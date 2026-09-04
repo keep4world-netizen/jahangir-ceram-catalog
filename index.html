@@ -1579,6 +1579,11 @@
     "assets/images/catalog-006.webp",
     "assets/images/catalog-007.webp"
   ];
+  var SIALK_PAGE34_DETAIL_IMAGES = [
+    "assets/images/crystal-polish-iceberg.webp",
+    "assets/images/crystal-polish-karmania.webp",
+    "assets/images/crystal-polish-una.webp"
+  ];
   var SIALK_PAGE34_IMAGES = [
     "assets/images/catalog-008.webp",
     "assets/images/catalog-009.webp",
@@ -2138,7 +2143,7 @@
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
       '<h2 class="catalog-heading">' + name + '</h2>' +
       '<p class="catalog-breadcrumb">Sialk Ceram / Porcelain Ceramic / Crystal Polish / 100' + String.fromCharCode(0xD7) + '100</p>' +
-      '<div class="product-detail-description product-detail-image" data-placeholder="product-image"><img src="' + SIALK_PAGE34_IMAGES[index] + '" alt="' + name + ' 100×100" loading="lazy"></div>' +
+      '<div class="product-detail-description product-detail-image" data-placeholder="product-image"><img src="' + SIALK_PAGE34_DETAIL_IMAGES[index] + '" alt="' + name + ' 100×100" loading="lazy"></div>' +
       '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
     page.querySelector(".catalog-back").onclick = function () {
       var target = Array.prototype.find.call(pages.querySelectorAll(".page"), function (candidate) { return candidate.dataset.pageKey === backKey; });
