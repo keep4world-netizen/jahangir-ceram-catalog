@@ -804,7 +804,7 @@
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    background-image: linear-gradient(rgba(8, 9, 12, .52), rgba(8, 9, 12, .72)), url("assets/images/catalog-001.webp");
+    background-image: linear-gradient(rgba(8, 9, 12, .52), rgba(8, 9, 12, .72)), url("assets/images/cover.webp");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1493,7 +1493,7 @@
   <option value="ar">ar</option>
 </select>
 </div>
-<img alt="Jahangir Ceram logo" class="logo" src="assets/images/catalog-002.webp"/>
+<img alt="Jahangir Ceram logo" class="logo" src="assets/images/jahangir-ceram-logo.webp"/>
 <p class="title">Jahangir Ceram Catalogs</p>
 <div class="categories" id="categories"></div>
 <div class="page-number">Page 1</div>
@@ -1503,7 +1503,7 @@
 
   /* Two main categories — the Sialk Ceram logo has not been uploaded yet and will be added when available */
   var CATEGORIES = [
-    { id: "jahangir", name: "Jahangir Ceram", logo: "assets/images/catalog-003.webp", sub: [
+    { id: "jahangir", name: "Jahangir Ceram", logo: "assets/images/sialk-ceram-logo.webp", sub: [
       { name: "Porcelain Ceramic", children: { title: "", items: [
         { name: "Matte", children: { title: "", items: ["80×80", "60×120"] } },
         { name: "Nano Polish", children: { title: "", items: ["80×80"] } }
@@ -1515,7 +1515,7 @@
         { name: "Takgol", children: { title: "", items: ["30×60"] } }
       ] } }
     ] },
-    { id: "sialk", name: "Sialk Ceram", logo: "assets/images/catalog-004.webp", sub: [
+    { id: "sialk", name: "Sialk Ceram", logo: "assets/images/catalog-brand.webp", sub: [
       { name: "Porcelain Ceramic", children: { title: "", items: [
         { name: "Nano Polish", children: { title: "", items: ["60×120", "80×80", "100×100"] } },
         { name: "Crystal Polish", children: { title: "", items: ["100×100"] } }
@@ -1575,50 +1575,50 @@
     "Una"
   ];
   var SIALK_PAGE30_IMAGES = [
-    "assets/images/catalog-005.webp",
-    "assets/images/catalog-006.webp",
-    "assets/images/catalog-007.webp"
+    "assets/images/avin-gallery-100x100.webp",
+    "assets/images/tida-gallery-100x100.webp",
+    "assets/images/versad-gallery-100x100.webp"
   ];
   var SIALK_PAGE34_DETAIL_IMAGES = [
-    "assets/images/crystal-polish-iceberg.webp",
-    "assets/images/crystal-polish-karmania.webp",
-    "assets/images/crystal-polish-una.webp"
+    "assets/images/iceberg.webp",
+    "assets/images/karmania.webp",
+    "assets/images/una.webp"
   ];
   var SIALK_PAGE34_IMAGES = [
-    "assets/images/catalog-008.webp",
-    "assets/images/catalog-009.webp",
-    "assets/images/catalog-010.webp"
+    "assets/images/iceberg-gallery.webp",
+    "assets/images/karmania-gallery.webp",
+    "assets/images/una-gallery.webp"
   ];
   var SIALK_PAGE19_IMAGES = [
-    "assets/images/catalog-011.webp",
-    "assets/images/catalog-012.webp",
-    "assets/images/catalog-013.webp",
-    "assets/images/catalog-014.webp",
-    "assets/images/catalog-015.webp"
+    "assets/images/aramis-gallery-60x120.webp",
+    "assets/images/diako-black-white-gallery-60x120.webp",
+    "assets/images/emerita-black-white-gallery-60x120.webp",
+    "assets/images/nalina-gallery-60x120.webp",
+    "assets/images/sertina-gallery-60x120.webp"
   ];
   var SIALK_PAGE19_DETAIL_IMAGES = [
-    "assets/images/catalog-016.webp",
-    "assets/images/catalog-017.webp",
-    "assets/images/catalog-018.webp",
-    "assets/images/catalog-019.webp",
-    "assets/images/catalog-020.webp"
+    "assets/images/aramis-60x120.webp",
+    "assets/images/diako-black-white-60x120.webp",
+    "assets/images/emerita-black-white-60x120.webp",
+    "assets/images/nalina-60x120.webp",
+    "assets/images/sertina-60x120.webp"
   ];
   var SIALK_PAGE25_IMAGES = [
-    "assets/images/catalog-021.webp",
-    "assets/images/catalog-022.webp",
-    "assets/images/catalog-023.webp",
-    "assets/images/catalog-024.webp"
+    "assets/images/afra-gallery-80x80.webp",
+    "assets/images/aylin-gallery-80x80.webp",
+    "assets/images/jarsha-gallery-80x80.webp",
+    "assets/images/versad-gallery-80x80.webp"
   ];
   var SIALK_PAGE25_DETAIL_IMAGES = [
-    "assets/images/catalog-025.webp",
-    "assets/images/catalog-026.webp",
-    "assets/images/catalog-027.webp",
-    "assets/images/catalog-028.webp"
+    "assets/images/afra-80x80.webp",
+    "assets/images/aylin-80x80.webp",
+    "assets/images/jarsha-80x80.webp",
+    "assets/images/versad-80x80.webp"
   ];
-  var MATTE_IMAGES = ["assets/images/catalog-029.webp","assets/images/catalog-030.webp","assets/images/catalog-031.webp","assets/images/catalog-032.webp","assets/images/catalog-033.webp","assets/images/catalog-034.webp","assets/images/catalog-035.webp"];
-  var MATIC_LIGHT_GALLERY_IMAGE = "assets/images/catalog-032.webp";
-  var CLOUDY_PRODUCT_IMAGE = "assets/images/catalog-036.webp";
-  var PRODUCT_IMAGES = {"Cloudy": "assets/images/catalog-036.webp", "Mitis": "assets/images/catalog-037.webp", "Neomatte": "assets/images/catalog-038.webp", "Matic Light": "assets/images/catalog-039.webp", "Matic Dark": "assets/images/catalog-040.webp", "Matsu Gray": "assets/images/catalog-041.webp", "Matsu Cream": "assets/images/catalog-042.webp"};
+  var MATTE_IMAGES = ["assets/images/cloudy-gallery-80x80.webp","assets/images/mitis-gallery-80x80.webp","assets/images/neomatte-gallery-80x80.webp","assets/images/matic-light-gallery-80x80.webp","assets/images/matic-dark-gallery-80x80.webp","assets/images/matsu-gray-gallery-80x80.webp","assets/images/matsu-cream-gallery-80x80.webp"];
+  var MATIC_LIGHT_GALLERY_IMAGE = "assets/images/matic-light-gallery-80x80.webp";
+  var CLOUDY_PRODUCT_IMAGE = "assets/images/cloudy-80x80.webp";
+  var PRODUCT_IMAGES = {"Cloudy": "assets/images/cloudy-80x80.webp", "Mitis": "assets/images/mitis-80x80.webp", "Neomatte": "assets/images/neomatte-80x80.webp", "Matic Light": "assets/images/matic-light-80x80.webp", "Matic Dark": "assets/images/matic-dark-80x80.webp", "Matsu Gray": "assets/images/matsu-gray-80x80.webp", "Matsu Cream": "assets/images/matsu-cream-80x80.webp"};
   // Matic Light had a NO IMAGE AVAILABLE placeholder; use a valid light product photo fallback.
   MATTE_IMAGES[3] = MATTE_IMAGES[1];
 
@@ -2446,34 +2446,34 @@
         '</div>' +
         '<div class="social-links" aria-label="Social media and website links">' +
           '<a class="social-link" href="https://www.instagram.com/jahangir_ceram" data-platform="instagram" aria-label="Instagram" title="Instagram" target="_blank" rel="noopener">' +
-            '<img class="social-icon" src="assets/images/catalog-043.webp" alt="" aria-hidden="true"><span class="social-label">Instagram</span>' +
+            '<img class="social-icon" src="assets/images/contact-asset-01.webp" alt="" aria-hidden="true"><span class="social-label">Instagram</span>' +
           '</a>' +
           '<a class="social-link" href="https://wa.me/989103101405" data-platform="whatsapp" aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener">' +
-            '<img class="social-icon" src="assets/images/catalog-044.webp" alt="" aria-hidden="true"><span class="social-label">WhatsApp</span>' +
+            '<img class="social-icon" src="assets/images/contact-asset-02.webp" alt="" aria-hidden="true"><span class="social-label">WhatsApp</span>' +
           '</a>' +
           '<a class="social-link" href="https://t.me/jahangirceram" data-platform="telegram" aria-label="Telegram" title="Telegram" target="_blank" rel="noopener">' +
-            '<img class="social-icon" src="assets/images/catalog-045.webp" alt="" aria-hidden="true"><span class="social-label">Telegram</span>' +
+            '<img class="social-icon" src="assets/images/contact-asset-03.webp" alt="" aria-hidden="true"><span class="social-label">Telegram</span>' +
           '</a>' +
           '<a class="social-link" href="" data-platform="linkedin" aria-label="LinkedIn" title="LinkedIn">' +
-            '<img class="social-icon" src="assets/images/catalog-046.webp" alt="" aria-hidden="true"><span class="social-label">LinkedIn</span>' +
+            '<img class="social-icon" src="assets/images/contact-asset-04.webp" alt="" aria-hidden="true"><span class="social-label">LinkedIn</span>' +
           '</a>' +
           '<a class="social-link" href="https://ble.ir/jahangir_ceram" data-platform="bale" aria-label="Bale" title="Bale" target="_blank" rel="noopener">' +
-            '<img class="social-icon" src="assets/images/catalog-047.webp" alt="" aria-hidden="true"><span class="social-label">Bale</span>' +
+            '<img class="social-icon" src="assets/images/contact-asset-05.webp" alt="" aria-hidden="true"><span class="social-label">Bale</span>' +
           '</a>' +
           '<a class="social-link" href="https://eitaa.com/jahangir_ceram" data-platform="eitaa" aria-label="Eitaa" title="Eitaa" target="_blank" rel="noopener">' +
-            '<img class="social-icon" src="assets/images/catalog-048.webp" alt="" aria-hidden="true"><span class="social-label">Eitaa</span>' +
+            '<img class="social-icon" src="assets/images/contact-asset-06.webp" alt="" aria-hidden="true"><span class="social-label">Eitaa</span>' +
           '</a>' +
           '<a class="social-link" href="https://rubika.ir/page/jahangirceram" data-platform="rubika" aria-label="Rubika" title="Rubika" target="_blank" rel="noopener">' +
-            '<img class="social-icon" src="assets/images/catalog-049.webp" alt="" aria-hidden="true"><span class="social-label">Rubika</span>' +
+            '<img class="social-icon" src="assets/images/contact-asset-07.webp" alt="" aria-hidden="true"><span class="social-label">Rubika</span>' +
           '</a>' +
           '<a class="social-link" href="https://www.aparat.com/jahangirceram" data-platform="aparat" aria-label="Aparat" title="Aparat" target="_blank" rel="noopener">' +
-            '<img class="social-icon" src="assets/images/catalog-050.webp" alt="" aria-hidden="true"><span class="social-label">Aparat</span>' +
+            '<img class="social-icon" src="assets/images/contact-asset-08.webp" alt="" aria-hidden="true"><span class="social-label">Aparat</span>' +
           '</a>' +
           '<a class="social-link" href="https://jahangirceram.com" data-platform="website" aria-label="Website" title="Website" target="_blank" rel="noopener">' +
-            '<img class="social-icon" src="assets/images/catalog-002.webp" alt="" aria-hidden="true"><span class="social-label">Website</span>' +
+            '<img class="social-icon" src="assets/images/jahangir-ceram-logo.webp" alt="" aria-hidden="true"><span class="social-label">Website</span>' +
           '</a>' +
           '<a class="social-link" href="mailto:jahangirceram@gmail.com" data-platform="email" aria-label="Email" title="Email" target="_blank" rel="noopener">' +
-            '<img class="social-icon" src="assets/images/catalog-051.webp" alt="" aria-hidden="true"><span class="social-label">Email</span>' +
+            '<img class="social-icon" src="assets/images/contact-asset-09.webp" alt="" aria-hidden="true"><span class="social-label">Email</span>' +
           '</a>' +
         '</div>' +
       '</div>' +
