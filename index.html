@@ -797,8 +797,7 @@
   .product-detail-description { max-width: 120mm; margin: 14mm auto 0; padding: 10mm 12mm; color: var(--silver); border: 1px solid var(--border); border-radius: 14px; background: linear-gradient(145deg, var(--dark-2), var(--dark-3)); box-shadow: 0 12px 26px rgba(0,0,0,.16); font-size: 16px; line-height: 1.9; }
   body.light-mode .product-detail-description { color: #403930; background: linear-gradient(145deg, #FFFFFF, #F1E9DD); border-color: #D8C5A7; box-shadow: 0 12px 26px rgba(101,77,42,.12); }
   .product-detail-image { padding: 5mm; overflow: hidden; }
-  .product-detail-image img { display: block; width: 100%; max-height: 155mm; object-fit: contain; border-radius: 10px; }
-  .crystal-polish-detail-image img { max-height: none; width: 100%; height: auto; object-fit: contain; }
+  .product-detail-image img { display: block; height: 155mm; width: auto; max-width: 100%; margin: 0 auto; object-fit: contain; border-radius: 10px; }
 
   /* Responsive supplied background for the first cover page */
   body > .page:first-child {
@@ -2144,7 +2143,7 @@
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
       '<h2 class="catalog-heading">' + name + '</h2>' +
       '<p class="catalog-breadcrumb">Sialk Ceram / Porcelain Ceramic / Crystal Polish / 100' + String.fromCharCode(0xD7) + '100</p>' +
-      '<div class="product-detail-description product-detail-image crystal-polish-detail-image" data-placeholder="product-image"><img src="' + SIALK_PAGE34_DETAIL_IMAGES[index] + '" alt="' + name + ' 100×100" loading="lazy"></div>' +
+      '<div class="product-detail-description product-detail-image" data-placeholder="product-image"><img src="' + SIALK_PAGE34_DETAIL_IMAGES[index] + '" alt="' + name + ' 100×100" loading="lazy"></div>' +
       '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
     page.querySelector(".catalog-back").onclick = function () {
       var target = Array.prototype.find.call(pages.querySelectorAll(".page"), function (candidate) { return candidate.dataset.pageKey === backKey; });
