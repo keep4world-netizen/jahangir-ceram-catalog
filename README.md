@@ -1,6 +1,6 @@
 # Jahangir Ceram Catalog
 
-A self-contained, trilingual static product catalog for Jahangir Ceram. The production site is served from [`index.html`](index.html); all images are embedded in the HTML, so no asset directory or backend is required.
+A self-contained, trilingual static product catalog for Jahangir Ceram. The production site is served from [`index.html`](index.html). Images are served as standalone WebP assets from `assets/images/`, allowing Vercel's CDN and browser cache to handle each image independently. Product-gallery images use lazy loading without changing their visual quality or layout.
 
 ## Run locally
 
@@ -18,7 +18,7 @@ Then visit <http://localhost:8000>.
 2. In Vercel, choose **Add New → Project**, import the GitHub repository, and keep the default framework setting as **Other**.
 3. Leave the build command empty and set the output directory to `.`. Vercel will serve `index.html` automatically.
 
-This repository includes `vercel.json` with static-site headers. No environment variables, database, Node.js runtime, or server-side build step is required.
+This repository includes `vercel.json` with static-site headers. Image assets are cached for one year using immutable caching. No environment variables, database, Node.js runtime, or server-side build step is required.
 
 ## Validate the catalog
 
@@ -51,4 +51,4 @@ python3 build_catalog.py path/to/catalog-source.html --output path/to/index.html
 
 ## Compatibility
 
-The catalog supports desktop and mobile layouts, light and dark themes, English/Persian/Arabic, RTL layout, device safe areas, A4 printing, and browsers without full `:has()` support. Images are embedded as WebP data URLs. Vazirmatn is loaded from Google Fonts with a system-font fallback when offline.
+The catalog supports desktop and mobile layouts, light and dark themes, English/Persian/Arabic, RTL layout, device safe areas, A4 printing, and browsers without full `:has()` support. Images are standalone WebP assets with lazy loading for product galleries. Vazirmatn is loaded from Google Fonts with a system-font fallback when offline.
