@@ -1945,6 +1945,21 @@
   var defaultTitle = pageTitle.textContent;
 
 
+  var deferredProductImageObserver = "IntersectionObserver" in window
+    ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            loadDeferredProductImages(entry.target);
+            deferredProductImageObserver.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: "900px 0px" })
+    : null;
+
+  function observeDeferredProductImages(sheet) {
+    if (deferredProductImageObserver && sheet) deferredProductImageObserver.observe(sheet);
+  }
+
   function loadDeferredProductImages(sheet) {
     var page = sheet && sheet.querySelector(".product-detail-page");
     var images = sheet ? sheet.querySelectorAll("img[data-src]") : [];
@@ -1998,6 +2013,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    observeDeferredProductImages(sheet);
     return sheet;
   }
   function showJahangir60120ProductPage(index, backKey) {
@@ -2050,6 +2066,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    observeDeferredProductImages(sheet);
     return sheet;
   }
   function showProductPage(index, backKey) {
@@ -2092,6 +2109,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    observeDeferredProductImages(sheet);
     return sheet;
   }
   function showJahangirNano80ProductPage(index, backKey) {
@@ -2138,6 +2156,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    observeDeferredProductImages(sheet);
     return sheet;
   }
   function showSialkProductPage(index, backKey) {
@@ -2183,6 +2202,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    observeDeferredProductImages(sheet);
     return sheet;
   }
   function showSialkPage25ProductPage(index, backKey) {
@@ -2222,6 +2242,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    observeDeferredProductImages(sheet);
     return sheet;
   }
   function showSialkPage30ProductPage(index, backKey) {
@@ -2261,6 +2282,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    observeDeferredProductImages(sheet);
     return sheet;
   }
   function showSialkPage34ProductPage(index, backKey) {
