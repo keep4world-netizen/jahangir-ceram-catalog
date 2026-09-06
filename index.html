@@ -1506,6 +1506,27 @@
     .catalog-sheet .catalog-page:has(.product-grid) .product-grid { gap: 7px 5px; }
     .catalog-sheet .catalog-page:has(.product-grid) .product-card { height: 165px; }
   }
+  /* Gallery image loader: keep the existing card layout while each image is loading. */
+  .product-photo.has-image { position: relative; overflow: hidden; }
+  .product-photo.has-image.image-loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    border: 2px solid rgba(213, 152, 44, .25);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: gallery-image-spin .8s linear infinite;
+    pointer-events: none;
+  }
+  .product-photo.has-image.image-loading img { opacity: 0; transition: opacity .18s ease; }
+  .product-photo.has-image.image-loaded::after { display: none; }
+  .product-photo.has-image.image-loaded img { opacity: 1; }
+  @keyframes gallery-image-spin { to { transform: rotate(360deg); } }
+
   /* Deferred product images: keep the page stable and show a loader instead of a dark/empty area. */
   .product-detail-page.has-deferred-image { position: relative; }
   .product-detail-page.has-deferred-image::after {
@@ -1960,6 +1981,23 @@
     if (deferredProductImageObserver && sheet) deferredProductImageObserver.observe(sheet);
   }
 
+  function setupGalleryImageLoaders(root) {
+    if (!root) return;
+    root.querySelectorAll(".product-photo.has-image").forEach(function (photo) {
+      var image = photo.querySelector("img");
+      if (!image || photo.dataset.loaderReady === "true") return;
+      photo.dataset.loaderReady = "true";
+      photo.classList.add("image-loading");
+      var finish = function () {
+        photo.classList.remove("image-loading");
+        photo.classList.add("image-loaded");
+      };
+      image.addEventListener("load", finish, { once: true });
+      image.addEventListener("error", finish, { once: true });
+      if (image.complete) finish();
+    });
+  }
+
   function loadDeferredProductImages(sheet) {
     var page = sheet && sheet.querySelector(".product-detail-page");
     var images = sheet ? sheet.querySelectorAll("img[data-src]") : [];
@@ -2326,6 +2364,7 @@
                   ? (pageKey === ("jahangir-Porcelain-Ceramic-Nano-Polish-80" + String.fromCharCode(0xD7) + "80") ? renderJahangirNano80Gallery() : (pageKey === ("jahangir-Porcelain-Ceramic-Matte-60" + String.fromCharCode(0xD7) + "120") ? renderJahangir60120Gallery(pageKey) : (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-60" + String.fromCharCode(0xD7) + "120") ? renderSialkPage19Gallery() : (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-80" + String.fromCharCode(0xD7) + "80") ? renderSialkPage25Gallery() : (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-100" + String.fromCharCode(0xD7) + "100") ? renderSialkPage30Gallery() : (pageKey === ("sialk-Porcelain-Ceramic-Crystal-Polish-100" + String.fromCharCode(0xD7) + "100") ? renderSialkPage34Gallery() : renderProductGallery(pageKey)))))))
         : '<div class="coming-soon-message" data-placeholder="coming-soon">Coming Soon</div>') +
       '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
+    setupGalleryImageLoaders(page);
     page.querySelectorAll(".product-link").forEach(function (link) {
       link.addEventListener("click", function (event) {
         event.preventDefault();
