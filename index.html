@@ -1506,6 +1506,29 @@
     .catalog-sheet .catalog-page:has(.product-grid) .product-grid { gap: 7px 5px; }
     .catalog-sheet .catalog-page:has(.product-grid) .product-card { height: 165px; }
   }
+  /* Deferred product images: keep the page stable and show a loader instead of a dark/empty area. */
+  .product-detail-page.has-deferred-image { position: relative; }
+  .product-detail-page.has-deferred-image::after {
+    content: "";
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 3px solid rgba(213, 152, 44, .25);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: product-image-spin .8s linear infinite;
+    pointer-events: none;
+  }
+  .product-detail-page.has-deferred-image.image-ready::after { display: none; }
+  .product-detail-page.has-deferred-image img[data-src] { opacity: 0; transition: opacity .18s ease; }
+  .product-detail-page.has-deferred-image img.deferred-image-loaded { opacity: 1; }
+  .product-detail-page.has-deferred-image .cloudy-product-image { min-height: 180px; object-fit: contain; }
+  @media (max-width: 820px) { .product-detail-page.has-deferred-image .cloudy-product-image { min-height: 140px; } }
+  @keyframes product-image-spin { to { transform: rotate(360deg); } }
+
   /* Keep the product title, breadcrumb, and image visually closer together. */
   .product-detail-page > .cloudy-product-image { margin-top: 2mm; }
   .product-detail-page > .product-detail-description { margin-top: 3mm; }
@@ -1921,6 +1944,31 @@
   var pageTitle = document.querySelector(".title");
   var defaultTitle = pageTitle.textContent;
 
+
+  function loadDeferredProductImages(sheet) {
+    var page = sheet && sheet.querySelector(".product-detail-page");
+    var images = sheet ? sheet.querySelectorAll("img[data-src]") : [];
+    if (!page || !images.length) return;
+    page.classList.add("has-deferred-image");
+    var remaining = images.length;
+    Array.prototype.forEach.call(images, function (image) {
+      var source = image.getAttribute("data-src");
+      image.addEventListener("load", function () {
+        image.classList.add("deferred-image-loaded");
+        image.removeAttribute("data-src");
+        remaining -= 1;
+        if (remaining <= 0) page.classList.add("image-ready");
+      }, { once: true });
+      image.addEventListener("error", function () {
+        image.classList.add("deferred-image-loaded");
+        image.removeAttribute("data-src");
+        remaining -= 1;
+        if (remaining <= 0) page.classList.add("image-ready");
+      }, { once: true });
+      image.src = source;
+    });
+  }
+
   function ensureJahangir60120ProductPage(index, backKey) {
     var pages = document.getElementById("catalog-pages");
     var name = MATTE_60120_PRODUCTS[index];
@@ -1939,7 +1987,7 @@
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
       '<h2 class="catalog-heading">' + name + ' · 60×120</h2>' +
       '<p class="catalog-breadcrumb">Jahangir Ceram / Porcelain Ceramic / Matte</p>' +
-      '<img class="cloudy-product-image" src="' + productImage + '" alt="' + name + ' 60×120 product presentation" loading="eager" decoding="async">' +
+      '<img class="cloudy-product-image" data-src="' + productImage + '" alt="' + name + ' 60×120 product presentation" loading="lazy" decoding="async">' +
       '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
     page.querySelector(".catalog-back").onclick = function () {
       var target = Array.prototype.find.call(pages.querySelectorAll(".page"), function (candidate) { return candidate.dataset.pageKey === backKey; });
@@ -1954,6 +2002,7 @@
   }
   function showJahangir60120ProductPage(index, backKey) {
     var sheet = ensureJahangir60120ProductPage(index, backKey);
+    loadDeferredProductImages(sheet);
     history.pushState({ pageKey: sheet.dataset.pageKey }, "", "#jahangir-product-60120-" + index);
     sheet.scrollIntoView({ behavior: "auto", block: "start" });
   }
@@ -1979,7 +2028,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page product-detail-page" + (index === 0 ? " cloudy-product-page" : "");
     var productImageMarkup = PRODUCT_IMAGES[name]
-      ? '<img class="cloudy-product-image" src="' + PRODUCT_IMAGES[name] + '" alt="' + tr("productImageAlt").replace("{name}", name).replace("80×80", "\u200e80×80\u200e") + '" loading="eager" decoding="async">'
+      ? '<img class="cloudy-product-image" data-src="' + PRODUCT_IMAGES[name] + '" alt="' + tr("productImageAlt").replace("{name}", name).replace("80×80", "\u200e80×80\u200e") + '" loading="lazy" decoding="async">'
       : '';
     page.innerHTML =
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
@@ -2005,6 +2054,7 @@
   }
   function showProductPage(index, backKey) {
     var sheet = ensureProductPage(index, backKey);
+    loadDeferredProductImages(sheet);
     history.pushState({ pageKey: sheet.dataset.pageKey }, "", "#product-80x80-" + index);
     sheet.scrollIntoView({ behavior: "auto", block: "start" });
   }
@@ -2046,6 +2096,7 @@
   }
   function showJahangirNano80ProductPage(index, backKey) {
     var sheet = ensureJahangirNano80ProductPage(index, backKey);
+    loadDeferredProductImages(sheet);
     history.pushState({ pageKey: sheet.dataset.pageKey }, "", "#jahangir-nano-80-product-" + index);
     sheet.scrollIntoView({ behavior: "auto", block: "start" });
   }
@@ -2076,7 +2127,7 @@
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
       '<h2 class="catalog-heading">' + SIALK_PAGE19_PRODUCTS[index] + ' · 60×120</h2>' +
       '<p class="catalog-breadcrumb">Sialk Ceram / Porcelain Ceramic / Nano Polish</p>' +
-      '<img class="cloudy-product-image sialk-product-image" src="' + SIALK_PAGE19_DETAIL_IMAGES[index] + '" alt="' + name + ' 60×120" loading="eager" decoding="async">' +
+      '<img class="cloudy-product-image sialk-product-image" data-src="' + SIALK_PAGE19_DETAIL_IMAGES[index] + '" alt="' + name + ' 60×120" loading="lazy" decoding="async">' +
       '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
     page.querySelector(".catalog-back").onclick = function () {
       var target = Array.prototype.find.call(pages.querySelectorAll(".page"), function (candidate) { return candidate.dataset.pageKey === backKey; });
@@ -2091,6 +2142,7 @@
   }
   function showSialkProductPage(index, backKey) {
     var sheet = ensureSialkProductPage(index, backKey);
+    loadDeferredProductImages(sheet);
     history.pushState({ pageKey: sheet.dataset.pageKey }, "", "#sialk-product-page19-" + index);
     sheet.scrollIntoView({ behavior: "auto", block: "start" });
   }
@@ -2114,7 +2166,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page product-detail-page";
     var productImageMarkup = SIALK_PAGE25_DETAIL_IMAGES[index]
-      ? '<img class="cloudy-product-image sialk-8080-product-image" src="' + SIALK_PAGE25_DETAIL_IMAGES[index] + '" alt="' + name + ' 80×80" loading="eager" decoding="async">'
+      ? '<img class="cloudy-product-image sialk-8080-product-image" data-src="' + SIALK_PAGE25_DETAIL_IMAGES[index] + '" alt="' + name + ' 80×80" loading="lazy" decoding="async">'
       : '<div class="product-detail-description" data-placeholder="product-image">Product image will be added later.</div>';
     page.innerHTML =
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
@@ -2135,6 +2187,7 @@
   }
   function showSialkPage25ProductPage(index, backKey) {
     var sheet = ensureSialkPage25ProductPage(index, backKey);
+    loadDeferredProductImages(sheet);
     history.pushState({ pageKey: sheet.dataset.pageKey }, "", "#sialk-product-page25-" + index);
     sheet.scrollIntoView({ behavior: "auto", block: "start" });
   }
@@ -2158,7 +2211,7 @@
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
       '<h2 class="catalog-heading">' + name + ' · 100×100</h2>' +
       '<p class="catalog-breadcrumb">Sialk Ceram / Porcelain Ceramic / Nano Polish</p>' +
-      '<div class="product-detail-description product-detail-image" data-placeholder="product-image"><img src="' + SIALK_PAGE30_IMAGES[index] + '" alt="' + name + ' 100×100" loading="lazy" decoding="async"></div>' +
+      '<div class="product-detail-description product-detail-image" data-placeholder="product-image"><img data-src="' + SIALK_PAGE30_IMAGES[index] + '" alt="' + name + ' 100×100" loading="lazy" decoding="async"></div>' +
       '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
     page.querySelector(".catalog-back").onclick = function () {
       var target = Array.prototype.find.call(pages.querySelectorAll(".page"), function (candidate) { return candidate.dataset.pageKey === backKey; });
@@ -2173,6 +2226,7 @@
   }
   function showSialkPage30ProductPage(index, backKey) {
     var sheet = ensureSialkPage30ProductPage(index, backKey);
+    loadDeferredProductImages(sheet);
     history.pushState({ pageKey: sheet.dataset.pageKey }, "", "#sialk-product-page30-" + index);
     sheet.scrollIntoView({ behavior: "auto", block: "start" });
   }
@@ -2196,7 +2250,7 @@
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
       '<h2 class="catalog-heading">' + name + ' · 100×100</h2>' +
       '<p class="catalog-breadcrumb">Sialk Ceram / Porcelain Ceramic / Crystal Polish</p>' +
-      '<img class="cloudy-product-image" src="' + SIALK_PAGE34_DETAIL_IMAGES[index] + '" alt="' + name + ' 100×100" loading="eager" decoding="async">' +
+      '<img class="cloudy-product-image" data-src="' + SIALK_PAGE34_DETAIL_IMAGES[index] + '" alt="' + name + ' 100×100" loading="lazy" decoding="async">' +
       '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
     page.querySelector(".catalog-back").onclick = function () {
       var target = Array.prototype.find.call(pages.querySelectorAll(".page"), function (candidate) { return candidate.dataset.pageKey === backKey; });
@@ -2211,6 +2265,7 @@
   }
   function showSialkPage34ProductPage(index, backKey) {
     var sheet = ensureSialkPage34ProductPage(index, backKey);
+    loadDeferredProductImages(sheet);
     history.pushState({ pageKey: sheet.dataset.pageKey }, "", "#sialk-product-page34-" + index);
     sheet.scrollIntoView({ behavior: "auto", block: "start" });
   }
