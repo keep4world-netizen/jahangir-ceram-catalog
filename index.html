@@ -2667,6 +2667,19 @@
     pages.appendChild(sheet);
     return sheet;
   }
+  function goToStaticPage(pageKey) {
+    var pageSelector = pageKey === "contact-us" ? ".contact-sheet" : ".about-sheet";
+    var page = document.querySelector(pageSelector);
+    if (!page) {
+      page = pageKey === "contact-us" ? createContactPage() : createAboutPage();
+    }
+    history.pushState({ pageKey: pageKey }, "", "#" + pageKey);
+    requestAnimationFrame(function () {
+      page.scrollIntoView({ behavior: "auto", block: "start" });
+    });
+    return page;
+  }
+
   function render() {
     var wrap = document.getElementById("categories");
     wrap.innerHTML = "";
@@ -2700,11 +2713,7 @@
         '<path d="M13 22h-1.5"></path>' +
       '</svg><span>' + tr("contactUs") + '</span>';
     contactButton.onclick = function () {
-      var contactPage = document.querySelector('.contact-sheet');
-      if (contactPage) {
-        history.pushState({ pageKey: "contact-us" }, "", "#contact-us");
-        contactPage.scrollIntoView({ behavior: "auto", block: "start" });
-      }
+      goToStaticPage("contact-us");
     };
     wrap.appendChild(contactButton);
     var aboutButton = document.createElement("button");
@@ -2718,11 +2727,7 @@
         '<path d="M5.5 20c.5-3.6 2.8-5.6 6.5-5.6s6 2 6.5 5.6"></path>' +
       '</svg><span>' + tr("aboutUs") + '</span>';
     aboutButton.onclick = function () {
-      var aboutPage = document.querySelector('.about-sheet');
-      if (aboutPage) {
-        history.pushState({ pageKey: "about-us" }, "", "#about-us");
-        aboutPage.scrollIntoView({ behavior: "auto", block: "start" });
-      }
+      goToStaticPage("about-us");
     };
     wrap.appendChild(aboutButton);
   }
@@ -2863,14 +2868,27 @@
     document.querySelectorAll("#catalog-pages > .page").forEach(refreshSheetLanguage);
   }
 
-  window.addEventListener("popstate", function () {
-    if (location.hash.indexOf("#catalog-") !== 0 && location.hash.indexOf("#category-") !== 0) {
+  function handleLocationHash() {
+    var hash = location.hash;
+    if (hash === "#contact-us" || hash === "#about-us") {
+      var pageKey = hash.slice(1);
+      var page = document.querySelector(pageKey === "contact-us" ? ".contact-sheet" : ".about-sheet");
+      if (!page) page = pageKey === "contact-us" ? createContactPage() : createAboutPage();
+      requestAnimationFrame(function () {
+        page.scrollIntoView({ behavior: "auto", block: "start" });
+      });
+      return;
+    }
+    if (hash.indexOf("#catalog-") !== 0 && hash.indexOf("#category-") !== 0) {
       pageTitle.textContent = tr("siteTitle");
       activeId = null;
       activeSubName = null;
       render();
     }
-  });
+  }
+
+  window.addEventListener("popstate", handleLocationHash);
+  window.addEventListener("hashchange", handleLocationHash);
 
   var languageSelect = document.getElementById("language-select");
   if (languageSelect) {
@@ -2889,6 +2907,7 @@
   createContactPage();
   render();
   applyLanguage();
+  handleLocationHash();
 </script>
 </body>
 </html>
