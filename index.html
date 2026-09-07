@@ -56,6 +56,32 @@
     transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
   .theme-toggle:hover { color: var(--gold); border-color: var(--gold); }
+  .home-button {
+    position: fixed;
+    right: max(18px, env(safe-area-inset-right));
+    bottom: max(18px, env(safe-area-inset-bottom));
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    color: var(--silver);
+    background: var(--dark-2);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .26);
+    font-size: 21px;
+    transition: color .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .home-button:hover, .home-button:focus-visible {
+    color: var(--gold);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+  body.light-mode .home-button { color: #5A4B3B; background: #fff; border-color: #D8C5A7; }
+  body.light-mode .home-button:hover, body.light-mode .home-button:focus-visible { color: #704707; border-color: var(--gold); }
   .theme-icon {
     display: inline-block;
     font-size: 19px;
@@ -1565,6 +1591,7 @@
   <option value="ar">ar</option>
 </select>
 </div>
+<button aria-label="Home" class="home-button" id="home-button" title="Home" type="button"><span aria-hidden="true">⌂</span></button>
 <img alt="Jahangir Ceram logo" class="logo" src="/assets/images/jahangir-ceram-logo.webp"/>
 <p class="title">Jahangir Ceram Catalogs</p>
 <div class="categories" id="categories"></div>
@@ -2674,10 +2701,20 @@
       page = pageKey === "contact-us" ? createContactPage() : createAboutPage();
     }
     history.pushState({ pageKey: pageKey }, "", "#" + pageKey);
-    requestAnimationFrame(function () {
-      page.scrollIntoView({ behavior: "auto", block: "start" });
-    });
+    // Scroll synchronously on the first click, then repeat after layout settles.
+    page.scrollIntoView({ behavior: "auto", block: "start" });
+    requestAnimationFrame(function () { page.scrollIntoView({ behavior: "auto", block: "start" }); });
     return page;
+  }
+
+  function goHome() {
+    history.pushState({}, "", location.pathname + location.search);
+    activeId = null;
+    activeSubName = null;
+    window.scrollTo(0, 0);
+    var cover = document.getElementById("cover-page") || document.querySelector("body > .page:first-child");
+    if (cover) cover.scrollIntoView({ behavior: "auto", block: "start" });
+    render();
   }
 
   function render() {
@@ -2856,6 +2893,10 @@
     document.body.classList.toggle("rtl", direction === "rtl");
     if (pageTitle) pageTitle.textContent = tr("siteTitle");
     if (themeToggle) themeToggle.setAttribute("aria-label", tr("themeToggle"));
+    if (homeButton) {
+      homeButton.setAttribute("aria-label", currentLanguage === "fa" ? "صفحه اول" : (currentLanguage === "ar" ? "الصفحة الرئيسية" : "Home"));
+      homeButton.title = homeButton.getAttribute("aria-label");
+    }
     if (languageSelect) {
       languageSelect.value = currentLanguage;
       languageSelect.setAttribute("aria-label", tr("languageSelect"));
@@ -2889,6 +2930,9 @@
 
   window.addEventListener("popstate", handleLocationHash);
   window.addEventListener("hashchange", handleLocationHash);
+
+  var homeButton = document.getElementById("home-button");
+  if (homeButton) homeButton.addEventListener("click", goHome);
 
   var languageSelect = document.getElementById("language-select");
   if (languageSelect) {
