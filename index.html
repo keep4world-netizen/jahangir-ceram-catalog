@@ -1741,6 +1741,102 @@
     .catalog-sheet .catalog-page > .page-number,
     .category-sheet .catalog-page > .page-number { bottom: 20px; }
   }
+
+  /* Structural footer row: Back | page number | Home */
+  .catalog-sheet .catalog-page,
+  .category-sheet .catalog-page {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 24mm;
+  }
+  .catalog-sheet .catalog-page > .bottom-nav-row,
+  .category-sheet .catalog-page > .bottom-nav-row {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 10mm;
+    height: 36px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    column-gap: 12px;
+    z-index: 3;
+  }
+  .bottom-nav-row > .bottom-nav-side {
+    display: flex;
+    align-items: center;
+    height: 36px;
+  }
+  .bottom-nav-row > .bottom-nav-side:first-child { justify-content: flex-start; }
+  .bottom-nav-row > .bottom-nav-side:last-child { justify-content: flex-end; }
+  .bottom-nav-row > .bottom-nav-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    min-width: 70px;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+  }
+  .bottom-nav-row .catalog-back,
+  .bottom-nav-row .page-home-button {
+    position: static !important;
+    box-sizing: border-box;
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    line-height: 1;
+    font-size: 12px;
+    color: var(--silver);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(59, 55, 50, 0.82);
+    transition: border-color .2s ease, color .2s ease, background .2s ease, transform .2s ease;
+  }
+  .bottom-nav-row .page-home-button:hover,
+  .bottom-nav-row .page-home-button:focus-visible {
+    transform: translateX(-3px);
+    border-color: var(--gold);
+    color: var(--gold-soft);
+    background: rgba(214,163,58,.12);
+  }
+  body.light-mode .bottom-nav-row .page-home-button {
+    color: #5A4B3B;
+    background: rgba(255,253,249,.86);
+    border-color: #D8C5A7;
+  }
+  body.light-mode .bottom-nav-row .page-home-button:hover,
+  body.light-mode .bottom-nav-row .page-home-button:focus-visible {
+    color: #704707;
+    background: #F5E2BA;
+    border-color: var(--gold);
+  }
+  .bottom-nav-row .catalog-back .back-icon {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .bottom-nav-row .page-home-button .home-arrow {
+    font-size: 13px;
+    line-height: 1;
+  }
+  @media (max-width: 820px) {
+    .catalog-sheet .catalog-page > .bottom-nav-row,
+    .category-sheet .catalog-page > .bottom-nav-row {
+      left: 15px;
+      right: 15px;
+      bottom: 20px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -3091,21 +3187,38 @@
 
   function addHomeButton(page) {
     if (!page) return;
-    var existing = page.querySelector(":scope > .page-home-button");
-    if (existing) {
-      var existingLabel = currentLanguage === "fa" ? "صفحه اول" : (currentLanguage === "ar" ? "الصفحة الرئيسية" : "Home");
-      existing.setAttribute("aria-label", existingLabel);
-      var existingLabelNode = existing.querySelector(".home-label");
-      if (existingLabelNode) existingLabelNode.textContent = existingLabel;
-      return;
+    var label = currentLanguage === "fa" ? "صفحه اول" : (currentLanguage === "ar" ? "الصفحة الرئيسية" : "Home");
+    var button = page.querySelector(":scope > .page-home-button");
+    if (!button) {
+      button = document.createElement("button");
+      button.type = "button";
+      button.className = "page-home-button";
+      button.addEventListener("click", goHome);
     }
-    var button = document.createElement("button");
-    button.type = "button";
-    button.className = "page-home-button";
-    button.setAttribute("aria-label", currentLanguage === "fa" ? "صفحه اول" : (currentLanguage === "ar" ? "الصفحة الرئيسية" : "Home"));
-    button.innerHTML = '<span class="home-arrow" aria-hidden="true">↑</span><span class="home-label">' + (currentLanguage === "fa" ? "صفحه اول" : (currentLanguage === "ar" ? "الصفحة الرئيسية" : "Home")) + '</span>';
-    button.addEventListener("click", goHome);
-    page.insertBefore(button, page.firstChild);
+    button.setAttribute("aria-label", label);
+    button.innerHTML = '<span class="home-arrow" aria-hidden="true">↑</span><span class="home-label">' + label + '</span>';
+
+    var back = page.querySelector(":scope > .catalog-back");
+    var pageNumber = page.querySelector(":scope > .page-number");
+    if (!back || !pageNumber) return;
+    var row = page.querySelector(":scope > .bottom-nav-row");
+    if (!row) {
+      row = document.createElement("div");
+      row.className = "bottom-nav-row";
+      var left = document.createElement("div");
+      left.className = "bottom-nav-side";
+      var center = document.createElement("div");
+      center.className = "bottom-nav-page";
+      var right = document.createElement("div");
+      right.className = "bottom-nav-side";
+      row.appendChild(left);
+      row.appendChild(center);
+      row.appendChild(right);
+      page.appendChild(row);
+    }
+    row.children[0].appendChild(back);
+    row.children[1].appendChild(pageNumber);
+    row.children[2].appendChild(button);
   }
 
   function addHomeButtonsToAllPages() {
