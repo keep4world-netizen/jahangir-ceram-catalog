@@ -1660,6 +1660,18 @@
     "Ribera",
     "Velora"
   ];
+  var JAHANGIR_NANO_80_GALLERY_IMAGES = [
+    "assets/images/diora-gallery-80x80.webp",
+    "assets/images/lona-gallery-80x80.webp",
+    "assets/images/ribera-gallery-80x80.webp",
+    "assets/images/velora-gallery-80x80.webp"
+  ];
+  var JAHANGIR_NANO_80_DETAIL_IMAGES = [
+    "assets/images/diora-80x80.webp",
+    "assets/images/lona-80x80.webp",
+    "assets/images/ribera-80x80.webp",
+    "assets/images/velora-80x80.webp"
+  ];
   var SIALK_PAGE30_PRODUCTS = [
     "Avin",
     "Tida",
@@ -1735,7 +1747,7 @@
       JAHANGIR_NANO_80_PRODUCTS.map(function (name, index) {
         var productHash = '#jahangir-nano-80-product-' + index;
         return '<a class="product-card product-link" href="' + productHash + '" data-jahangir-nano80-index="' + index + '" aria-label="' + name + '">' +
-          '<div class="product-photo" role="img" aria-label="' + name + '"></div>' +
+          '<div class="product-photo has-image" role="img" aria-label="' + name + '"><img src="' + JAHANGIR_NANO_80_GALLERY_IMAGES[index] + '" alt="' + name + ' 80×80" loading="lazy" decoding="async"></div>' +
           '<div class="product-name">' + name + '</div>' +
         '</a>';
       }).join("") +
@@ -2136,7 +2148,7 @@
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
       '<h2 class="catalog-heading">' + name + ' · 80×80</h2>' +
       '<p class="catalog-breadcrumb">Jahangir Ceram / Porcelain Ceramic / Nano Polish</p>' +
-      '<div class="product-detail-description" data-placeholder="product-image">Product image will be added later.</div>' +
+      '<img class="cloudy-product-image jahagir-nano-product-image" data-src="' + JAHANGIR_NANO_80_DETAIL_IMAGES[index] + '" alt="' + name + ' 80×80 product presentation" loading="lazy" decoding="async">' +
       '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
     page.querySelector(".catalog-back").onclick = function () {
       var target = Array.prototype.find.call(pages.querySelectorAll(".page"), function (candidate) { return candidate.dataset.pageKey === backKey; });
