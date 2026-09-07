@@ -1695,6 +1695,52 @@
   /* Keep the product title, breadcrumb, and image visually closer together. */
   .product-detail-page > .cloudy-product-image { margin-top: 2mm; }
   .product-detail-page > .product-detail-description { margin-top: 3mm; }
+  /* Final bottom navigation alignment: equal buttons on one shared center line. */
+  .catalog-sheet .catalog-page > .catalog-back,
+  .category-sheet .catalog-page > .catalog-back,
+  .catalog-sheet .catalog-page > .page-home-button,
+  .category-sheet .catalog-page > .page-home-button {
+    box-sizing: border-box;
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .catalog-sheet .catalog-page > .catalog-back,
+  .category-sheet .catalog-page > .catalog-back {
+    left: 24px;
+    bottom: 10mm;
+  }
+  .catalog-sheet .catalog-page > .page-home-button,
+  .category-sheet .catalog-page > .page-home-button {
+    right: 24px;
+    bottom: 10mm;
+  }
+  .catalog-sheet .catalog-page > .page-number,
+  .category-sheet .catalog-page > .page-number {
+    box-sizing: border-box;
+    height: 36px;
+    min-height: 36px;
+    bottom: 10mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  @media (max-width: 820px) {
+    .catalog-sheet .catalog-page > .catalog-back,
+    .category-sheet .catalog-page > .catalog-back { left: 15px; bottom: 20px; }
+    .catalog-sheet .catalog-page > .page-home-button,
+    .category-sheet .catalog-page > .page-home-button { right: 15px; bottom: 20px; }
+    .catalog-sheet .catalog-page > .page-number,
+    .category-sheet .catalog-page > .page-number { bottom: 20px; }
+  }
 </style>
 </head>
 <body>
