@@ -1856,6 +1856,53 @@
       bottom: 20px;
     }
   }
+  /* Final Fitileh 2×60 card fix: square uncropped image plus visible product name. */
+  .catalog-sheet .catalog-page .fitile-260-grid .fitile-260-card,
+  .catalog-sheet .catalog-page .fitile-260-grid .fitile-260-card:nth-child(n) {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+  .catalog-sheet .catalog-page .fitile-260-grid .fitile-260-card .product-photo.has-image {
+    display: block !important;
+    flex: 0 0 auto !important;
+    width: calc(100% - 16px) !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    margin: 8px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+  .catalog-sheet .catalog-page .fitile-260-grid .fitile-260-card .product-photo.has-image img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+  .catalog-sheet .catalog-page .fitile-260-grid .fitile-260-card .product-name {
+    display: block !important;
+    flex: 0 0 auto !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 8px 5px 12px !important;
+    color: var(--silver) !important;
+    background: transparent !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    line-height: 1.45 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    overflow-wrap: anywhere !important;
+  }
+  body.light-mode .catalog-sheet .catalog-page .fitile-260-grid .fitile-260-card .product-name { color: #403930 !important; }
 </style>
 </head>
 <body>
