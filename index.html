@@ -942,7 +942,11 @@
   .product-link:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
   .fitile-260-card { width: 100%; font: inherit; text-align: inherit; cursor: pointer; }
   .fitile-260-card .product-photo { background: rgba(255,255,255,.04); }
-  .fitile-260-card .product-name { min-height: 2.4em; }
+  .fitile-260-grid .fitile-260-card { height: auto !important; min-height: 0; padding: 0; color: var(--silver); }
+  .fitile-260-grid .fitile-260-card .product-photo.has-image { flex: 0 0 auto; width: calc(100% - 16px); aspect-ratio: 1 / 1; margin: 8px; box-sizing: border-box; }
+  .fitile-260-grid .fitile-260-card .product-photo.has-image img { width: 100%; height: 100%; object-fit: contain; object-position: center; }
+  .fitile-260-grid .fitile-260-card .product-name { display: block !important; flex: 0 0 auto !important; width: 100%; box-sizing: border-box; min-height: 0; margin: 0; padding: 8px 5px 12px; color: var(--silver); background: transparent; font-size: 12px; font-weight: 800; line-height: 1.45; text-align: center; white-space: normal; overflow-wrap: anywhere; }
+  body.light-mode .fitile-260-grid .fitile-260-card .product-name { color: #403930; }
   body.fitile-lightbox-open { overflow: hidden; }
   .fitile-lightbox { display: none; position: fixed; inset: 0; z-index: 1000; align-items: center; justify-content: center; padding: 24px; background: rgba(4,5,7,.88); }
   .fitile-lightbox.is-open { display: flex; }
