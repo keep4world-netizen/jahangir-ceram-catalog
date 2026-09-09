@@ -1907,6 +1907,25 @@
     overflow-wrap: anywhere !important;
   }
   body.light-mode .catalog-sheet .catalog-page .fitile-260-grid .fitile-260-card .product-name { color: #403930 !important; }
+  /* Fitileh page 30: four equal cards per row without changing other galleries. */
+  .catalog-sheet .catalog-page .fitile-260-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-template-rows: none !important;
+    grid-auto-rows: 1fr !important;
+    align-items: stretch !important;
+  }
+  .catalog-sheet .catalog-page .fitile-260-grid .fitile-260-card {
+    width: 100% !important;
+    min-height: 0 !important;
+    height: 100% !important;
+  }
+  .catalog-sheet .catalog-page .fitile-260-grid .fitile-260-card .product-photo.has-image {
+    width: calc(100% - 16px) !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+  @media (max-width: 600px) {
+    .catalog-sheet .catalog-page .fitile-260-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  }
 </style>
 </head>
 <body>
@@ -2116,9 +2135,10 @@
   function renderFitile260Gallery() {
     return '<div class="product-grid fitile-260-grid" aria-label="Fitile 2-60 Products">' +
       FITILE_2_60_ITEMS.map(function (item, index) {
-        return '<button class="product-card product-link fitile-260-card" type="button" data-fitile-index="' + index + '" aria-label="View ' + item.name + '">' +
-          '<div class="product-photo has-image" role="img" aria-label="' + item.name + '"><img src="' + item.thumb + '" data-full-src="' + item.src + '" alt="' + item.name + ' 2×60" width="400" height="400" loading="lazy" decoding="async"></div>' +
-          '<div class="product-name">' + item.name + '</div>' +
+        var displayName = item.type === "silver" ? item.name : item.name + " Gold";
+        return '<button class="product-card product-link fitile-260-card" type="button" data-fitile-index="' + index + '" aria-label="View ' + displayName + '">' +
+          '<div class="product-photo has-image" role="img" aria-label="' + displayName + '"><img src="' + item.thumb + '" data-full-src="' + item.src + '" alt="' + displayName + ' 2×60" width="400" height="400" loading="lazy" decoding="async"></div>' +
+          '<div class="product-name">' + displayName + '</div>' +
         '</button>';
       }).join("") +
     '</div>';
@@ -3310,6 +3330,7 @@
       else if (isSialkPage34Product) productName = SIALK_PAGE34_PRODUCTS[productIndex] || "";
       else if (isJahangir60120Product) productName = MATTE_60120_PRODUCTS[productIndex] || "";
       else productName = MATTE_PRODUCTS[productIndex] || "";
+      if (isFitile260Product && FITILE_2_60_ITEMS[productIndex] && FITILE_2_60_ITEMS[productIndex].type !== "silver") productName += " Gold";
       var localizedProductName = (isFitile260Product || isJahangirNano80Product || isSialkProduct || isSialkPage25Product || isSialkPage30Product || isSialkPage34Product || isJahangir60120Product) ? productName : localizeName(productName);
       var label = (isJahangirNano80Product ? ("View " + localizedProductName + " 80×80 product page") : (isJahangir60120Product ? ("View " + localizedProductName + " 60×120 product page") : (isSialkProduct ? ("View " + localizedProductName + " 80×80 product page") : tr("viewProduct").replace("{name}", localizedProductName).replace("80×80", "\u200e80×80\u200e"))));
       link.setAttribute("aria-label", label);
