@@ -1931,6 +1931,11 @@
   .catalog-sheet .catalog-page .fitile-460-grid .fitile-460-card .product-photo.has-image { flex: 0 0 auto !important; width: calc(100% - 16px) !important; aspect-ratio: 1 / 1 !important; margin: 8px !important; }
   .catalog-sheet .catalog-page .fitile-460-grid .fitile-460-card .product-name { display: block !important; flex: 0 0 auto !important; width: 100% !important; min-height: 0 !important; padding: 8px 5px 12px !important; font-size: 12px !important; font-weight: 800 !important; text-align: center !important; overflow-wrap: anywhere !important; }
   @media (max-width: 600px) { .catalog-sheet .catalog-page .fitile-460-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }
+  .catalog-sheet .catalog-page .takgol-3060-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; grid-template-rows: none !important; grid-auto-rows: 1fr !important; align-items: stretch !important; }
+  .catalog-sheet .catalog-page .takgol-3060-grid .takgol-3060-card { width: 100% !important; height: 100% !important; min-height: 0 !important; display: flex !important; flex-direction: column !important; overflow: visible !important; padding: 0 !important; }
+  .catalog-sheet .catalog-page .takgol-3060-grid .takgol-3060-card .product-photo.has-image { flex: 0 0 auto !important; width: calc(100% - 16px) !important; aspect-ratio: 1 / 1 !important; margin: 8px !important; }
+  .catalog-sheet .catalog-page .takgol-3060-grid .takgol-3060-card .product-name { display: block !important; flex: 0 0 auto !important; width: 100% !important; min-height: 0 !important; padding: 8px 5px 12px !important; font-size: 12px !important; font-weight: 800 !important; text-align: center !important; overflow-wrap: anywhere !important; }
+  @media (max-width: 600px) { .catalog-sheet .catalog-page .takgol-3060-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }
 </style>
 </head>
 <body>
@@ -2164,6 +2169,28 @@
     return items;
   }, []);
 
+  var TAKGOL_30_60_ITEMS = [
+    ["Delux", "Delux.webp", "Delux Silver.webp"],
+    ["Diana", "Diana.webp", "Diana Silver.webp"],
+    ["Karako", "Karako.webp", "Karako Silver.webp"],
+    ["Lara", "Lara.webp", "Lara Silver.webp"],
+    ["Linda", "Linda.webp", "Linda Silver.webp"],
+    ["Maria", "Maria.webp", "Maria Silver.webp"],
+    ["Milo", "Milo.webp", "Milo Silver.webp"],
+    ["Niloofarr", "Niloofarr.webp", "Niloofarr Silver.webp"],
+    ["Pika", "Pika.webp", "Pika Silver.webp"],
+    ["Roya", "Roya.webp", "Roya Silver.webp"],
+    ["Sepanda", "Sepanda.webp", "Sepanda Silver.webp"],
+    ["Shailin", "Shailin.webp", "Shailin Silver.webp"],
+    ["Shaniz", "Shaniz.webp", "Shaniz Silver.webp"],
+    ["Teylor", "Teylor.webp", "Teylor Silver.webp"],
+    ["Tino", "Tino.webp", "Tino Silver.webp"],
+  ].reduce(function (items, item) {
+    items.push({ name: item[0], type: "product", src: "assets/images/" + item[1], thumb: "assets/images/page32-thumbs/" + item[1] });
+    if (item[2]) items.push({ name: item[0] + " Silver", type: "silver", src: "assets/images/" + item[2], thumb: "assets/images/page32-thumbs/" + item[2] });
+    return items;
+  }, []);
+
   // Matic Light had a NO IMAGE AVAILABLE placeholder; use a valid light product photo fallback.
   MATTE_IMAGES[3] = MATTE_IMAGES[1];
 
@@ -2231,6 +2258,32 @@
     if (lightbox) lightbox.classList.remove("is-open", "is-loading");
     document.body.classList.remove("fitile-lightbox-open");
   }
+
+  function renderTakgol3060Gallery() {
+    return '<div class="product-grid takgol-3060-grid" aria-label="Takgol 30-60 Products">' + TAKGOL_30_60_ITEMS.map(function (item, index) {
+      var displayName = item.type === "silver" ? item.name : item.name + " Gold";
+      return '<button class="product-card product-link takgol-3060-card" type="button" data-takgol3060-index="' + index + '" aria-label="View ' + displayName + '">' +
+        '<div class="product-photo has-image" role="img" aria-label="' + displayName + '"><img src="' + item.thumb + '" alt="' + displayName + ' 30×60" width="400" height="400" loading="lazy" decoding="async"></div>' +
+        '<div class="product-name">' + displayName + '</div></button>';
+    }).join("") + '</div>';
+  }
+  var takgol3060LightboxIndex = 0;
+  function getTakgol3060Lightbox() {
+    var lightbox = document.getElementById("takgol-3060-lightbox"); if (lightbox) return lightbox;
+    lightbox = document.createElement("div"); lightbox.id = "takgol-3060-lightbox"; lightbox.className = "fitile-lightbox"; lightbox.setAttribute("role", "dialog"); lightbox.setAttribute("aria-modal", "true");
+    lightbox.innerHTML = '<button class="fitile-lightbox-close" type="button" aria-label="Close">×</button><button class="fitile-lightbox-prev" type="button" aria-label="Previous image">‹</button><figure class="fitile-lightbox-figure"><span class="fitile-lightbox-spinner" aria-label="Loading" role="status"></span><img class="fitile-lightbox-image" alt=""><figcaption class="fitile-lightbox-caption"></figcaption></figure><button class="fitile-lightbox-next" type="button" aria-label="Next image">›</button>';
+    document.body.appendChild(lightbox);
+    lightbox.addEventListener("click", function(e){ if(e.target===lightbox) closeTakgol3060Lightbox(); });
+    lightbox.querySelector(".fitile-lightbox-close").addEventListener("click", closeTakgol3060Lightbox);
+    lightbox.querySelector(".fitile-lightbox-prev").addEventListener("click", function(){ showTakgol3060Lightbox(takgol3060LightboxIndex-1); });
+    lightbox.querySelector(".fitile-lightbox-next").addEventListener("click", function(){ showTakgol3060Lightbox(takgol3060LightboxIndex+1); });
+    return lightbox;
+  }
+  function showTakgol3060Lightbox(index) {
+    var lightbox=getTakgol3060Lightbox(); takgol3060LightboxIndex=(index+TAKGOL_30_60_ITEMS.length)%TAKGOL_30_60_ITEMS.length; var item=TAKGOL_30_60_ITEMS[takgol3060LightboxIndex]; var image=lightbox.querySelector(".fitile-lightbox-image"); var requestId=(lightbox._loadId||0)+1; lightbox._loadId=requestId;
+    lightbox.classList.add("is-loading","is-open"); image.onload=function(){if(lightbox._loadId===requestId)lightbox.classList.remove("is-loading");}; image.onerror=function(){if(lightbox._loadId===requestId)lightbox.classList.remove("is-loading");}; image.removeAttribute("src"); image.alt=item.name+" 30×60"; lightbox.querySelector(".fitile-lightbox-caption").textContent=item.name; document.body.classList.add("fitile-lightbox-open"); image.src=item.src; lightbox.querySelector(".fitile-lightbox-close").focus();
+  }
+  function closeTakgol3060Lightbox(){var lightbox=document.getElementById("takgol-3060-lightbox");if(lightbox)lightbox.classList.remove("is-open","is-loading");document.body.classList.remove("fitile-lightbox-open");}
 
   var fitile260LightboxIndex = 0;
   function getFitile260Lightbox() {
@@ -2909,6 +2962,7 @@
     SIALK_PAGE34_PRODUCTS.forEach(function (_name, index) { ensureSialkPage34ProductPage(index, backKey); });
   }
   function renderCatalogGallery(pageKey) {
+    if (pageKey === ("jahangir-Decorative-Takgol-30" + String.fromCharCode(0xD7) + "60")) return renderTakgol3060Gallery();
     if (pageKey === ("jahangir-Decorative-Fitileh-4" + String.fromCharCode(0xD7) + "60")) return renderFitile460Gallery();
     if (pageKey === ("jahangir-Decorative-Fitileh-2" + String.fromCharCode(0xD7) + "60")) return renderFitile260Gallery();
     if (pageKey === ("jahangir-Porcelain-Ceramic-Nano-Polish-80" + String.fromCharCode(0xD7) + "80")) return renderJahangirNano80Gallery();
@@ -2955,7 +3009,9 @@
       page.querySelectorAll(".product-link").forEach(function (link) {
         link.addEventListener("click", function (event) {
           event.preventDefault();
-        if (link.dataset.fitile460Index !== undefined) {
+        if (link.dataset.takgol3060Index !== undefined) {
+          showTakgol3060Lightbox(Number(link.dataset.takgol3060Index));
+        } else if (link.dataset.fitile460Index !== undefined) {
           showFitile460Lightbox(Number(link.dataset.fitile460Index));
         } else if (link.dataset.fitileIndex !== undefined) {
           showFitile260Lightbox(Number(link.dataset.fitileIndex));
@@ -3054,7 +3110,7 @@
           showCatalogPage(name, {
             key: category.id + "-" + pathKey(currentPath),
             path: fullPath.join(" / "),
-            productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
+            productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Takgol / 30" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
             backKey: "category-" + category.id
           });
         };
@@ -3111,7 +3167,7 @@
         var pageOptions = {
           key: category.id + "-" + pathKey(currentPath),
           path: [category.name].concat(currentPath).join(" / "),
-          productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
+          productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Takgol / 30" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
           backKey: "category-" + category.id,
           initial: true
         };
@@ -3423,15 +3479,27 @@
     sheet.querySelectorAll(".product-link").forEach(function (link) {
       var isFitile260Product = link.dataset.fitileIndex !== undefined;
       var isFitile460Product = link.dataset.fitile460Index !== undefined;
+      var isTakgol3060Product = link.dataset.takgol3060Index !== undefined;
       var isSialkProduct = link.dataset.sialkProductIndex !== undefined;
       var isSialkPage25Product = link.dataset.sialkPage25Index !== undefined;
       var isSialkPage30Product = link.dataset.sialkPage30Index !== undefined;
       var isSialkPage34Product = link.dataset.sialkPage34Index !== undefined;
       var isJahangir60120Product = link.dataset.jahangir60120Index !== undefined;
       var isJahangirNano80Product = link.dataset.jahangirNano80Index !== undefined;
-      var productIndex = Number(isFitile460Product ? link.dataset.fitile460Index : (isFitile260Product ? link.dataset.fitileIndex : (isJahangirNano80Product ? link.dataset.jahangirNano80Index : (isSialkProduct ? link.dataset.sialkProductIndex : (isSialkPage25Product ? link.dataset.sialkPage25Index : (isSialkPage30Product ? link.dataset.sialkPage30Index : (isSialkPage34Product ? link.dataset.sialkPage34Index : (isJahangir60120Product ? link.dataset.jahangir60120Index : link.dataset.productIndex))))))));
+      var productIndex;
+      if (isTakgol3060Product) productIndex = Number(link.dataset.takgol3060Index);
+      else if (isFitile460Product) productIndex = Number(link.dataset.fitile460Index);
+      else if (isFitile260Product) productIndex = Number(link.dataset.fitileIndex);
+      else if (isJahangirNano80Product) productIndex = Number(link.dataset.jahangirNano80Index);
+      else if (isSialkProduct) productIndex = Number(link.dataset.sialkProductIndex);
+      else if (isSialkPage25Product) productIndex = Number(link.dataset.sialkPage25Index);
+      else if (isSialkPage30Product) productIndex = Number(link.dataset.sialkPage30Index);
+      else if (isSialkPage34Product) productIndex = Number(link.dataset.sialkPage34Index);
+      else if (isJahangir60120Product) productIndex = Number(link.dataset.jahangir60120Index);
+      else productIndex = Number(link.dataset.productIndex);
       var productName;
-      if (isFitile460Product) productName = FITILE_4_60_ITEMS[productIndex] ? FITILE_4_60_ITEMS[productIndex].name : "";
+      if (isTakgol3060Product) productName = TAKGOL_30_60_ITEMS[productIndex] ? TAKGOL_30_60_ITEMS[productIndex].name : "";
+      else if (isFitile460Product) productName = FITILE_4_60_ITEMS[productIndex] ? FITILE_4_60_ITEMS[productIndex].name : "";
       else if (isFitile260Product) productName = FITILE_2_60_ITEMS[productIndex] ? FITILE_2_60_ITEMS[productIndex].name : "";
       else if (isJahangirNano80Product) productName = JAHANGIR_NANO_80_PRODUCTS[productIndex] || "";
       else if (isSialkProduct) productName = SIALK_PAGE19_PRODUCTS[productIndex] || "";
@@ -3441,8 +3509,9 @@
       else if (isJahangir60120Product) productName = MATTE_60120_PRODUCTS[productIndex] || "";
       else productName = MATTE_PRODUCTS[productIndex] || "";
       if (isFitile260Product && FITILE_2_60_ITEMS[productIndex] && FITILE_2_60_ITEMS[productIndex].type !== "silver") productName += " Gold";
+      if (isTakgol3060Product && TAKGOL_30_60_ITEMS[productIndex] && TAKGOL_30_60_ITEMS[productIndex].type !== "silver") productName += " Gold";
       if (isFitile460Product && FITILE_4_60_ITEMS[productIndex] && FITILE_4_60_ITEMS[productIndex].type !== "silver") productName += " Gold";
-      var localizedProductName = (isFitile260Product || isFitile460Product || isJahangirNano80Product || isSialkProduct || isSialkPage25Product || isSialkPage30Product || isSialkPage34Product || isJahangir60120Product) ? productName : localizeName(productName);
+      var localizedProductName = (isFitile260Product || isFitile460Product || isTakgol3060Product || isJahangirNano80Product || isSialkProduct || isSialkPage25Product || isSialkPage30Product || isSialkPage34Product || isJahangir60120Product) ? productName : localizeName(productName);
       var label = (isJahangirNano80Product ? ("View " + localizedProductName + " 80×80 product page") : (isJahangir60120Product ? ("View " + localizedProductName + " 60×120 product page") : (isSialkProduct ? ("View " + localizedProductName + " 80×80 product page") : tr("viewProduct").replace("{name}", localizedProductName).replace("80×80", "\u200e80×80\u200e"))));
       link.setAttribute("aria-label", label);
       var productNameNode = link.querySelector(".product-name");
