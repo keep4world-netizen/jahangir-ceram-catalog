@@ -2056,8 +2056,8 @@
     ["Vista 2", "Vista 2.webp", "Vista 2 Silver.webp"],
     ["Vista", "Vista.webp", "Vista Silver.webp"]
   ].reduce(function (items, item) {
-    items.push({ name: item[0], type: "product", src: "assets/images/fitile-2-60/" + item[1] });
-    if (item[2]) items.push({ name: item[0] + " Silver", type: "silver", src: "assets/images/fitile-2-60/" + item[2] });
+    items.push({ name: item[0], type: "product", src: "assets/images/" + item[1] });
+    if (item[2]) items.push({ name: item[0] + " Silver", type: "silver", src: "assets/images/" + item[2] });
     return items;
   }, []);
   // Matic Light had a NO IMAGE AVAILABLE placeholder; use a valid light product photo fallback.
