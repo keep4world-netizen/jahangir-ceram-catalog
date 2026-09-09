@@ -1926,6 +1926,11 @@
   @media (max-width: 600px) {
     .catalog-sheet .catalog-page .fitile-260-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   }
+  .catalog-sheet .catalog-page .fitile-460-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; grid-template-rows: none !important; grid-auto-rows: 1fr !important; align-items: stretch !important; }
+  .catalog-sheet .catalog-page .fitile-460-grid .fitile-460-card { width: 100% !important; height: 100% !important; min-height: 0 !important; display: flex !important; flex-direction: column !important; overflow: visible !important; padding: 0 !important; }
+  .catalog-sheet .catalog-page .fitile-460-grid .fitile-460-card .product-photo.has-image { flex: 0 0 auto !important; width: calc(100% - 16px) !important; aspect-ratio: 1 / 1 !important; margin: 8px !important; }
+  .catalog-sheet .catalog-page .fitile-460-grid .fitile-460-card .product-name { display: block !important; flex: 0 0 auto !important; width: 100% !important; min-height: 0 !important; padding: 8px 5px 12px !important; font-size: 12px !important; font-weight: 800 !important; text-align: center !important; overflow-wrap: anywhere !important; }
+  @media (max-width: 600px) { .catalog-sheet .catalog-page .fitile-460-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }
 </style>
 </head>
 <body>
@@ -2129,6 +2134,36 @@
     if (item[2]) items.push({ name: item[0] + " Silver", type: "silver", src: "assets/images/" + item[2], thumb: "assets/images/fitile-thumbs/" + item[2] });
     return items;
   }, []);
+  var FITILE_4_60_ITEMS = [
+    ["Afia", "Afia.webp", "Afia Silver.webp"],
+    ["Arka", "Arka.webp", "Arka Silver.webp"],
+    ["Arvest", "Arvest.webp", "Arvest Silver.webp"],
+    ["CEMENTA", "CEMENTA.webp", "CEMENTA Silver.webp"],
+    ["Dena", "Dena.webp", "Dena Silver.webp"],
+    ["Dorsa", "Dorsa.webp", "Dorsa Silver.webp"],
+    ["Gama", "Gama.webp", "Gama Silver.webp"],
+    ["Golsa", "Golsa.webp", "Golsa Silver.webp"],
+    ["Karen", "Karen.webp", "Karen Silver.webp"],
+    ["Karino", "Karino.webp", "Karino Silver.webp"],
+    ["Katrina", "Katrina.webp", "Katrina Silver.webp"],
+    ["Mana", "Mana.webp", "Mana Silver.webp"],
+    ["Melisa", "Melisa.webp", "Melisa Silver.webp"],
+    ["Oktav", "Oktav.webp", "Oktav Silver.webp"],
+    ["Opal", "Opal.webp", "Opal Silver.webp"],
+    ["Roja", "Roja.webp", "Roja Silver.webp"],
+    ["Romika", "Romika.webp", "Romika Silver.webp"],
+    ["SARINA", "SARINA.webp", "SARINA Silver.webp"],
+    ["SHAZEM", "SHAZEM.webp", "SHAZEM Silver.webp"],
+    ["Sadia", "Sadia.webp", "Sadia Silver.webp"],
+    ["Salma", "Salma.webp", "Salma Silver.webp"],
+    ["Saren", "Saren.webp", "Saren Silver.webp"],
+    ["Versace", "Versace.webp", "Versace Silver.webp"]
+  ].reduce(function (items, item) {
+    items.push({ name: item[0], type: "product", src: "assets/images/" + item[1], thumb: "assets/images/page31-thumbs/" + item[1] });
+    if (item[2]) items.push({ name: item[0] + " Silver", type: "silver", src: "assets/images/" + item[2], thumb: "assets/images/page31-thumbs/" + item[2] });
+    return items;
+  }, []);
+
   // Matic Light had a NO IMAGE AVAILABLE placeholder; use a valid light product photo fallback.
   MATTE_IMAGES[3] = MATTE_IMAGES[1];
 
@@ -2142,6 +2177,59 @@
         '</button>';
       }).join("") +
     '</div>';
+  }
+
+  function renderFitile460Gallery() {
+    return '<div class="product-grid fitile-460-grid" aria-label="Fitile 4-60 Products">' +
+      FITILE_4_60_ITEMS.map(function (item, index) {
+        var displayName = item.type === "silver" ? item.name : item.name + " Gold";
+        return '<button class="product-card product-link fitile-460-card" type="button" data-fitile460-index="' + index + '" aria-label="View ' + displayName + '">' +
+          '<div class="product-photo has-image" role="img" aria-label="' + displayName + '"><img src="' + item.thumb + '" alt="' + displayName + ' 4×60" width="400" height="400" loading="lazy" decoding="async"></div>' +
+          '<div class="product-name">' + displayName + '</div>' +
+        '</button>';
+      }).join("") +
+    '</div>';
+  }
+
+  var fitile460LightboxIndex = 0;
+  function getFitile460Lightbox() {
+    var lightbox = document.getElementById("fitile-460-lightbox");
+    if (lightbox) return lightbox;
+    lightbox = document.createElement("div");
+    lightbox.id = "fitile-460-lightbox";
+    lightbox.className = "fitile-lightbox";
+    lightbox.setAttribute("role", "dialog");
+    lightbox.setAttribute("aria-modal", "true");
+    lightbox.setAttribute("aria-label", "Product image viewer");
+    lightbox.innerHTML = '<button class="fitile-lightbox-close" type="button" aria-label="Close">×</button><button class="fitile-lightbox-prev" type="button" aria-label="Previous image">‹</button><figure class="fitile-lightbox-figure"><span class="fitile-lightbox-spinner" aria-label="Loading" role="status"></span><img class="fitile-lightbox-image" alt=""><figcaption class="fitile-lightbox-caption"></figcaption></figure><button class="fitile-lightbox-next" type="button" aria-label="Next image">›</button>';
+    document.body.appendChild(lightbox);
+    lightbox.addEventListener("click", function (event) { if (event.target === lightbox) closeFitile460Lightbox(); });
+    lightbox.querySelector(".fitile-lightbox-close").addEventListener("click", closeFitile460Lightbox);
+    lightbox.querySelector(".fitile-lightbox-prev").addEventListener("click", function () { showFitile460Lightbox(fitile460LightboxIndex - 1); });
+    lightbox.querySelector(".fitile-lightbox-next").addEventListener("click", function () { showFitile460Lightbox(fitile460LightboxIndex + 1); });
+    return lightbox;
+  }
+  function showFitile460Lightbox(index) {
+    var lightbox = getFitile460Lightbox();
+    fitile460LightboxIndex = (index + FITILE_4_60_ITEMS.length) % FITILE_4_60_ITEMS.length;
+    var item = FITILE_4_60_ITEMS[fitile460LightboxIndex];
+    var image = lightbox.querySelector(".fitile-lightbox-image");
+    var requestId = (lightbox._fitileLoadId || 0) + 1;
+    lightbox._fitileLoadId = requestId;
+    lightbox.classList.add("is-loading", "is-open");
+    image.onload = function () { if (lightbox._fitileLoadId === requestId) lightbox.classList.remove("is-loading"); };
+    image.onerror = function () { if (lightbox._fitileLoadId === requestId) lightbox.classList.remove("is-loading"); };
+    image.removeAttribute("src");
+    image.alt = item.name + " 4×60";
+    lightbox.querySelector(".fitile-lightbox-caption").textContent = item.name;
+    document.body.classList.add("fitile-lightbox-open");
+    image.src = item.src;
+    lightbox.querySelector(".fitile-lightbox-close").focus();
+  }
+  function closeFitile460Lightbox() {
+    var lightbox = document.getElementById("fitile-460-lightbox");
+    if (lightbox) lightbox.classList.remove("is-open", "is-loading");
+    document.body.classList.remove("fitile-lightbox-open");
   }
 
   var fitile260LightboxIndex = 0;
@@ -2193,10 +2281,17 @@
   }
   document.addEventListener("keydown", function (event) {
     var lightbox = document.getElementById("fitile-260-lightbox");
-    if (!lightbox || !lightbox.classList.contains("is-open")) return;
-    if (event.key === "Escape") closeFitile260Lightbox();
-    if (event.key === "ArrowLeft") showFitile260Lightbox(fitile260LightboxIndex - 1);
-    if (event.key === "ArrowRight") showFitile260Lightbox(fitile260LightboxIndex + 1);
+    if (lightbox && lightbox.classList.contains("is-open")) {
+      if (event.key === "Escape") closeFitile260Lightbox();
+      if (event.key === "ArrowLeft") showFitile260Lightbox(fitile260LightboxIndex - 1);
+      if (event.key === "ArrowRight") showFitile260Lightbox(fitile260LightboxIndex + 1);
+      return;
+    }
+    var lightbox460 = document.getElementById("fitile-460-lightbox");
+    if (!lightbox460 || !lightbox460.classList.contains("is-open")) return;
+    if (event.key === "Escape") closeFitile460Lightbox();
+    if (event.key === "ArrowLeft") showFitile460Lightbox(fitile460LightboxIndex - 1);
+    if (event.key === "ArrowRight") showFitile460Lightbox(fitile460LightboxIndex + 1);
   });
 
   function renderJahangir60120Gallery(backKey) {
@@ -2813,6 +2908,18 @@
   function precreateSialkPage34ProductPages(backKey) {
     SIALK_PAGE34_PRODUCTS.forEach(function (_name, index) { ensureSialkPage34ProductPage(index, backKey); });
   }
+  function renderCatalogGallery(pageKey) {
+    if (pageKey === ("jahangir-Decorative-Fitileh-4" + String.fromCharCode(0xD7) + "60")) return renderFitile460Gallery();
+    if (pageKey === ("jahangir-Decorative-Fitileh-2" + String.fromCharCode(0xD7) + "60")) return renderFitile260Gallery();
+    if (pageKey === ("jahangir-Porcelain-Ceramic-Nano-Polish-80" + String.fromCharCode(0xD7) + "80")) return renderJahangirNano80Gallery();
+    if (pageKey === ("jahangir-Porcelain-Ceramic-Matte-60" + String.fromCharCode(0xD7) + "120")) return renderJahangir60120Gallery(pageKey);
+    if (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-60" + String.fromCharCode(0xD7) + "120")) return renderSialkPage19Gallery();
+    if (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-80" + String.fromCharCode(0xD7) + "80")) return renderSialkPage25Gallery();
+    if (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-100" + String.fromCharCode(0xD7) + "100")) return renderSialkPage30Gallery();
+    if (pageKey === ("sialk-Porcelain-Ceramic-Crystal-Polish-100" + String.fromCharCode(0xD7) + "100")) return renderSialkPage34Gallery();
+    return renderProductGallery(pageKey);
+  }
+
   function showCatalogPage(size, options) {
     options = options || {};
     var pages = document.getElementById("catalog-pages");
@@ -2841,15 +2948,16 @@
       '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
       '<h2 class="catalog-heading">' + catalogHeadingLabel(size, options.path || "") + '</h2>' +
       '<p class="catalog-breadcrumb">' + catalogBreadcrumbLabel(options.path || "") + '</p>' +
-      (options.productGallery
-                  ? (pageKey === ("jahangir-Decorative-Fitileh-2" + String.fromCharCode(0xD7) + "60") ? renderFitile260Gallery() : (pageKey === ("jahangir-Porcelain-Ceramic-Nano-Polish-80" + String.fromCharCode(0xD7) + "80") ? renderJahangirNano80Gallery() : (pageKey === ("jahangir-Porcelain-Ceramic-Matte-60" + String.fromCharCode(0xD7) + "120") ? renderJahangir60120Gallery(pageKey) : (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-60" + String.fromCharCode(0xD7) + "120") ? renderSialkPage19Gallery() : (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-80" + String.fromCharCode(0xD7) + "80") ? renderSialkPage25Gallery() : (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-100" + String.fromCharCode(0xD7) + "100") ? renderSialkPage30Gallery() : (pageKey === ("sialk-Porcelain-Ceramic-Crystal-Polish-100" + String.fromCharCode(0xD7) + "100") ? renderSialkPage34Gallery() : renderProductGallery(pageKey))))))))
+      (options.productGallery ? renderCatalogGallery(pageKey)
         : '<div class="coming-soon-message" data-placeholder="coming-soon">Coming Soon</div>') +
       '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
     setupGalleryImageLoaders(page);
       page.querySelectorAll(".product-link").forEach(function (link) {
         link.addEventListener("click", function (event) {
           event.preventDefault();
-        if (link.dataset.fitileIndex !== undefined) {
+        if (link.dataset.fitile460Index !== undefined) {
+          showFitile460Lightbox(Number(link.dataset.fitile460Index));
+        } else if (link.dataset.fitileIndex !== undefined) {
           showFitile260Lightbox(Number(link.dataset.fitileIndex));
         } else if (link.dataset.jahangirNano80Index !== undefined) {
           showJahangirNano80ProductPage(Number(link.dataset.jahangirNano80Index), backTargetKey || pageKey);
@@ -2946,7 +3054,7 @@
           showCatalogPage(name, {
             key: category.id + "-" + pathKey(currentPath),
             path: fullPath.join(" / "),
-            productGallery: (category.id === "jahangir" && currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60")) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
+            productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
             backKey: "category-" + category.id
           });
         };
@@ -3003,7 +3111,7 @@
         var pageOptions = {
           key: category.id + "-" + pathKey(currentPath),
           path: [category.name].concat(currentPath).join(" / "),
-          productGallery: (category.id === "jahangir" && currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60")) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
+          productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
           backKey: "category-" + category.id,
           initial: true
         };
@@ -3314,15 +3422,17 @@
     });
     sheet.querySelectorAll(".product-link").forEach(function (link) {
       var isFitile260Product = link.dataset.fitileIndex !== undefined;
+      var isFitile460Product = link.dataset.fitile460Index !== undefined;
       var isSialkProduct = link.dataset.sialkProductIndex !== undefined;
       var isSialkPage25Product = link.dataset.sialkPage25Index !== undefined;
       var isSialkPage30Product = link.dataset.sialkPage30Index !== undefined;
       var isSialkPage34Product = link.dataset.sialkPage34Index !== undefined;
       var isJahangir60120Product = link.dataset.jahangir60120Index !== undefined;
       var isJahangirNano80Product = link.dataset.jahangirNano80Index !== undefined;
-      var productIndex = Number(isFitile260Product ? link.dataset.fitileIndex : (isJahangirNano80Product ? link.dataset.jahangirNano80Index : (isSialkProduct ? link.dataset.sialkProductIndex : (isSialkPage25Product ? link.dataset.sialkPage25Index : (isSialkPage30Product ? link.dataset.sialkPage30Index : (isSialkPage34Product ? link.dataset.sialkPage34Index : (isJahangir60120Product ? link.dataset.jahangir60120Index : link.dataset.productIndex)))))));
+      var productIndex = Number(isFitile460Product ? link.dataset.fitile460Index : (isFitile260Product ? link.dataset.fitileIndex : (isJahangirNano80Product ? link.dataset.jahangirNano80Index : (isSialkProduct ? link.dataset.sialkProductIndex : (isSialkPage25Product ? link.dataset.sialkPage25Index : (isSialkPage30Product ? link.dataset.sialkPage30Index : (isSialkPage34Product ? link.dataset.sialkPage34Index : (isJahangir60120Product ? link.dataset.jahangir60120Index : link.dataset.productIndex))))))));
       var productName;
-      if (isFitile260Product) productName = FITILE_2_60_ITEMS[productIndex] ? FITILE_2_60_ITEMS[productIndex].name : "";
+      if (isFitile460Product) productName = FITILE_4_60_ITEMS[productIndex] ? FITILE_4_60_ITEMS[productIndex].name : "";
+      else if (isFitile260Product) productName = FITILE_2_60_ITEMS[productIndex] ? FITILE_2_60_ITEMS[productIndex].name : "";
       else if (isJahangirNano80Product) productName = JAHANGIR_NANO_80_PRODUCTS[productIndex] || "";
       else if (isSialkProduct) productName = SIALK_PAGE19_PRODUCTS[productIndex] || "";
       else if (isSialkPage25Product) productName = SIALK_PAGE25_PRODUCTS[productIndex] || "";
@@ -3331,7 +3441,8 @@
       else if (isJahangir60120Product) productName = MATTE_60120_PRODUCTS[productIndex] || "";
       else productName = MATTE_PRODUCTS[productIndex] || "";
       if (isFitile260Product && FITILE_2_60_ITEMS[productIndex] && FITILE_2_60_ITEMS[productIndex].type !== "silver") productName += " Gold";
-      var localizedProductName = (isFitile260Product || isJahangirNano80Product || isSialkProduct || isSialkPage25Product || isSialkPage30Product || isSialkPage34Product || isJahangir60120Product) ? productName : localizeName(productName);
+      if (isFitile460Product && FITILE_4_60_ITEMS[productIndex] && FITILE_4_60_ITEMS[productIndex].type !== "silver") productName += " Gold";
+      var localizedProductName = (isFitile260Product || isFitile460Product || isJahangirNano80Product || isSialkProduct || isSialkPage25Product || isSialkPage30Product || isSialkPage34Product || isJahangir60120Product) ? productName : localizeName(productName);
       var label = (isJahangirNano80Product ? ("View " + localizedProductName + " 80×80 product page") : (isJahangir60120Product ? ("View " + localizedProductName + " 60×120 product page") : (isSialkProduct ? ("View " + localizedProductName + " 80×80 product page") : tr("viewProduct").replace("{name}", localizedProductName).replace("80×80", "\u200e80×80\u200e"))));
       link.setAttribute("aria-label", label);
       var productNameNode = link.querySelector(".product-name");
