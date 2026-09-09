@@ -3287,15 +3287,24 @@
       node.textContent = localizeName(node.dataset.entryOriginalName);
     });
     sheet.querySelectorAll(".product-link").forEach(function (link) {
+      var isFitile260Product = link.dataset.fitileIndex !== undefined;
       var isSialkProduct = link.dataset.sialkProductIndex !== undefined;
       var isSialkPage25Product = link.dataset.sialkPage25Index !== undefined;
       var isSialkPage30Product = link.dataset.sialkPage30Index !== undefined;
       var isSialkPage34Product = link.dataset.sialkPage34Index !== undefined;
       var isJahangir60120Product = link.dataset.jahangir60120Index !== undefined;
       var isJahangirNano80Product = link.dataset.jahangirNano80Index !== undefined;
-      var productIndex = Number(isJahangirNano80Product ? link.dataset.jahangirNano80Index : (isSialkProduct ? link.dataset.sialkProductIndex : (isSialkPage25Product ? link.dataset.sialkPage25Index : (isSialkPage30Product ? link.dataset.sialkPage30Index : (isSialkPage34Product ? link.dataset.sialkPage34Index : (isJahangir60120Product ? link.dataset.jahangir60120Index : link.dataset.productIndex))))));
-      var productName = isJahangirNano80Product ? (JAHANGIR_NANO_80_PRODUCTS[productIndex] || "") : (isSialkProduct ? (SIALK_PAGE19_PRODUCTS[productIndex] || "") : (isSialkPage25Product ? (SIALK_PAGE25_PRODUCTS[productIndex] || "") : (isSialkPage30Product ? (SIALK_PAGE30_PRODUCTS[productIndex] || "") : (isSialkPage34Product ? (SIALK_PAGE34_PRODUCTS[productIndex] || "") : (isJahangir60120Product ? (MATTE_60120_PRODUCTS[productIndex] || "") : (MATTE_PRODUCTS[productIndex] || ""))))));
-      var localizedProductName = (isJahangirNano80Product || isSialkProduct || isSialkPage25Product || isSialkPage30Product || isSialkPage34Product || isJahangir60120Product) ? productName : localizeName(productName);
+      var productIndex = Number(isFitile260Product ? link.dataset.fitileIndex : (isJahangirNano80Product ? link.dataset.jahangirNano80Index : (isSialkProduct ? link.dataset.sialkProductIndex : (isSialkPage25Product ? link.dataset.sialkPage25Index : (isSialkPage30Product ? link.dataset.sialkPage30Index : (isSialkPage34Product ? link.dataset.sialkPage34Index : (isJahangir60120Product ? link.dataset.jahangir60120Index : link.dataset.productIndex)))))));
+      var productName;
+      if (isFitile260Product) productName = FITILE_2_60_ITEMS[productIndex] ? FITILE_2_60_ITEMS[productIndex].name : "";
+      else if (isJahangirNano80Product) productName = JAHANGIR_NANO_80_PRODUCTS[productIndex] || "";
+      else if (isSialkProduct) productName = SIALK_PAGE19_PRODUCTS[productIndex] || "";
+      else if (isSialkPage25Product) productName = SIALK_PAGE25_PRODUCTS[productIndex] || "";
+      else if (isSialkPage30Product) productName = SIALK_PAGE30_PRODUCTS[productIndex] || "";
+      else if (isSialkPage34Product) productName = SIALK_PAGE34_PRODUCTS[productIndex] || "";
+      else if (isJahangir60120Product) productName = MATTE_60120_PRODUCTS[productIndex] || "";
+      else productName = MATTE_PRODUCTS[productIndex] || "";
+      var localizedProductName = (isFitile260Product || isJahangirNano80Product || isSialkProduct || isSialkPage25Product || isSialkPage30Product || isSialkPage34Product || isJahangir60120Product) ? productName : localizeName(productName);
       var label = (isJahangirNano80Product ? ("View " + localizedProductName + " 80×80 product page") : (isJahangir60120Product ? ("View " + localizedProductName + " 60×120 product page") : (isSialkProduct ? ("View " + localizedProductName + " 80×80 product page") : tr("viewProduct").replace("{name}", localizedProductName).replace("80×80", "\u200e80×80\u200e"))));
       link.setAttribute("aria-label", label);
       var productNameNode = link.querySelector(".product-name");
