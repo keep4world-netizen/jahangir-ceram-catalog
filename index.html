@@ -2107,8 +2107,8 @@
     ["Vista 2", "Vista 2.webp", "Vista 2 Silver.webp"],
     ["Vista", "Vista.webp", "Vista Silver.webp"]
   ].reduce(function (items, item) {
-    items.push({ name: item[0], type: "product", src: "assets/images/" + item[1] });
-    if (item[2]) items.push({ name: item[0] + " Silver", type: "silver", src: "assets/images/" + item[2] });
+    items.push({ name: item[0], type: "product", src: "assets/images/" + item[1], thumb: "assets/images/fitile-thumbs/" + item[1] });
+    if (item[2]) items.push({ name: item[0] + " Silver", type: "silver", src: "assets/images/" + item[2], thumb: "assets/images/fitile-thumbs/" + item[2] });
     return items;
   }, []);
   // Matic Light had a NO IMAGE AVAILABLE placeholder; use a valid light product photo fallback.
@@ -2118,7 +2118,7 @@
     return '<div class="product-grid fitile-260-grid" aria-label="Fitile 2-60 Products">' +
       FITILE_2_60_ITEMS.map(function (item, index) {
         return '<button class="product-card product-link fitile-260-card" type="button" data-fitile-index="' + index + '" aria-label="View ' + item.name + '">' +
-          '<div class="product-photo has-image" role="img" aria-label="' + item.name + '"><img src="' + item.src + '" alt="' + item.name + ' 2×60" loading="lazy" decoding="async"></div>' +
+          '<div class="product-photo has-image" role="img" aria-label="' + item.name + '"><img src="' + item.thumb + '" data-full-src="' + item.src + '" alt="' + item.name + ' 2×60" width="400" height="400" loading="lazy" decoding="async"></div>' +
           '<div class="product-name">' + item.name + '</div>' +
         '</button>';
       }).join("") +
