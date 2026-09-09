@@ -950,8 +950,12 @@
   body.fitile-lightbox-open { overflow: hidden; }
   .fitile-lightbox { display: none; position: fixed; inset: 0; z-index: 1000; align-items: center; justify-content: center; padding: 24px; background: rgba(4,5,7,.88); }
   .fitile-lightbox.is-open { display: flex; }
-  .fitile-lightbox-figure { display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(86vw, 900px); max-height: 92vh; margin: 0; }
+  .fitile-lightbox-figure { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: min(86vw, 900px); min-height: 180px; max-height: 92vh; margin: 0; }
   .fitile-lightbox-image { display: block; width: auto; height: auto; max-width: 100%; max-height: 82vh; object-fit: contain; border-radius: 12px; box-shadow: 0 18px 55px rgba(0,0,0,.5); }
+  .fitile-lightbox.is-loading .fitile-lightbox-image { visibility: hidden; }
+  .fitile-lightbox-spinner { display: none; position: absolute; top: 50%; left: 50%; width: 42px; height: 42px; margin: -21px 0 0 -21px; border: 4px solid rgba(255,255,255,.25); border-top-color: var(--gold-soft); border-radius: 50%; animation: fitile-lightbox-spin .8s linear infinite; }
+  .fitile-lightbox.is-loading .fitile-lightbox-spinner { display: block; }
+  @keyframes fitile-lightbox-spin { to { transform: rotate(360deg); } }
   .fitile-lightbox-caption { color: #F2D48B; font-size: 16px; font-weight: 700; text-align: center; }
   .fitile-lightbox-close, .fitile-lightbox-prev, .fitile-lightbox-next { position: fixed; z-index: 1; display: grid; place-items: center; width: 46px; height: 46px; color: #FFF; background: rgba(34,31,27,.88); border: 1px solid rgba(242,212,139,.55); border-radius: 50%; font: 32px/1 Arial, sans-serif; cursor: pointer; }
   .fitile-lightbox-close { top: 22px; right: 22px; font-size: 30px; }
@@ -2138,7 +2142,7 @@
     lightbox.innerHTML =
       '<button class="fitile-lightbox-close" type="button" aria-label="Close">×</button>' +
       '<button class="fitile-lightbox-prev" type="button" aria-label="Previous image">‹</button>' +
-      '<figure class="fitile-lightbox-figure"><img class="fitile-lightbox-image" alt=""><figcaption class="fitile-lightbox-caption"></figcaption></figure>' +
+      '<figure class="fitile-lightbox-figure"><span class="fitile-lightbox-spinner" aria-label="Loading" role="status"></span><img class="fitile-lightbox-image" alt=""><figcaption class="fitile-lightbox-caption"></figcaption></figure>' +
       '<button class="fitile-lightbox-next" type="button" aria-label="Next image">›</button>';
     document.body.appendChild(lightbox);
     lightbox.addEventListener("click", function (event) {
@@ -2153,11 +2157,18 @@
     var lightbox = getFitile260Lightbox();
     fitile260LightboxIndex = (index + FITILE_2_60_ITEMS.length) % FITILE_2_60_ITEMS.length;
     var item = FITILE_2_60_ITEMS[fitile260LightboxIndex];
-    lightbox.querySelector(".fitile-lightbox-image").src = item.src;
-    lightbox.querySelector(".fitile-lightbox-image").alt = item.name + " 2×60";
+    var image = lightbox.querySelector(".fitile-lightbox-image");
+    var requestId = (lightbox._fitileLoadId || 0) + 1;
+    lightbox._fitileLoadId = requestId;
+    lightbox.classList.add("is-loading");
+    image.onload = function () { if (lightbox._fitileLoadId === requestId) lightbox.classList.remove("is-loading"); };
+    image.onerror = function () { if (lightbox._fitileLoadId === requestId) lightbox.classList.remove("is-loading"); };
+    image.removeAttribute("src");
+    image.alt = item.name + " 2×60";
     lightbox.querySelector(".fitile-lightbox-caption").textContent = item.name;
     lightbox.classList.add("is-open");
     document.body.classList.add("fitile-lightbox-open");
+    image.src = item.src;
     lightbox.querySelector(".fitile-lightbox-close").focus();
   }
   function closeFitile260Lightbox() {
