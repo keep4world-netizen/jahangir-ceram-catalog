@@ -2962,10 +2962,11 @@
     if (!page) {
       page = pageKey === "contact-us" ? createContactPage() : createAboutPage();
     }
-    history.pushState({ pageKey: pageKey }, "", "#" + pageKey);
-    // Scroll synchronously on the first click, then repeat after layout settles.
-    page.scrollIntoView({ behavior: "auto", block: "start" });
-    requestAnimationFrame(function () { page.scrollIntoView({ behavior: "auto", block: "start" }); });
+    history.pushState({ pageKey: pageKey }, "", location.pathname + location.search + "#" + pageKey);
+    window.scrollTo({ top: page.offsetTop, left: 0, behavior: "smooth" });
+    setTimeout(function () {
+      window.scrollTo({ top: page.offsetTop, left: 0, behavior: "auto" });
+    }, 300);
     return page;
   }
 
