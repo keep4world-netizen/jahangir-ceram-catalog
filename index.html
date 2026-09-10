@@ -2438,7 +2438,7 @@
       dir: "ltr",
       ui: {
         siteTitle: "Jahangir Ceram Catalogs", themeToggle: "Toggle color mode", languageSelect: "Select language",
-        contactUs: "Contact Us", aboutUs: "About Us", back: "Back", page: "Page", catalogs: "Catalogs",
+        contactUs: "Contact Us", aboutUs: "About Us", back: "Back", home: "Home", page: "Page", catalogs: "Catalogs",
         selectSubcategory: "Select a subcategory", contactText: "Free consultation on all platforms",
         aboutText: "Hello! My name is Abbas Jahangir. In 1997, I started my career in the tile and ceramic industry with a small shop in Kashan and a few tile samples. Four years later, I founded Jahangir Workshop with three people and entered the production of decorative pieces. Thanks to God and the support of our customers, today Jahangir Ceram is a large, fully equipped factory exporting its decorative products to countries across the region. We are here to save you the time and energy of unnecessary market searching and help you make the best possible choice with confidence. We are always happy to hear about your positive experiences. If you had a good shopping experience with us, we would appreciate it if you shared it with others.",
         productImageAlt: "{name} 80×80 product presentation", viewProduct: "View {name} 80×80 product page",
@@ -2450,7 +2450,7 @@
       dir: "rtl",
       ui: {
         siteTitle: "کاتالوگ‌های جهانگیر سرام", themeToggle: "تغییر حالت رنگی", languageSelect: "انتخاب زبان",
-        contactUs: "تماس با ما", aboutUs: "درباره ما", back: "بازگشت", page: "صفحه", catalogs: "کاتالوگ‌های",
+        contactUs: "تماس با ما", aboutUs: "درباره ما", back: "بازگشت", home: "صفحهٔ اصلی", page: "صفحه", catalogs: "کاتالوگ‌های",
         selectSubcategory: "یک زیرمجموعه را انتخاب کنید:", contactText: "مشاوره رایگان در تمامی پلتفرم ها",
         aboutText: "سلام! من عباس جهانگیر هستم. از سال ۱۳۷۶ با یک مغازه کوچک در کاشان و چند نمونه کاشی، مسیر کاریم رو در دنیای کاشی و سرامیک شروع کردم. چهار سال بعد، کارگاه جهانگیر رو با سه نفر تأسیس کردم و وارد تولید قطعات دکوری شدم. به لطف خدا و همراهی مشتریان، امروز «جهانگیر سرام» یک کارخانه کامل و بزرگه که محصولات تزیینی خودش رو به کشورهای منطقه صادر میکنه. ما اینجاییم تا وقت و انرژیتون رو از بازارگردی بی‌دلیل حفظ کنیم و کمک کنیم بهترین انتخاب ممکن رو با اطمینان انجام بدید. همیشه از شنیدن تجربه‌های خوب شما خوشحال میشیم. اگر خرید خوبی با ما داشتید، ممنون میشیم با دیگران هم به اشتراک بذارید.",
         productImageAlt: "ارائهٔ محصول {name} در ابعاد ۸۰×۸۰", viewProduct: "مشاهدهٔ صفحهٔ محصول {name} در ابعاد ۸۰×۸۰",
@@ -2462,7 +2462,7 @@
       dir: "rtl",
       ui: {
         siteTitle: "كتالوجات جهانغير سيرام", themeToggle: "تغيير وضع الألوان", languageSelect: "اختيار اللغة",
-        contactUs: "اتصل بنا", aboutUs: "من نحن", back: "رجوع", page: "صفحة", catalogs: "كتالوجات",
+        contactUs: "اتصل بنا", aboutUs: "من نحن", back: "رجوع", home: "الصفحة الرئيسية", page: "صفحة", catalogs: "كتالوجات",
         selectSubcategory: "اختر تصنيفاً فرعياً", contactText: "استشارات مجانية على جميع المنصات",
         aboutText: "مرحباً! أنا عباس جهانغير. بدأت مسيرتي المهنية في عالم البلاط والسيراميك عام 1997 من خلال متجر صغير في كاشان وعدد قليل من عينات البلاط. وبعد أربع سنوات، أسستُ ورشة جهانغير مع ثلاثة أشخاص، وبدأنا إنتاج القطع الزخرفية. بفضل الله ودعم عملائنا، أصبحت «جهانغير سيرام» اليوم مصنعاً كبيراً ومتكاملاً، يصدّر منتجاته الزخرفية إلى دول المنطقة. نحن هنا لنوفّر عليكم الوقت والجهد الناتجين عن البحث غير الضروري في الأسواق، ولنساعدكم على اتخاذ أفضل اختيار ممكن بثقة. يسعدنا دائماً أن نسمع عن تجاربكم الجيدة. وإذا كانت لكم تجربة شراء موفقة معنا، فسنكون ممتنين لمشاركتها مع الآخرين.",
         productImageAlt: "عرض منتج {name} بمقاس 80×80", viewProduct: "عرض صفحة منتج {name} بمقاس 80×80",
@@ -3565,7 +3565,7 @@
 
   function addHomeButton(page) {
     if (!page) return;
-    var label = currentLanguage === "fa" ? "صفحه اول" : (currentLanguage === "ar" ? "الصفحة الرئيسية" : "Home");
+    var label = tr("home");
     var button = page.querySelector(":scope > .page-home-button");
     if (!button) {
       button = document.createElement("button");
