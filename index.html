@@ -1825,6 +1825,12 @@
     background: rgba(59, 55, 50, 0.82);
     transition: border-color .2s ease, color .2s ease, background .2s ease, transform .2s ease;
   }
+  /* Let the localized Home label determine its own horizontal width. */
+  .bottom-nav-row .page-home-button {
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 0 12px !important;
+  }
   .bottom-nav-row .page-home-button:hover,
   .bottom-nav-row .page-home-button:focus-visible {
     transform: translateX(-3px);
