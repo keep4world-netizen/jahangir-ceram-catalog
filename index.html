@@ -3572,7 +3572,7 @@
   function addHomeButton(page) {
     if (!page) return;
     var label = tr("home");
-    var button = page.querySelector(":scope > .page-home-button");
+    var button = page.querySelector(".page-home-button");
     if (!button) {
       button = document.createElement("button");
       button.type = "button";
