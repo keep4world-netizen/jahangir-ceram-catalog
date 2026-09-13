@@ -1987,14 +1987,14 @@
     var activeId = null;
   var WASHBASIN_PRODUCTS = ["WB1", "WB2", "WB3"];
   var WASHBASIN_GALLERY_IMAGES = [
-    "assets/images/wb1-gallery.webp",
-    "assets/images/wb2-gallery.webp",
-    "assets/images/wb3-gallery.webp"
+    "assets/wb1-gallery.webp",
+    "assets/wb2-gallery.webp",
+    "assets/wb3-gallery.webp"
   ];
   var WASHBASIN_DETAIL_IMAGES = [
-    "assets/images/WB1.webp",
-    "assets/images/WB2.webp",
-    "assets/images/WB3.webp"
+    "assets/WB1.webp",
+    "assets/WB2.webp",
+    "assets/WB3.webp"
   ];
   var MATTE_PRODUCTS = [
     "Cloudy",
@@ -3333,7 +3333,7 @@
         var pageOptions = {
           key: category.id + "-" + pathKey(currentPath),
           path: [category.name].concat(currentPath).join(" / "),
-          productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Takgol / 30" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
+          productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Takgol / 30" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === "Washbasin") || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
           backKey: "category-" + category.id,
           initial: true
         };
