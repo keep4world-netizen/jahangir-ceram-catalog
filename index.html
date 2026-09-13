@@ -2023,6 +2023,43 @@
   .catalog-sheet .catalog-page .takgol-3060-grid .takgol-3060-card .product-photo.has-image { flex: 0 0 auto !important; width: calc(100% - 16px) !important; aspect-ratio: 1 / 1 !important; margin: 8px !important; }
   .catalog-sheet .catalog-page .takgol-3060-grid .takgol-3060-card .product-name { display: block !important; flex: 0 0 auto !important; width: 100% !important; min-height: 0 !important; padding: 8px 5px 12px !important; font-size: 12px !important; font-weight: 800 !important; text-align: center !important; overflow-wrap: anywhere !important; }
   @media (max-width: 600px) { .catalog-sheet .catalog-page .takgol-3060-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }
+  /* Final Puzzle gallery layout override: four desktop columns, two mobile columns, full images. */
+  .catalog-sheet .catalog-page.has-product-grid .product-grid.puzzle-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    max-width: 150mm;
+    gap: 4mm 3mm;
+  }
+  .catalog-sheet .catalog-page.has-product-grid .product-grid.puzzle-grid .product-card {
+    height: auto !important;
+  }
+  .catalog-sheet .catalog-page.has-product-grid .product-grid.puzzle-grid .product-photo.has-image {
+    aspect-ratio: 4 / 3 !important;
+    margin: 4px;
+  }
+  .catalog-sheet .catalog-page.has-product-grid .product-grid.puzzle-grid .product-photo.has-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
+    object-position: center;
+  }
+  .catalog-sheet .catalog-page.has-product-grid .product-grid.puzzle-grid .product-name {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    padding: 4px 2px 8px !important;
+    font-size: 11px;
+    line-height: 1.25;
+  }
+  @media (max-width: 820px) {
+    .catalog-sheet .catalog-page.has-product-grid .product-grid.puzzle-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      max-width: 94%;
+      gap: 10px 8px;
+    }
+    .catalog-sheet .catalog-page.has-product-grid .product-grid.puzzle-grid .product-name {
+      padding: 4px 2px 7px !important;
+      font-size: 10px;
+    }
+  }
 </style>
 </head>
 <body>
