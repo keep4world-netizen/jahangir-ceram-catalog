@@ -1478,6 +1478,33 @@
   }
 
 
+  /* Puzzle gallery: four columns on desktop and two on mobile. */
+  .catalog-sheet .catalog-page .puzzle-grid {
+    max-width: 150mm;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4mm 3mm;
+  }
+  .catalog-sheet .catalog-page .puzzle-grid .product-card { height: 165px; }
+  .catalog-sheet .catalog-page .puzzle-grid .product-photo.has-image {
+    aspect-ratio: 1 / .82;
+    margin: 4px;
+  }
+  .catalog-sheet .catalog-page .puzzle-grid .product-name {
+    flex: 0 0 auto;
+    min-height: 0;
+    padding: 4px 2px 8px;
+    font-size: 11px;
+    line-height: 1.25;
+  }
+  @media (max-width: 820px) {
+    .catalog-sheet .catalog-page .puzzle-grid {
+      max-width: 94%;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 8px;
+    }
+    .catalog-sheet .catalog-page .puzzle-grid .product-card { height: auto; }
+    .catalog-sheet .catalog-page .puzzle-grid .product-name { padding: 4px 2px 7px; font-size: 10px; }
+  }
   /* Washbasin gallery refinement: smaller, airier cards with contained product imagery. */
   .catalog-sheet .catalog-page .washbasin-grid {
     max-width: 142mm;
@@ -2040,6 +2067,19 @@
 
     var activeId = null;
   var WASHBASIN_PRODUCTS = ["WB1", "WB2", "WB3"];
+  var PUZZLE_PRODUCTS = ["Puzzle 01", "Puzzle 02", "Puzzle 03", "Puzzle 04"];
+  var PUZZLE_GALLERY_IMAGES = [
+    "assets/images/puzzle01gallery.webp",
+    "assets/images/puzzle02gallery.webp",
+    "assets/images/puzzle03gallery.webp",
+    "assets/images/puzzle04gallery.webp"
+  ];
+  var PUZZLE_DETAIL_IMAGES = [
+    "assets/images/puzzle01.webp",
+    "assets/images/puzzle02.webp",
+    "assets/images/puzzle03.webp",
+    "assets/images/puzzle04.webp"
+  ];
   var WASHBASIN_GALLERY_IMAGES = [
     "assets/images/wb1-gallery.webp",
     "assets/images/wb2-gallery.webp",
@@ -2452,6 +2492,60 @@
         '</a>';
       }).join("") +
     '</div>';
+  }
+  function renderPuzzleGallery() {
+    return '<div class="product-grid puzzle-grid" aria-label="Puzzle Products">' +
+      PUZZLE_PRODUCTS.map(function (name, index) {
+        var productHash = '#puzzle-product-' + index;
+        return '<a class="product-card product-link" href="' + productHash + '" data-puzzle-index="' + index + '" aria-label="' + name + '">' +
+          '<div class="product-photo has-image" role="img" aria-label="' + name + '"><img src="' + PUZZLE_GALLERY_IMAGES[index] + '" alt="' + name + ' gallery" loading="lazy" decoding="async"></div>' +
+          '<div class="product-name">' + name + '</div>' +
+        '</a>';
+      }).join("") +
+    '</div>';
+  }
+  function ensurePuzzleProductPage(index, backKey) {
+    var pages = document.getElementById("catalog-pages");
+    var name = PUZZLE_PRODUCTS[index];
+    var pageKey = "puzzle-product-" + index;
+    var existingSheet = Array.prototype.find.call(
+      pages.querySelectorAll(".catalog-sheet"),
+      function (candidate) { return candidate.dataset.pageKey === pageKey; }
+    );
+    if (existingSheet) return existingSheet;
+    var sheet = document.createElement("div");
+    sheet.className = "page catalog-sheet product-detail-sheet";
+    sheet.dataset.pageKey = pageKey;
+    sheet.dataset.puzzleIndex = String(index);
+    sheet.dataset.pageNumber = String(pages.querySelectorAll(".page").length + 2);
+    var page = document.createElement("section");
+    page.className = "catalog-page product-detail-page";
+    page.innerHTML =
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<h2 class="catalog-heading">' + name + ' · Puzzle</h2>' +
+      '<p class="catalog-breadcrumb">Jahangir Ceram / Puzzle</p>' +
+      '<img class="cloudy-product-image puzzle-product-image" data-src="' + PUZZLE_DETAIL_IMAGES[index] + '" alt="' + name + ' product presentation" loading="lazy" decoding="async">' +
+      '<div class="page-number">' + pageLabel(sheet.dataset.pageNumber) + '</div>';
+    page.querySelector(".catalog-back").onclick = function () {
+      var target = Array.prototype.find.call(pages.querySelectorAll(".page"), function (candidate) { return candidate.dataset.pageKey === backKey; });
+      if (target) {
+        history.pushState({ pageKey: backKey }, "", "#catalog-" + encodeURIComponent("Puzzle"));
+        target.scrollIntoView({ behavior: "auto", block: "start" });
+      }
+    };
+    sheet.appendChild(page);
+    pages.appendChild(sheet);
+    observeDeferredProductImages(sheet);
+    return sheet;
+  }
+  function showPuzzleProductPage(index, backKey) {
+    var sheet = ensurePuzzleProductPage(index, backKey);
+    loadDeferredProductImages(sheet);
+    history.pushState({ pageKey: sheet.dataset.pageKey }, "", "#puzzle-product-" + index);
+    sheet.scrollIntoView({ behavior: "auto", block: "start" });
+  }
+  function precreatePuzzleProductPages(backKey) {
+    PUZZLE_PRODUCTS.forEach(function (_name, index) { ensurePuzzleProductPage(index, backKey); });
   }
   function ensureWashbasinProductPage(index, backKey) {
     var pages = document.getElementById("catalog-pages");
@@ -3189,6 +3283,7 @@
     if (pageKey === ("sialk-Porcelain-Ceramic-Nano-Polish-100" + String.fromCharCode(0xD7) + "100")) return renderSialkPage30Gallery();
     if (pageKey === ("sialk-Porcelain-Ceramic-Crystal-Polish-100" + String.fromCharCode(0xD7) + "100")) return renderSialkPage34Gallery();
     if (pageKey === "jahangir-Washbasin") return renderWashbasinGallery();
+    if (pageKey === "jahangir-Puzzle") return renderPuzzleGallery();
     return renderProductGallery(pageKey);
   }
 
@@ -3237,6 +3332,8 @@
           showJahangirNano80ProductPage(Number(link.dataset.jahangirNano80Index), backTargetKey || pageKey);
         } else if (link.dataset.washbasinIndex !== undefined) {
           showWashbasinProductPage(Number(link.dataset.washbasinIndex), backTargetKey || pageKey);
+        } else if (link.dataset.puzzleIndex !== undefined) {
+          showPuzzleProductPage(Number(link.dataset.puzzleIndex), backTargetKey || pageKey);
         } else if (link.dataset.sialkProductIndex !== undefined) {
           showSialkProductPage(Number(link.dataset.sialkProductIndex), backTargetKey || pageKey);
         } else if (link.dataset.sialkPage25Index !== undefined) {
@@ -3330,7 +3427,7 @@
           showCatalogPage(name, {
             key: category.id + "-" + pathKey(currentPath),
             path: fullPath.join(" / "),
-            productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Takgol / 30" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === "Washbasin") || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
+            productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Takgol / 30" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && (currentPath.join(" / ") === "Washbasin" || currentPath.join(" / ") === "Puzzle")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
             backKey: "category-" + category.id
           });
         };
@@ -3387,7 +3484,7 @@
         var pageOptions = {
           key: category.id + "-" + pathKey(currentPath),
           path: [category.name].concat(currentPath).join(" / "),
-          productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Takgol / 30" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && currentPath.join(" / ") === "Washbasin") || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
+          productGallery: (category.id === "jahangir" && (currentPath.join(" / ") === ("Decorative / Fitileh / 2" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Fitileh / 4" + String.fromCharCode(0xD7) + "60") || currentPath.join(" / ") === ("Decorative / Takgol / 30" + String.fromCharCode(0xD7) + "60"))) || (category.id === "jahangir" && currentPath.indexOf("Matte") !== -1 && (name === "80×80" || name === "60×120")) || (category.id === "jahangir" && (currentPath.join(" / ") === "Washbasin" || currentPath.join(" / ") === "Puzzle")) || (category.id === "jahangir" && currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80")) || (category.id === "sialk" && (currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 60" + String.fromCharCode(0xD7) + "120") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 80" + String.fromCharCode(0xD7) + "80") || currentPath.join(" / ") === ("Porcelain Ceramic / Nano Polish / 100" + String.fromCharCode(0xD7) + "100") || currentPath.join(" / ") === ("Porcelain Ceramic / Crystal Polish / 100" + String.fromCharCode(0xD7) + "100"))),
           backKey: "category-" + category.id,
           initial: true
         };
@@ -3396,11 +3493,14 @@
           precreateJahangirNano80ProductPages(pageOptions.key);
         } else if (pageOptions.productGallery && category.id === "jahangir" && pageOptions.key.indexOf("-60" + String.fromCharCode(0xD7) + "120") !== -1) {
           precreateJahangir60120ProductPages(pageOptions.key);
-        } else if (pageOptions.productGallery && category.id === "jahangir" && pageOptions.key !== "jahangir-Washbasin") {
+        } else if (pageOptions.productGallery && category.id === "jahangir" && pageOptions.key !== "jahangir-Washbasin" && pageOptions.key !== "jahangir-Puzzle") {
           precreateProductPages(pageOptions.key);
         }
         if (pageOptions.productGallery && pageOptions.key === "jahangir-Washbasin") {
           precreateWashbasinProductPages(pageOptions.key);
+        }
+        if (pageOptions.productGallery && pageOptions.key === "jahangir-Puzzle") {
+          precreatePuzzleProductPages(pageOptions.key);
         }
         if (pageOptions.productGallery && category.id === "sialk" && pageOptions.key.indexOf("-60" + String.fromCharCode(0xD7) + "120") !== -1) {
           precreateSialkProductPages(pageOptions.key);
@@ -3655,6 +3755,11 @@
       if (breadcrumb) breadcrumb.textContent = localizePath("Jahangir Ceram / Porcelain Ceramic");
       var productImage = sheet.querySelector(".cloudy-product-image");
       if (productImage) productImage.alt = tr("productImageAlt").replace("{name}", productName).replace("80×80", "\u200e80×80\u200e");
+    } else if (pageKey.indexOf("puzzle-product-") === 0) {
+      var puzzleIndex = Number(sheet.dataset.puzzleIndex || pageKey.split("-").pop());
+      var puzzleName = PUZZLE_PRODUCTS[puzzleIndex] || "";
+      if (heading) heading.textContent = localizeProductName(puzzleName) + " · Puzzle";
+      if (breadcrumb) breadcrumb.textContent = "Jahangir Ceram / Puzzle";
     } else if (pageKey.indexOf("washbasin-product-") === 0) {
       var washbasinIndex = Number(sheet.dataset.washbasinIndex || pageKey.split("-").pop());
       var washbasinName = WASHBASIN_PRODUCTS[washbasinIndex] || "";
@@ -3715,12 +3820,14 @@
       var isJahangir60120Product = link.dataset.jahangir60120Index !== undefined;
       var isJahangirNano80Product = link.dataset.jahangirNano80Index !== undefined;
       var isWashbasinProduct = link.dataset.washbasinIndex !== undefined;
+      var isPuzzleProduct = link.dataset.puzzleIndex !== undefined;
       var productIndex;
       if (isTakgol3060Product) productIndex = Number(link.dataset.takgol3060Index);
       else if (isFitile460Product) productIndex = Number(link.dataset.fitile460Index);
       else if (isFitile260Product) productIndex = Number(link.dataset.fitileIndex);
       else if (isJahangirNano80Product) productIndex = Number(link.dataset.jahangirNano80Index);
       else if (isWashbasinProduct) productIndex = Number(link.dataset.washbasinIndex);
+      else if (isPuzzleProduct) productIndex = Number(link.dataset.puzzleIndex);
       else if (isSialkProduct) productIndex = Number(link.dataset.sialkProductIndex);
       else if (isSialkPage25Product) productIndex = Number(link.dataset.sialkPage25Index);
       else if (isSialkPage30Product) productIndex = Number(link.dataset.sialkPage30Index);
@@ -3733,6 +3840,7 @@
       else if (isFitile260Product) productName = FITILE_2_60_ITEMS[productIndex] ? FITILE_2_60_ITEMS[productIndex].name : "";
       else if (isJahangirNano80Product) productName = JAHANGIR_NANO_80_PRODUCTS[productIndex] || "";
       else if (isWashbasinProduct) productName = WASHBASIN_PRODUCTS[productIndex] || "";
+      else if (isPuzzleProduct) productName = PUZZLE_PRODUCTS[productIndex] || "";
       else if (isSialkProduct) productName = SIALK_PAGE19_PRODUCTS[productIndex] || "";
       else if (isSialkPage25Product) productName = SIALK_PAGE25_PRODUCTS[productIndex] || "";
       else if (isSialkPage30Product) productName = SIALK_PAGE30_PRODUCTS[productIndex] || "";
