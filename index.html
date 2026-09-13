@@ -1692,6 +1692,19 @@
     .catalog-sheet .catalog-page:has(.product-grid) .product-grid { gap: 7px 5px; }
     .catalog-sheet .catalog-page:has(.product-grid) .product-card { height: 165px; }
   }
+  /* Final mobile washbasin tuning: shorter product cards, wider image frame. */
+  @media (max-width: 820px) {
+    .catalog-sheet .catalog-page .washbasin-grid .product-card { height: 180px; }
+    .catalog-sheet .catalog-page .washbasin-grid .product-photo.has-image {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  @media (max-width: 480px) {
+    .catalog-sheet .catalog-page .washbasin-grid .product-card { height: 168px; }
+    .catalog-sheet .catalog-page .washbasin-grid .product-photo.has-image {
+      aspect-ratio: 4 / 3;
+    }
+  }
   /* Gallery image loader: keep the existing card layout while each image is loading. */
   .product-photo.has-image { position: relative; overflow: hidden; }
   .product-photo.has-image.image-loading::after {
