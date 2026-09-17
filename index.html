@@ -2969,18 +2969,6 @@
     var scrollTarget = this;
     if (this.matches && this.matches("#catalog-pages > .page")) {
       setCurrentCatalogPage(this);
-      if (this.dataset.parentKey && !this.classList.contains("product-detail-sheet")) {
-        var parentKey = this.dataset.parentKey;
-        while (parentKey) {
-          var parent = Array.prototype.find.call(
-            document.querySelectorAll("#catalog-pages > .page"),
-            function (page) { return page.dataset.pageKey === parentKey; }
-          );
-          if (!parent) break;
-          scrollTarget = parent;
-          parentKey = parent.dataset.parentKey || "";
-        }
-      }
     } else if (this.matches && this.matches("body > .page:first-of-type")) {
       document.body.classList.remove("has-catalog-page");
     }
