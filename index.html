@@ -1384,7 +1384,7 @@
   body.single-page-mode.has-catalog-page #catalog-pages > .page.is-parent,
   body.single-page-mode.has-catalog-page #catalog-pages > .page.is-gallery-child-visible { display: flex !important; }
   body.single-page-mode.has-catalog-page #catalog-pages > .gallery-next-control.is-visible { display: flex; }
-  .gallery-next-control { display: none; justify-content: center; align-items: center; width: min(210mm, 100%); min-height: 54px; margin: 0 auto; padding: 4px 18px 10px; box-sizing: border-box; }
+  .gallery-next-control { display: none; justify-content: center; align-items: center; width: min(210mm, 100%); min-height: 54px; margin: -7mm auto 0; padding: 0 18px 5mm; box-sizing: border-box; }
   .gallery-next-control button { min-height: 48px; padding: 12px 24px; color: var(--gold-soft); background: linear-gradient(145deg, var(--dark-2), var(--dark-3)); border: 1px solid var(--gold); border-radius: 10px; font: inherit; font-weight: 700; cursor: pointer; }
   .gallery-next-control button:hover, .gallery-next-control button:focus-visible { color: #fff; background: var(--gold); outline: none; }
   body.single-page-mode:not(.has-catalog-page) #catalog-pages > .gallery-next-control { display: none !important; }
@@ -2963,6 +2963,7 @@
     button.textContent = tr("otherProducts");
     button.setAttribute("aria-label", tr("otherProducts"));
     button.addEventListener("click", function () {
+      control.remove();
       nextGallery.dataset.appendGallery = "true";
       nextGallery.scrollIntoView({ behavior: "smooth", block: "start" });
     });

@@ -63,6 +63,8 @@ assert 'function ensureNextGalleryControl(gallery)' in script
 assert 'otherProducts' in script
 assert 'nextGallery.dataset.appendGallery = "true"' in script
 assert 'var appendGallery = sheet.dataset.appendGallery === "true"' in script
+assert 'control.remove()' in script
+assert 'margin: -7mm auto 0' in css
 assert 'page.classList.add("is-current")' in script
 assert 'function goToStaticPage(pageKey)' in script
 assert 'hideBackOnPages' in script
