@@ -4,6 +4,7 @@ import base64
 import re
 import subprocess
 import tempfile
+from urllib.parse import unquote
 
 try:
     from bs4 import BeautifulSoup
@@ -99,7 +100,11 @@ result = subprocess.run(['node', '--check', js_path], capture_output=True, text=
 if result.returncode != 0:
     raise SystemExit(result.stderr)
 
-image_refs = sorted(set(re.findall(r'/assets/images/([^"\' )]+)', html)))
+# Collect every literal asset path, including relative paths and nested thumbnail folders.
+# Dynamic array values in the catalog are literal strings, so this catches the actual
+# image set used by generated pages rather than only static HTML attributes.
+raw_asset_refs = re.findall(r'(?<![A-Za-z0-9_])/?assets/images/([^"\' )<>]+)', html)
+image_refs = sorted({unquote(ref).rstrip('/') for ref in raw_asset_refs if not ref.endswith('/')})
 assert image_refs, 'No external image references found'
 assert 'data:image/' not in html
 EXPECTED_SIALK_60120_DETAIL_IMAGES = 5
@@ -109,6 +114,10 @@ for image_name in image_refs:
     assert image_path.is_file(), image_path
     with Image.open(image_path) as im:
         assert im.format == 'WEBP' and im.width > 0 and im.height > 0
+
+# Accessibility regression checks for the 60×120 gallery.
+assert 'MATTE_60120_GALLERY_IMAGES[index]' in script
+assert "60×120 product presentation" in script
 assert 'var SIALK_PAGE19_DETAIL_IMAGES = [' in script
 assert script.count('SIALK_PAGE19_DETAIL_IMAGES[index]') == 1
 assert 'var SIALK_PAGE25_DETAIL_IMAGES = [' in script
@@ -123,7 +132,7 @@ print('English/Persian/Arabic language selector and dictionaries: OK')
 print('RTL direction support for Persian and Arabic: OK')
 print('Dynamic page, breadcrumb, button, social label, and accessibility localization: OK')
 print('All 10 social links and their embedded icons are correctly concatenated: OK')
-print(f'All {len(image_refs)} external WebP image assets exist and remain valid: OK')
+print(f'All {len(image_refs)} referenced WebP image assets exist and remain valid: OK')
 print(f'All {EXPECTED_SIALK_60120_DETAIL_IMAGES} Sialk 60×120 detail images are configured separately from the gallery: OK')
 print(f'All {EXPECTED_SIALK_8080_DETAIL_IMAGES} Sialk 80×80 detail images are configured separately from the gallery: OK')
 print('Theme, navigation, page order, and dimensions preserved: OK')

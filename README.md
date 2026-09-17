@@ -37,8 +37,13 @@ python3 validate_catalog.py path/to/catalog.html
 
 ## Editing the catalog
 
-The production `index.html` in this package is the complete catalog, including its newer catalog sections. Edit that file directly when changing catalog data or image paths, and place WebP image assets in `assets/images/`. The old generator script is intentionally not included because it could overwrite newer production sections.
+The production `index.html` in this package is the complete catalog, including its newer catalog sections. Edit that file directly when changing catalog data or image paths, and place WebP image assets in `assets/images/`. The `catalog-source.html` file is a legacy reference only and is not deployed; do not edit it for production changes. The old generator script is intentionally not included because it could overwrite newer production sections.
 
 ## Compatibility
 
 The catalog supports desktop and mobile layouts, light and dark themes, English/Persian/Arabic, RTL layout, device safe areas, A4 printing, and browsers without full `:has()` support. Images are standalone WebP assets, with lazy loading retained for product galleries. Vazirmatn is loaded from Google Fonts with a system-font fallback when offline.
+
+
+## Continuous validation
+
+GitHub Actions runs the catalog validator and JavaScript syntax check on pushes and pull requests. Keep the production file as `index.html` and run the same checks locally before publishing.

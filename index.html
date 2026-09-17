@@ -7,7 +7,15 @@
 <meta content="#343434" name="theme-color"/>
 <meta content="only light" name="color-scheme"/>
 <meta content="Jahangir Ceram product catalog" name="description"/>
-<title>Jahangir Ceram</title>
+<meta content="Jahangir Ceram Catalogs" property="og:title"/>
+<meta content="Explore Jahangir Ceram and Sialk Ceram tile and ceramic product catalogs." property="og:description"/>
+<meta content="https://jahangir-ceram-catalog.vercel.app/assets/images/cover.webp" property="og:image"/>
+<meta content="https://jahangir-ceram-catalog.vercel.app/" property="og:url"/>
+<meta content="website" property="og:type"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<link rel="canonical" href="https://jahangir-ceram-catalog.vercel.app/"/>
+<link rel="icon" type="image/webp" href="/assets/images/jahangir-ceram-logo.webp"/>
+<title>Jahangir Ceram Catalogs</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap');
 
@@ -2506,7 +2514,7 @@
       MATTE_60120_PRODUCTS.map(function (name, index) {
         var productHash = '#jahangir-product-60120-' + index;
         return '<a class="product-card product-link" href="' + productHash + '" data-jahangir60120-index="' + index + '" aria-label="' + name + '">' +
-          '<div class="product-photo has-image" role="img" aria-label="' + name + '"><img src="' + MATTE_60120_GALLERY_IMAGES[index] + '" alt="' + name + ' 60×120" loading="lazy" decoding="async"></div>' +
+          '<div class="product-photo has-image" role="img" aria-label="' + name + ' 60×120"><img src="' + MATTE_60120_GALLERY_IMAGES[index] + '" alt="' + name + ' 60×120 product presentation" loading="lazy" decoding="async"></div>' +
           '<div class="product-name">' + name + '</div>' +
         '</a>';
       }).join("") +
@@ -2703,7 +2711,7 @@
         contactUs: "Contact Us", aboutUs: "About Us", back: "Back", home: "Home", gold: "Gold", silver: "Silver", page: "Page", catalogs: "Catalogs",
         selectSubcategory: "Select a subcategory", contactText: "Free consultation on all platforms",
         aboutText: "Hello! My name is Abbas Jahangir. In 1997, I started my career in the tile and ceramic industry with a small shop in Kashan and a few tile samples. Four years later, I founded Jahangir Workshop with three people and entered the production of decorative pieces. Thanks to God and the support of our customers, today Jahangir Ceram is a large, fully equipped factory exporting its decorative products to countries across the region. We are here to save you the time and energy of unnecessary market searching and help you make the best possible choice with confidence. We are always happy to hear about your positive experiences. If you had a good shopping experience with us, we would appreciate it if you shared it with others.",
-        productImageAlt: "{name} 80×80 product presentation", viewProduct: "View {name} 80×80 product page",
+        productImageAlt: "{name} 80×80 product presentation", productImageAlt60120: "{name} 60×120 product presentation", viewProduct: "View {name} 80×80 product page",
         instagram: "Instagram", whatsapp: "WhatsApp", telegram: "Telegram", linkedin: "LinkedIn", email: "Email",
         bale: "Bale", eitaa: "Eitaa", rubika: "Rubika", aparat: "Aparat", website: "Website", socialLinks: "Social media and website links", contactDetails: "Contact details", mobilePhone: "Mobile phone", landline: "Landline", factoryAddress: "Factory address", officeAddress: "Office address"
       }
@@ -2715,7 +2723,7 @@
         contactUs: "تماس با ما", aboutUs: "درباره ما", back: "بازگشت", home: "صفحهٔ اصلی", gold: "طلایی", silver: "نقره‌ای", page: "صفحه", catalogs: "کاتالوگ‌های",
         selectSubcategory: "یک زیرمجموعه را انتخاب کنید:", contactText: "مشاوره رایگان در تمامی پلتفرم ها",
         aboutText: "سلام! من عباس جهانگیر هستم. از سال ۱۳۷۶ با یک مغازه کوچک در کاشان و چند نمونه کاشی، مسیر کاریم رو در دنیای کاشی و سرامیک شروع کردم. چهار سال بعد، کارگاه جهانگیر رو با سه نفر تأسیس کردم و وارد تولید قطعات دکوری شدم. به لطف خدا و همراهی مشتریان، امروز «جهانگیر سرام» یک کارخانه کامل و بزرگه که محصولات تزیینی خودش رو به کشورهای منطقه صادر میکنه. ما اینجاییم تا وقت و انرژیتون رو از بازارگردی بی‌دلیل حفظ کنیم و کمک کنیم بهترین انتخاب ممکن رو با اطمینان انجام بدید. همیشه از شنیدن تجربه‌های خوب شما خوشحال میشیم. اگر خرید خوبی با ما داشتید، ممنون میشیم با دیگران هم به اشتراک بذارید.",
-        productImageAlt: "ارائهٔ محصول {name} در ابعاد ۸۰×۸۰", viewProduct: "مشاهدهٔ صفحهٔ محصول {name} در ابعاد ۸۰×۸۰",
+        productImageAlt: "ارائهٔ محصول {name} در ابعاد ۸۰×۸۰", productImageAlt60120: "ارائهٔ محصول {name} در ابعاد ۶۰×۱۲۰", viewProduct: "مشاهدهٔ صفحهٔ محصول {name} در ابعاد ۸۰×۸۰",
         instagram: "اینستاگرام", whatsapp: "واتساپ", telegram: "تلگرام", linkedin: "لینکدین", email: "ایمیل",
         bale: "بله", eitaa: "ایتا", rubika: "روبیکا", aparat: "آپارات", website: "وب‌سایت", socialLinks: "پیوندهای شبکه‌های اجتماعی و وب‌سایت", contactDetails: "اطلاعات تماس", mobilePhone: "شمارهٔ همراه", landline: "تلفن ثابت", factoryAddress: "آدرس کارخانه", officeAddress: "آدرس دفتر"
       }
@@ -2727,7 +2735,7 @@
         contactUs: "اتصل بنا", aboutUs: "من نحن", back: "رجوع", home: "الصفحة الرئيسية", gold: "ذهبي", silver: "فضي", page: "صفحة", catalogs: "كتالوجات",
         selectSubcategory: "اختر تصنيفاً فرعياً", contactText: "استشارات مجانية على جميع المنصات",
         aboutText: "مرحباً! أنا عباس جهانغير. بدأت مسيرتي المهنية في عالم البلاط والسيراميك عام 1997 من خلال متجر صغير في كاشان وعدد قليل من عينات البلاط. وبعد أربع سنوات، أسستُ ورشة جهانغير مع ثلاثة أشخاص، وبدأنا إنتاج القطع الزخرفية. بفضل الله ودعم عملائنا، أصبحت «جهانغير سيرام» اليوم مصنعاً كبيراً ومتكاملاً، يصدّر منتجاته الزخرفية إلى دول المنطقة. نحن هنا لنوفّر عليكم الوقت والجهد الناتجين عن البحث غير الضروري في الأسواق، ولنساعدكم على اتخاذ أفضل اختيار ممكن بثقة. يسعدنا دائماً أن نسمع عن تجاربكم الجيدة. وإذا كانت لكم تجربة شراء موفقة معنا، فسنكون ممتنين لمشاركتها مع الآخرين.",
-        productImageAlt: "عرض منتج {name} بمقاس 80×80", viewProduct: "عرض صفحة منتج {name} بمقاس 80×80",
+        productImageAlt: "عرض منتج {name} بمقاس 80×80", productImageAlt60120: "عرض منتج {name} بمقاس 60×120", viewProduct: "عرض صفحة منتج {name} بمقاس 80×80",
         instagram: "إنستغرام", whatsapp: "واتساب", telegram: "تلغرام", linkedin: "لينكدإن", email: "البريد الإلكتروني",
         bale: "بله", eitaa: "إيتا", rubika: "روبيكا", aparat: "أبارات", website: "الموقع الإلكتروني", socialLinks: "روابط التواصل الاجتماعي والموقع الإلكتروني", contactDetails: "بيانات الاتصال", mobilePhone: "الهاتف المحمول", landline: "الهاتف الثابت", factoryAddress: "عنوان المصنع", officeAddress: "عنوان المكتب"
       }
@@ -3894,12 +3902,15 @@
       if (isTakgol3060Product && TAKGOL_30_60_ITEMS[productIndex] && TAKGOL_30_60_ITEMS[productIndex].type !== "silver") productName += " Gold";
       if (isFitile460Product && FITILE_4_60_ITEMS[productIndex] && FITILE_4_60_ITEMS[productIndex].type !== "silver") productName += " Gold";
       var localizedProductName = localizeProductName(productName);
-      var label = (isJahangirNano80Product ? ("View " + localizedProductName + " 80×80 product page") : (isJahangir60120Product ? ("View " + localizedProductName + " 60×120 product page") : (isSialkProduct ? ("View " + localizedProductName + " 80×80 product page") : tr("viewProduct").replace("{name}", localizedProductName).replace("80×80", "\u200e80×80\u200e"))));
+      var label = (isJahangirNano80Product ? ("View " + localizedProductName + " 80×80 product page") : (isJahangir60120Product || isSialkProduct ? ("View " + localizedProductName + " 60×120 product page") : tr("viewProduct").replace("{name}", localizedProductName).replace("80×80", "\u200e80×80\u200e")));
       link.setAttribute("aria-label", label);
       var productNameNode = link.querySelector(".product-name");
       if (productNameNode) productNameNode.textContent = localizedProductName;
       var image = link.querySelector("img");
-      if (image) image.alt = tr("productImageAlt").replace("{name}", localizedProductName).replace("80×80", "\u200e80×80\u200e");
+      if (image) {
+        var imageAltKey = isJahangir60120Product || isSialkProduct ? "productImageAlt60120" : "productImageAlt";
+        image.alt = tr(imageAltKey).replace("{name}", localizedProductName).replace("80×80", "\u200e80×80\u200e");
+      }
     });
   }
   function applyLanguage() {
