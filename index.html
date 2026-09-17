@@ -3450,6 +3450,18 @@
     if (categoryId === "sialk" && pageKey.indexOf("-80" + String.fromCharCode(0xD7) + "80") !== -1) precreateSialkPage25ProductPages(pageKey);
     if (categoryId === "sialk" && pageKey.indexOf("-100" + String.fromCharCode(0xD7) + "100") !== -1 && pageKey.indexOf("Crystal") === -1) precreateSialkPage30ProductPages(pageKey);
     if (categoryId === "sialk" && pageKey.indexOf("Crystal-Polish-100" + String.fromCharCode(0xD7) + "100") !== -1) precreateSialkPage34ProductPages(pageKey);
+
+    var pages = document.getElementById("catalog-pages");
+    var gallery = Array.prototype.find.call(pages.querySelectorAll(".page"), function (candidate) {
+      return candidate.dataset.pageKey === pageKey;
+    });
+    if (!gallery) return;
+    Array.prototype.slice.call(pages.querySelectorAll('.product-detail-sheet[data-parent-key="' + pageKey + '"]'))
+      .sort(function (a, b) { return Number(a.dataset.pageNumber || 0) - Number(b.dataset.pageNumber || 0); })
+      .forEach(function (productPage) {
+        if (productPage.previousElementSibling !== gallery) pages.insertBefore(productPage, gallery.nextSibling);
+        gallery = productPage;
+      });
   }
 
   function showCatalogPage(size, options) {
