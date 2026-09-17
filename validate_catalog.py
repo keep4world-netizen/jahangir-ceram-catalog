@@ -43,6 +43,7 @@ assert 'data-language="fa"' in html
 assert 'data-language="ar"' in html
 assert 'body.language-gate-active > .page' in css
 assert 'body.single-page-mode.has-catalog-page #catalog-pages > .page.is-current' in css
+assert 'is-gallery-child-visible' in css
 assert 'body.single-page-mode.has-catalog-page > .page:first-of-type' in css
 assert '<div class="cover-controls">' in html
 assert 'Coming Soon<small>به‌زودی</small>' not in html
@@ -56,6 +57,7 @@ assert 'function setCurrentCatalogPage(sheet)' in script
 assert 'Element.prototype.scrollIntoView' in script
 assert 'sheet.dataset.parentKey = backTargetKey || ""' in script
 assert 'while (parentKey)' in script
+assert 'page.classList.add("is-gallery-child-visible")' in script
 assert 'page.classList.add("is-current")' in script
 assert 'function goToStaticPage(pageKey)' in script
 social_platforms = re.findall(r'data-platform="([a-z]+)"', script)

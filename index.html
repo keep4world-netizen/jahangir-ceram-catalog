@@ -1381,7 +1381,8 @@
   body.language-gate-active > .page { display: none !important; }
   body.single-page-mode #catalog-pages > .page { display: none !important; }
   body.single-page-mode.has-catalog-page #catalog-pages > .page.is-current,
-  body.single-page-mode.has-catalog-page #catalog-pages > .page.is-parent { display: flex !important; }
+  body.single-page-mode.has-catalog-page #catalog-pages > .page.is-parent,
+  body.single-page-mode.has-catalog-page #catalog-pages > .page.is-gallery-child-visible { display: flex !important; }
   body.single-page-mode:not(.has-catalog-page) > .page:first-of-type { display: flex !important; }
   body.single-page-mode.has-catalog-page > .page:first-of-type { display: none !important; }
   .language-gate {
@@ -2937,7 +2938,10 @@
   function setCurrentCatalogPage(sheet) {
     if (!sheet) return;
     document.querySelectorAll("#catalog-pages > .page.is-current, #catalog-pages > .page.is-parent").forEach(function (page) {
-      page.classList.remove("is-current", "is-parent");
+      page.classList.remove("is-current", "is-parent", "is-gallery-child-visible");
+    });
+    document.querySelectorAll("#catalog-pages > .page.is-gallery-child-visible").forEach(function (page) {
+      page.classList.remove("is-gallery-child-visible");
     });
     var parentKey = sheet.dataset.parentKey || "";
     while (parentKey) {
@@ -2948,6 +2952,14 @@
       if (!parent) break;
       parent.classList.add("is-parent");
       parentKey = parent.dataset.parentKey || "";
+    }
+    var galleryKey = sheet.classList.contains("product-detail-sheet")
+      ? (sheet.dataset.parentKey || "")
+      : sheet.dataset.pageKey;
+    if (galleryKey) {
+      document.querySelectorAll("#catalog-pages > .page").forEach(function (page) {
+        if (page.dataset.parentKey === galleryKey) page.classList.add("is-gallery-child-visible");
+      });
     }
     sheet.classList.add("is-current");
     document.body.classList.add("has-catalog-page");

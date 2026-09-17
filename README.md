@@ -45,7 +45,7 @@ The catalog supports desktop and mobile layouts, light and dark themes, English/
 
 On every new visit, the catalog first shows a language selection screen with English, Persian, and Arabic options. After the visitor chooses a language, the main catalog opens in that language and the choice is retained for the catalog controls.
 
-The catalog uses hierarchical single-page navigation: only the cover or the currently selected catalog/category/product pages are visible at a time. When a category such as Sialk Ceram is selected, one of its sizes is opened, and a product is selected, the category remains above the size gallery and the product detail remains below that gallery. The Back and Home controls return to the previous page or the cover without showing unrelated catalog pages below it.
+The catalog uses hierarchical single-page navigation: only the cover or the currently selected catalog/category/product pages are visible at a time. When a category such as Sialk Ceram is selected and one of its sizes is opened, the category remains above the size gallery and every product detail page in that gallery is rendered below it before any product is selected. Selecting a product focuses its detail page without hiding the other products. The Back and Home controls return to the previous page or the cover without showing unrelated catalog pages below it.
 
 
 ## Continuous validation
