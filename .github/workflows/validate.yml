@@ -1,0 +1,39 @@
+name: Validate catalog
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Validate catalog and referenced assets
+        run: python validate_catalog.py
+
+      - name: Validate JavaScript syntax
+        run: |
+          python - <<'PY'
+          from bs4 import BeautifulSoup
+          from pathlib import Path
+          import tempfile
+          import subprocess
+          html = Path("index.html").read_text(encoding="utf-8")
+          script = BeautifulSoup(html, "html.parser").find("script").get_text()
+          with tempfile.NamedTemporaryFile("w", suffix=".js", encoding="utf-8", delete=False) as f:
+              f.write(script)
+              script_path = f.name
+          subprocess.run(["node", "--check", script_path], check=True)
+          PY
