@@ -2946,7 +2946,8 @@
       return String(candidate.dataset.pageKey || "").split("-")[0] === String(gallery.dataset.pageKey || "").split("-")[0];
     });
     var index = galleries.indexOf(gallery);
-    return index >= 0 ? galleries[index + 1] || null : null;
+    if (index < 0) return null;
+    return galleries[index + 1] || galleries[index - 1] || null;
   }
   function ensureNextGalleryControl(gallery) {
     var nextGallery = findNextGallery(gallery);

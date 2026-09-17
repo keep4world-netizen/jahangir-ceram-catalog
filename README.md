@@ -51,6 +51,8 @@ Pages 2, 3, 40, and 60 intentionally show only the Home control; all other catal
 
 After the last product of an opened gallery, a localized “View other products” button is shown outside the product frame with a five-millimetre gap from the preceding product frame. Once clicked, that button is removed and the next gallery is appended below the existing gallery and its products; previous galleries remain visible, and the chain continues when another gallery is available.
 
+If the selected gallery is already the last gallery in its category, the same control points to the preceding gallery instead, allowing the catalog chain to be traversed in reverse from the final gallery.
+
 
 ## Continuous validation
 
