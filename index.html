@@ -2955,7 +2955,7 @@
     }
     var galleryKey = sheet.classList.contains("product-detail-sheet")
       ? (sheet.dataset.parentKey || "")
-      : sheet.dataset.pageKey;
+      : (sheet.dataset.productGallery === "true" ? sheet.dataset.pageKey : "");
     if (galleryKey) {
       document.querySelectorAll("#catalog-pages > .page").forEach(function (page) {
         if (page.dataset.parentKey === galleryKey) page.classList.add("is-gallery-child-visible");
