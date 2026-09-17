@@ -4073,6 +4073,12 @@
     var back = page.querySelector(":scope > .catalog-back");
     var pageNumber = page.querySelector(":scope > .page-number");
     if (!back || !pageNumber) return;
+    var sheet = page.parentElement;
+    var hideBackOnPages = { "2": true, "3": true, "40": true, "60": true };
+    if (sheet && hideBackOnPages[sheet.dataset.pageNumber]) {
+      back.remove();
+      back = null;
+    }
     var row = page.querySelector(":scope > .bottom-nav-row");
     if (!row) {
       row = document.createElement("div");
@@ -4088,7 +4094,7 @@
       row.appendChild(right);
       page.appendChild(row);
     }
-    row.children[0].appendChild(back);
+    if (back) row.children[0].appendChild(back);
     row.children[1].appendChild(pageNumber);
     row.children[2].appendChild(button);
   }

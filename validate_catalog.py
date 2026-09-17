@@ -60,6 +60,8 @@ assert 'while (parentKey)' in script
 assert 'page.classList.add("is-gallery-child-visible")' in script
 assert 'page.classList.add("is-current")' in script
 assert 'function goToStaticPage(pageKey)' in script
+assert 'hideBackOnPages' in script
+assert 'back.remove()' in script
 social_platforms = re.findall(r'data-platform="([a-z]+)"', script)
 assert social_platforms == [
     'instagram', 'whatsapp', 'telegram', 'linkedin', 'bale',

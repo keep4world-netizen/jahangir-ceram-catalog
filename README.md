@@ -47,6 +47,8 @@ On every new visit, the catalog first shows a language selection screen with Eng
 
 The catalog uses hierarchical single-page navigation: only the cover or the currently selected catalog/category/product pages are visible at a time. When a category such as Sialk Ceram is selected and one of its sizes is opened, the category remains above the size gallery and every product detail page in that gallery is rendered below it before any product is selected. Selecting a product focuses its detail page without hiding the other products. The Back and Home controls return to the previous page or the cover without showing unrelated catalog pages below it.
 
+Pages 2, 3, 40, and 60 intentionally show only the Home control; all other catalog pages keep both Back and Home controls.
+
 
 ## Continuous validation
 
