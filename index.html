@@ -1377,6 +1377,38 @@
   }
 
 
+  /* Initial language selection screen */
+  body.language-gate-active > .page { display: none !important; }
+  .language-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-y: auto;
+    background: radial-gradient(circle at 50% 18%, rgba(213,152,44,.12), transparent 34%), linear-gradient(145deg, #343434, #1f1f1f);
+    color: #C0C0C0;
+  }
+  .language-gate-card {
+    width: min(100%, 540px);
+    padding: clamp(32px, 7vw, 64px) clamp(24px, 7vw, 56px);
+    text-align: center;
+    border: 1px solid #4a4a4a;
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(61,61,61,.96), rgba(42,42,42,.96));
+    box-shadow: 0 24px 70px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  .language-gate-logo { display: block; width: min(150px, 42vw); height: auto; margin: 0 auto 22px; }
+  .language-gate-title { margin: 0 0 34px; color: #C0C0C0; font-size: clamp(24px, 5vw, 36px); font-weight: 900; }
+  .language-gate-prompt { margin: 0 0 16px; color: #D5982C; font-size: 15px; font-weight: 600; }
+  .language-gate-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .language-gate-option { min-height: 58px; padding: 12px 8px; color: #C0C0C0; background: #2a2a2a; border: 1px solid #4a4a4a; border-radius: 10px; font: inherit; font-size: 15px; font-weight: 700; transition: transform .2s ease, color .2s ease, border-color .2s ease, background .2s ease; }
+  .language-gate-option:hover, .language-gate-option:focus-visible { color: #F2D48B; background: #343434; border-color: #D5982C; transform: translateY(-2px); }
+  .language-gate-option:focus-visible { outline: 2px solid #D5982C; outline-offset: 3px; }
+  @media (max-width: 420px) { .language-gate { padding: 16px; } .language-gate-options { grid-template-columns: 1fr; } }
+
   /* Complete cover isolation: the first page remains permanently dark in every body theme */
   body.light-mode > .page:first-child {
     --dark: #343434 !important;
@@ -2077,7 +2109,19 @@
   }
 </style>
 </head>
-<body>
+<body class="language-gate-active">
+<div class="language-gate" id="language-gate" role="dialog" aria-labelledby="language-gate-title" aria-describedby="language-gate-prompt">
+  <div class="language-gate-card">
+    <img class="language-gate-logo" src="/assets/images/jahangir-ceram-logo.webp" alt="Jahangir Ceram logo" decoding="async">
+    <h1 class="language-gate-title" id="language-gate-title">Jahangir Ceram Catalogs</h1>
+    <p class="language-gate-prompt" id="language-gate-prompt">Select your language</p>
+    <div class="language-gate-options" role="group" aria-label="Language options">
+      <button class="language-gate-option" type="button" data-language="en">English</button>
+      <button class="language-gate-option" type="button" data-language="fa" lang="fa" dir="rtl">فارسی</button>
+      <button class="language-gate-option" type="button" data-language="ar" lang="ar" dir="rtl">العربية</button>
+    </div>
+  </div>
+</div>
 <div class="page">
 <div class="cover-controls">
 <button aria-label="Toggle color mode" aria-pressed="false" class="theme-toggle" id="theme-toggle" type="button"><span aria-hidden="true" class="theme-icon">☀</span></button>
@@ -4011,10 +4055,25 @@
     precreateCatalogPages(category, category.sub, []);
   });
   createContactPage();
+
+  var languageGate = document.getElementById("language-gate");
+  var languageGateOptions = languageGate ? languageGate.querySelectorAll("[data-language]") : [];
+  Array.prototype.forEach.call(languageGateOptions, function (option) {
+    option.addEventListener("click", function () {
+      var selectedLanguage = option.dataset.language;
+      if (!LANGUAGES[selectedLanguage]) return;
+      currentLanguage = selectedLanguage;
+      writeStoredLanguage(currentLanguage);
+      applyLanguage();
+      document.body.classList.remove("language-gate-active");
+      if (languageGate) languageGate.remove();
+      var firstPage = document.querySelector("body > .page");
+      if (firstPage) firstPage.scrollIntoView({ behavior: "auto", block: "start" });
+    });
+  });
+
   render();
   applyLanguage();
-  addHomeButtonsToAllPages();
-  handleLocationHash();
 </script>
 </body>
 </html>

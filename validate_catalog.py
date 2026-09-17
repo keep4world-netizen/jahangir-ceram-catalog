@@ -36,6 +36,12 @@ assert soup.find('meta', attrs={'name': 'viewport'}) is not None
 assert '<option value="en">en</option>' in html
 assert '<option value="fa">fa</option>' in html
 assert '<option value="ar">ar</option>' in html
+assert 'class="language-gate"' in html
+assert 'Jahangir Ceram Catalogs</h1>' in html
+assert 'data-language="en"' in html
+assert 'data-language="fa"' in html
+assert 'data-language="ar"' in html
+assert 'body.language-gate-active > .page' in css
 assert '<div class="cover-controls">' in html
 assert 'Coming Soon<small>به‌زودی</small>' not in html
 assert 'data-placeholder="coming-soon">Coming Soon' in html
@@ -43,6 +49,7 @@ assert 'data-placeholder="coming-soon">Coming Soon' in html
 script_tag = soup.find('script')
 assert script_tag is not None
 script = script_tag.string or script_tag.get_text()
+assert 'document.body.classList.remove("language-gate-active")' in script
 social_platforms = re.findall(r'data-platform="([a-z]+)"', script)
 assert social_platforms == [
     'instagram', 'whatsapp', 'telegram', 'linkedin', 'bale',

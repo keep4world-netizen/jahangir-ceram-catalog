@@ -43,6 +43,8 @@ The production `index.html` in this package is the complete catalog, including i
 
 The catalog supports desktop and mobile layouts, light and dark themes, English/Persian/Arabic, RTL layout, device safe areas, A4 printing, and browsers without full `:has()` support. Images are standalone WebP assets, with lazy loading retained for product galleries. Vazirmatn is loaded from Google Fonts with a system-font fallback when offline.
 
+On every new visit, the catalog first shows a language selection screen with English, Persian, and Arabic options. After the visitor chooses a language, the main catalog opens in that language and the choice is retained for the catalog controls.
+
 
 ## Continuous validation
 
