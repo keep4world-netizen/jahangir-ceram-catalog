@@ -1383,6 +1383,11 @@
   body.single-page-mode.has-catalog-page #catalog-pages > .page.is-current,
   body.single-page-mode.has-catalog-page #catalog-pages > .page.is-parent,
   body.single-page-mode.has-catalog-page #catalog-pages > .page.is-gallery-child-visible { display: flex !important; }
+  body.single-page-mode.has-catalog-page #catalog-pages > .gallery-next-control.is-visible { display: flex; }
+  .gallery-next-control { display: none; justify-content: center; align-items: center; width: min(210mm, 100%); min-height: 92px; margin: 0 auto; padding: 18px; box-sizing: border-box; }
+  .gallery-next-control button { min-height: 48px; padding: 12px 24px; color: var(--gold-soft); background: linear-gradient(145deg, var(--dark-2), var(--dark-3)); border: 1px solid var(--gold); border-radius: 10px; font: inherit; font-weight: 700; cursor: pointer; }
+  .gallery-next-control button:hover, .gallery-next-control button:focus-visible { color: #fff; background: var(--gold); outline: none; }
+  body.single-page-mode:not(.has-catalog-page) #catalog-pages > .gallery-next-control { display: none !important; }
   body.single-page-mode:not(.has-catalog-page) > .page:first-of-type { display: flex !important; }
   body.single-page-mode.has-catalog-page > .page:first-of-type { display: none !important; }
   .language-gate {
@@ -2765,7 +2770,7 @@
         aboutText: "Hello! My name is Abbas Jahangir. In 1997, I started my career in the tile and ceramic industry with a small shop in Kashan and a few tile samples. Four years later, I founded Jahangir Workshop with three people and entered the production of decorative pieces. Thanks to God and the support of our customers, today Jahangir Ceram is a large, fully equipped factory exporting its decorative products to countries across the region. We are here to save you the time and energy of unnecessary market searching and help you make the best possible choice with confidence. We are always happy to hear about your positive experiences. If you had a good shopping experience with us, we would appreciate it if you shared it with others.",
         productImageAlt: "{name} 80×80 product presentation", productImageAlt60120: "{name} 60×120 product presentation", viewProduct: "View {name} 80×80 product page",
         instagram: "Instagram", whatsapp: "WhatsApp", telegram: "Telegram", linkedin: "LinkedIn", email: "Email",
-        bale: "Bale", eitaa: "Eitaa", rubika: "Rubika", aparat: "Aparat", website: "Website", socialLinks: "Social media and website links", contactDetails: "Contact details", mobilePhone: "Mobile phone", landline: "Landline", factoryAddress: "Factory address", officeAddress: "Office address"
+        bale: "Bale", eitaa: "Eitaa", rubika: "Rubika", aparat: "Aparat", website: "Website", socialLinks: "Social media and website links", otherProducts: "View other products", contactDetails: "Contact details", mobilePhone: "Mobile phone", landline: "Landline", factoryAddress: "Factory address", officeAddress: "Office address"
       }
     },
     fa: {
@@ -2777,7 +2782,7 @@
         aboutText: "سلام! من عباس جهانگیر هستم. از سال ۱۳۷۶ با یک مغازه کوچک در کاشان و چند نمونه کاشی، مسیر کاریم رو در دنیای کاشی و سرامیک شروع کردم. چهار سال بعد، کارگاه جهانگیر رو با سه نفر تأسیس کردم و وارد تولید قطعات دکوری شدم. به لطف خدا و همراهی مشتریان، امروز «جهانگیر سرام» یک کارخانه کامل و بزرگه که محصولات تزیینی خودش رو به کشورهای منطقه صادر میکنه. ما اینجاییم تا وقت و انرژیتون رو از بازارگردی بی‌دلیل حفظ کنیم و کمک کنیم بهترین انتخاب ممکن رو با اطمینان انجام بدید. همیشه از شنیدن تجربه‌های خوب شما خوشحال میشیم. اگر خرید خوبی با ما داشتید، ممنون میشیم با دیگران هم به اشتراک بذارید.",
         productImageAlt: "ارائهٔ محصول {name} در ابعاد ۸۰×۸۰", productImageAlt60120: "ارائهٔ محصول {name} در ابعاد ۶۰×۱۲۰", viewProduct: "مشاهدهٔ صفحهٔ محصول {name} در ابعاد ۸۰×۸۰",
         instagram: "اینستاگرام", whatsapp: "واتساپ", telegram: "تلگرام", linkedin: "لینکدین", email: "ایمیل",
-        bale: "بله", eitaa: "ایتا", rubika: "روبیکا", aparat: "آپارات", website: "وب‌سایت", socialLinks: "پیوندهای شبکه‌های اجتماعی و وب‌سایت", contactDetails: "اطلاعات تماس", mobilePhone: "شمارهٔ همراه", landline: "تلفن ثابت", factoryAddress: "آدرس کارخانه", officeAddress: "آدرس دفتر"
+        bale: "بله", eitaa: "ایتا", rubika: "روبیکا", aparat: "آپارات", website: "وب‌سایت", socialLinks: "پیوندهای شبکه‌های اجتماعی و وب‌سایت", otherProducts: "مشاهده سایر محصولات", contactDetails: "اطلاعات تماس", mobilePhone: "شمارهٔ همراه", landline: "تلفن ثابت", factoryAddress: "آدرس کارخانه", officeAddress: "آدرس دفتر"
       }
     },
     ar: {
@@ -2789,7 +2794,7 @@
         aboutText: "مرحباً! أنا عباس جهانغير. بدأت مسيرتي المهنية في عالم البلاط والسيراميك عام 1997 من خلال متجر صغير في كاشان وعدد قليل من عينات البلاط. وبعد أربع سنوات، أسستُ ورشة جهانغير مع ثلاثة أشخاص، وبدأنا إنتاج القطع الزخرفية. بفضل الله ودعم عملائنا، أصبحت «جهانغير سيرام» اليوم مصنعاً كبيراً ومتكاملاً، يصدّر منتجاته الزخرفية إلى دول المنطقة. نحن هنا لنوفّر عليكم الوقت والجهد الناتجين عن البحث غير الضروري في الأسواق، ولنساعدكم على اتخاذ أفضل اختيار ممكن بثقة. يسعدنا دائماً أن نسمع عن تجاربكم الجيدة. وإذا كانت لكم تجربة شراء موفقة معنا، فسنكون ممتنين لمشاركتها مع الآخرين.",
         productImageAlt: "عرض منتج {name} بمقاس 80×80", productImageAlt60120: "عرض منتج {name} بمقاس 60×120", viewProduct: "عرض صفحة منتج {name} بمقاس 80×80",
         instagram: "إنستغرام", whatsapp: "واتساب", telegram: "تلغرام", linkedin: "لينكدإن", email: "البريد الإلكتروني",
-        bale: "بله", eitaa: "إيتا", rubika: "روبيكا", aparat: "أبارات", website: "الموقع الإلكتروني", socialLinks: "روابط التواصل الاجتماعي والموقع الإلكتروني", contactDetails: "بيانات الاتصال", mobilePhone: "الهاتف المحمول", landline: "الهاتف الثابت", factoryAddress: "عنوان المصنع", officeAddress: "عنوان المكتب"
+        bale: "بله", eitaa: "إيتا", rubika: "روبيكا", aparat: "أبارات", website: "الموقع الإلكتروني", socialLinks: "روابط التواصل الاجتماعي والموقع الإلكتروني", otherProducts: "عرض المنتجات الأخرى", contactDetails: "بيانات الاتصال", mobilePhone: "الهاتف المحمول", landline: "الهاتف الثابت", factoryAddress: "عنوان المصنع", officeAddress: "عنوان المكتب"
       }
     }
   };
@@ -2935,10 +2940,42 @@
     try { element.scrollIntoView({ behavior: "auto", block: "start" }); }
     catch (error) { element.scrollIntoView(); }
   }
+  function findNextGallery(gallery) {
+    if (!gallery) return null;
+    var galleries = Array.prototype.filter.call(document.querySelectorAll('#catalog-pages > .page[data-product-gallery="true"]'), function (candidate) {
+      return String(candidate.dataset.pageKey || "").split("-")[0] === String(gallery.dataset.pageKey || "").split("-")[0];
+    });
+    var index = galleries.indexOf(gallery);
+    return index >= 0 ? galleries[index + 1] || null : null;
+  }
+  function ensureNextGalleryControl(gallery) {
+    var nextGallery = findNextGallery(gallery);
+    if (!nextGallery) return null;
+    var existing = Array.prototype.find.call(document.querySelectorAll("#catalog-pages > .gallery-next-control"), function (control) {
+      return control.dataset.galleryKey === gallery.dataset.pageKey;
+    });
+    if (existing) return existing;
+    var control = document.createElement("div");
+    control.className = "gallery-next-control";
+    control.dataset.galleryKey = gallery.dataset.pageKey;
+    var button = document.createElement("button");
+    button.type = "button";
+    button.textContent = tr("otherProducts");
+    button.setAttribute("aria-label", tr("otherProducts"));
+    button.addEventListener("click", function () {
+      nextGallery.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    control.appendChild(button);
+    var products = Array.prototype.filter.call(document.querySelectorAll("#catalog-pages > .page"), function (page) {
+      return page.dataset.parentKey === gallery.dataset.pageKey && page.classList.contains("product-detail-sheet");
+    });
+    (products[products.length - 1] || gallery).insertAdjacentElement("afterend", control);
+    return control;
+  }
   function setCurrentCatalogPage(sheet) {
     if (!sheet) return;
-    document.querySelectorAll("#catalog-pages > .page.is-current, #catalog-pages > .page.is-parent").forEach(function (page) {
-      page.classList.remove("is-current", "is-parent", "is-gallery-child-visible");
+    document.querySelectorAll("#catalog-pages > .page.is-current, #catalog-pages > .page.is-parent, #catalog-pages > .gallery-next-control.is-visible").forEach(function (page) {
+      page.classList.remove("is-current", "is-parent", "is-gallery-child-visible", "is-visible");
     });
     document.querySelectorAll("#catalog-pages > .page.is-gallery-child-visible").forEach(function (page) {
       page.classList.remove("is-gallery-child-visible");
@@ -2962,6 +2999,13 @@
       });
     }
     sheet.classList.add("is-current");
+    var activeGallery = sheet.classList.contains("product-detail-sheet")
+      ? Array.prototype.find.call(document.querySelectorAll("#catalog-pages > .page"), function (page) { return page.dataset.pageKey === sheet.dataset.parentKey; })
+      : (sheet.dataset.productGallery === "true" ? sheet : null);
+    if (activeGallery) {
+      var nextControl = ensureNextGalleryControl(activeGallery);
+      if (nextControl) nextControl.classList.add("is-visible");
+    }
     document.body.classList.add("has-catalog-page");
   }
   var nativeScrollIntoView = Element.prototype.scrollIntoView;

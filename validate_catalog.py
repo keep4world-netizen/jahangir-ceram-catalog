@@ -58,6 +58,9 @@ assert 'Element.prototype.scrollIntoView' in script
 assert 'sheet.dataset.parentKey = backTargetKey || ""' in script
 assert 'while (parentKey)' in script
 assert 'page.classList.add("is-gallery-child-visible")' in script
+assert 'function findNextGallery(gallery)' in script
+assert 'function ensureNextGalleryControl(gallery)' in script
+assert 'otherProducts' in script
 assert 'page.classList.add("is-current")' in script
 assert 'function goToStaticPage(pageKey)' in script
 assert 'hideBackOnPages' in script
