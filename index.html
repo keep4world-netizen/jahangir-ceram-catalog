@@ -1380,7 +1380,8 @@
   /* Initial language selection screen */
   body.language-gate-active > .page { display: none !important; }
   body.single-page-mode #catalog-pages > .page { display: none !important; }
-  body.single-page-mode.has-catalog-page #catalog-pages > .page.is-current { display: flex !important; }
+  body.single-page-mode.has-catalog-page #catalog-pages > .page.is-current,
+  body.single-page-mode.has-catalog-page #catalog-pages > .page.is-parent { display: flex !important; }
   body.single-page-mode:not(.has-catalog-page) > .page:first-of-type { display: flex !important; }
   body.single-page-mode.has-catalog-page > .page:first-of-type { display: none !important; }
   .language-gate {
@@ -2933,17 +2934,36 @@
   }
   function setCurrentCatalogPage(sheet) {
     if (!sheet) return;
-    document.querySelectorAll("#catalog-pages > .page.is-current").forEach(function (page) {
-      page.classList.remove("is-current");
+    document.querySelectorAll("#catalog-pages > .page.is-current, #catalog-pages > .page.is-parent").forEach(function (page) {
+      page.classList.remove("is-current", "is-parent");
     });
+    var parentKey = sheet.dataset.parentKey || "";
+    if (parentKey) {
+      var parent = Array.prototype.find.call(
+        document.querySelectorAll("#catalog-pages > .page"),
+        function (page) { return page.dataset.pageKey === parentKey; }
+      );
+      if (parent) parent.classList.add("is-parent");
+    }
     sheet.classList.add("is-current");
     document.body.classList.add("has-catalog-page");
   }
   var nativeScrollIntoView = Element.prototype.scrollIntoView;
   Element.prototype.scrollIntoView = function (options) {
-    if (this.matches && this.matches("#catalog-pages > .page")) setCurrentCatalogPage(this);
-    else if (this.matches && this.matches("body > .page:first-of-type")) document.body.classList.remove("has-catalog-page");
-    return nativeScrollIntoView.call(this, options);
+    var scrollTarget = this;
+    if (this.matches && this.matches("#catalog-pages > .page")) {
+      setCurrentCatalogPage(this);
+      if (this.dataset.parentKey) {
+        var parent = Array.prototype.find.call(
+          document.querySelectorAll("#catalog-pages > .page"),
+          function (page) { return page.dataset.pageKey === this.dataset.parentKey; }.bind(this)
+        );
+        if (parent) scrollTarget = parent;
+      }
+    } else if (this.matches && this.matches("body > .page:first-of-type")) {
+      document.body.classList.remove("has-catalog-page");
+    }
+    return nativeScrollIntoView.call(scrollTarget, options);
   };
   var currentLanguage = readStoredLanguage();
   if (!LANGUAGES[currentLanguage]) currentLanguage = "en";
@@ -3419,6 +3439,7 @@
     sheet.dataset.pageKey = pageKey;
     sheet.dataset.catalogSize = String(size);
     sheet.dataset.catalogPath = options.path || "";
+    sheet.dataset.parentKey = backTargetKey || "";
     sheet.dataset.productGallery = options.productGallery ? "true" : "false";
     sheet.dataset.pageNumber = String(pages.querySelectorAll(".page").length + 2);
     var page = document.createElement("section");
@@ -3744,11 +3765,13 @@
     if (!page) {
       page = pageKey === "contact-us" ? createContactPage() : createAboutPage();
     }
+    document.querySelectorAll("#catalog-pages > .page.is-current, #catalog-pages > .page.is-parent").forEach(function (candidate) {
+      candidate.classList.remove("is-current", "is-parent");
+    });
+    page.classList.add("is-current");
+    document.body.classList.add("has-catalog-page");
     history.pushState({ pageKey: pageKey }, "", location.pathname + location.search + "#" + pageKey);
-    window.scrollTo({ top: page.offsetTop, left: 0, behavior: "smooth" });
-    setTimeout(function () {
-      window.scrollTo({ top: page.offsetTop, left: 0, behavior: "auto" });
-    }, 300);
+    page.scrollIntoView({ behavior: "smooth", block: "start" });
     return page;
   }
 
