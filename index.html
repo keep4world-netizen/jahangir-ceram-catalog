@@ -2969,7 +2969,7 @@
     var scrollTarget = this;
     if (this.matches && this.matches("#catalog-pages > .page")) {
       setCurrentCatalogPage(this);
-      if (this.dataset.parentKey) {
+      if (this.dataset.parentKey && !this.classList.contains("product-detail-sheet")) {
         var parentKey = this.dataset.parentKey;
         while (parentKey) {
           var parent = Array.prototype.find.call(
