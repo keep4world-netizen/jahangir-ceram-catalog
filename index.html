@@ -1384,7 +1384,7 @@
   body.single-page-mode.has-catalog-page #catalog-pages > .page.is-parent,
   body.single-page-mode.has-catalog-page #catalog-pages > .page.is-gallery-child-visible { display: flex !important; }
   body.single-page-mode.has-catalog-page #catalog-pages > .gallery-next-control.is-visible { display: flex; }
-  .gallery-next-control { display: none; justify-content: center; align-items: center; width: min(210mm, 100%); min-height: 92px; margin: 0 auto; padding: 18px; box-sizing: border-box; }
+  .gallery-next-control { display: none; justify-content: center; align-items: center; width: min(210mm, 100%); min-height: 54px; margin: 0 auto; padding: 4px 18px 10px; box-sizing: border-box; }
   .gallery-next-control button { min-height: 48px; padding: 12px 24px; color: var(--gold-soft); background: linear-gradient(145deg, var(--dark-2), var(--dark-3)); border: 1px solid var(--gold); border-radius: 10px; font: inherit; font-weight: 700; cursor: pointer; }
   .gallery-next-control button:hover, .gallery-next-control button:focus-visible { color: #fff; background: var(--gold); outline: none; }
   body.single-page-mode:not(.has-catalog-page) #catalog-pages > .gallery-next-control { display: none !important; }
@@ -2963,6 +2963,7 @@
     button.textContent = tr("otherProducts");
     button.setAttribute("aria-label", tr("otherProducts"));
     button.addEventListener("click", function () {
+      nextGallery.dataset.appendGallery = "true";
       nextGallery.scrollIntoView({ behavior: "smooth", block: "start" });
     });
     control.appendChild(button);
@@ -2974,12 +2975,15 @@
   }
   function setCurrentCatalogPage(sheet) {
     if (!sheet) return;
-    document.querySelectorAll("#catalog-pages > .page.is-current, #catalog-pages > .page.is-parent, #catalog-pages > .gallery-next-control.is-visible").forEach(function (page) {
-      page.classList.remove("is-current", "is-parent", "is-gallery-child-visible", "is-visible");
-    });
-    document.querySelectorAll("#catalog-pages > .page.is-gallery-child-visible").forEach(function (page) {
-      page.classList.remove("is-gallery-child-visible");
-    });
+    var appendGallery = sheet.dataset.appendGallery === "true";
+    if (!appendGallery) {
+      document.querySelectorAll("#catalog-pages > .page.is-current, #catalog-pages > .page.is-parent, #catalog-pages > .gallery-next-control.is-visible").forEach(function (page) {
+        page.classList.remove("is-current", "is-parent", "is-gallery-child-visible", "is-visible");
+      });
+      document.querySelectorAll("#catalog-pages > .page.is-gallery-child-visible").forEach(function (page) {
+        page.classList.remove("is-gallery-child-visible");
+      });
+    }
     var parentKey = sheet.dataset.parentKey || "";
     while (parentKey) {
       var parent = Array.prototype.find.call(
@@ -3007,6 +3011,7 @@
       if (nextControl) nextControl.classList.add("is-visible");
     }
     document.body.classList.add("has-catalog-page");
+    delete sheet.dataset.appendGallery;
   }
   var nativeScrollIntoView = Element.prototype.scrollIntoView;
   Element.prototype.scrollIntoView = function (options) {

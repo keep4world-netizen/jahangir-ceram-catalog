@@ -61,6 +61,8 @@ assert 'page.classList.add("is-gallery-child-visible")' in script
 assert 'function findNextGallery(gallery)' in script
 assert 'function ensureNextGalleryControl(gallery)' in script
 assert 'otherProducts' in script
+assert 'nextGallery.dataset.appendGallery = "true"' in script
+assert 'var appendGallery = sheet.dataset.appendGallery === "true"' in script
 assert 'page.classList.add("is-current")' in script
 assert 'function goToStaticPage(pageKey)' in script
 assert 'hideBackOnPages' in script

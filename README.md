@@ -49,7 +49,7 @@ The catalog uses hierarchical single-page navigation: only the cover or the curr
 
 Pages 2, 3, 40, and 60 intentionally show only the Home control; all other catalog pages keep both Back and Home controls.
 
-After the last product of an opened gallery, a localized “View other products” button is shown outside the product frame. It opens the next gallery in the same catalog category together with all of that gallery's products, and the chain continues when another gallery is available.
+After the last product of an opened gallery, a localized “View other products” button is shown outside the product frame with compact spacing. It appends the next gallery in the same catalog category together with all of that gallery's products below the existing gallery and its products; previous galleries remain visible, and the chain continues when another gallery is available.
 
 
 ## Continuous validation
