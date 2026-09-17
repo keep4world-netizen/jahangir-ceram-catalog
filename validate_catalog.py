@@ -42,6 +42,8 @@ assert 'data-language="en"' in html
 assert 'data-language="fa"' in html
 assert 'data-language="ar"' in html
 assert 'body.language-gate-active > .page' in css
+assert 'body.single-page-mode.has-catalog-page #catalog-pages > .page.is-current' in css
+assert 'body.single-page-mode.has-catalog-page > .page:first-of-type' in css
 assert '<div class="cover-controls">' in html
 assert 'Coming Soon<small>به‌زودی</small>' not in html
 assert 'data-placeholder="coming-soon">Coming Soon' in html
@@ -50,6 +52,8 @@ script_tag = soup.find('script')
 assert script_tag is not None
 script = script_tag.string or script_tag.get_text()
 assert 'document.body.classList.remove("language-gate-active")' in script
+assert 'function setCurrentCatalogPage(sheet)' in script
+assert 'Element.prototype.scrollIntoView' in script
 social_platforms = re.findall(r'data-platform="([a-z]+)"', script)
 assert social_platforms == [
     'instagram', 'whatsapp', 'telegram', 'linkedin', 'bale',

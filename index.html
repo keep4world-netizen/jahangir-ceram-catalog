@@ -1379,6 +1379,10 @@
 
   /* Initial language selection screen */
   body.language-gate-active > .page { display: none !important; }
+  body.single-page-mode #catalog-pages > .page { display: none !important; }
+  body.single-page-mode.has-catalog-page #catalog-pages > .page.is-current { display: flex !important; }
+  body.single-page-mode:not(.has-catalog-page) > .page:first-of-type { display: flex !important; }
+  body.single-page-mode.has-catalog-page > .page:first-of-type { display: none !important; }
   .language-gate {
     position: fixed;
     inset: 0;
@@ -2109,7 +2113,7 @@
   }
 </style>
 </head>
-<body class="language-gate-active">
+<body class="language-gate-active single-page-mode">
 <div class="language-gate" id="language-gate" role="dialog" aria-labelledby="language-gate-title" aria-describedby="language-gate-prompt">
   <div class="language-gate-card">
     <img class="language-gate-logo" src="/assets/images/jahangir-ceram-logo.webp" alt="Jahangir Ceram logo" decoding="async">
@@ -2927,6 +2931,20 @@
     try { element.scrollIntoView({ behavior: "auto", block: "start" }); }
     catch (error) { element.scrollIntoView(); }
   }
+  function setCurrentCatalogPage(sheet) {
+    if (!sheet) return;
+    document.querySelectorAll("#catalog-pages > .page.is-current").forEach(function (page) {
+      page.classList.remove("is-current");
+    });
+    sheet.classList.add("is-current");
+    document.body.classList.add("has-catalog-page");
+  }
+  var nativeScrollIntoView = Element.prototype.scrollIntoView;
+  Element.prototype.scrollIntoView = function (options) {
+    if (this.matches && this.matches("#catalog-pages > .page")) setCurrentCatalogPage(this);
+    else if (this.matches && this.matches("body > .page:first-of-type")) document.body.classList.remove("has-catalog-page");
+    return nativeScrollIntoView.call(this, options);
+  };
   var currentLanguage = readStoredLanguage();
   if (!LANGUAGES[currentLanguage]) currentLanguage = "en";
   function tr(key) {

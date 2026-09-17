@@ -45,6 +45,8 @@ The catalog supports desktop and mobile layouts, light and dark themes, English/
 
 On every new visit, the catalog first shows a language selection screen with English, Persian, and Arabic options. After the visitor chooses a language, the main catalog opens in that language and the choice is retained for the catalog controls.
 
+The catalog uses single-page navigation: only the cover or the currently selected catalog/category/product page is visible at a time. The Back and Home controls return to the previous page or the cover without showing the other catalog pages below it.
+
 
 ## Continuous validation
 
