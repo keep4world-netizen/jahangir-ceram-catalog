@@ -55,6 +55,7 @@ assert 'document.body.classList.remove("language-gate-active")' in script
 assert 'function setCurrentCatalogPage(sheet)' in script
 assert 'Element.prototype.scrollIntoView' in script
 assert 'sheet.dataset.parentKey = backTargetKey || ""' in script
+assert 'while (parentKey)' in script
 assert 'page.classList.add("is-current")' in script
 assert 'function goToStaticPage(pageKey)' in script
 social_platforms = re.findall(r'data-platform="([a-z]+)"', script)
