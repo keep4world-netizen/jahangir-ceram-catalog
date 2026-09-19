@@ -3443,7 +3443,7 @@
     var categoryId = pageKey.indexOf("sialk-") === 0 ? "sialk" : "jahangir";
     if (categoryId === "jahangir" && pageKey.indexOf("Nano-Polish-80" + String.fromCharCode(0xD7) + "80") !== -1) precreateJahangirNano80ProductPages(pageKey);
     else if (categoryId === "jahangir" && pageKey.indexOf("-60" + String.fromCharCode(0xD7) + "120") !== -1) precreateJahangir60120ProductPages(pageKey);
-    else if (categoryId === "jahangir" && pageKey !== "jahangir-Washbasin" && pageKey !== "jahangir-Puzzle") precreateProductPages(pageKey);
+    else if (categoryId === "jahangir" && pageKey.indexOf("jahangir-Decorative-") !== 0 && pageKey !== "jahangir-Washbasin" && pageKey !== "jahangir-Puzzle") precreateProductPages(pageKey);
     if (pageKey === "jahangir-Washbasin") precreateWashbasinProductPages(pageKey);
     if (pageKey === "jahangir-Puzzle") precreatePuzzleProductPages(pageKey);
     if (categoryId === "sialk" && pageKey.indexOf("-60" + String.fromCharCode(0xD7) + "120") !== -1) precreateSialkProductPages(pageKey);
