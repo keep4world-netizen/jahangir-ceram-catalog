@@ -959,8 +959,10 @@
   body.fitile-lightbox-open { overflow: hidden; }
   .fitile-lightbox { display: none; position: fixed; inset: 0; z-index: 1000; align-items: center; justify-content: center; padding: 24px; background: rgba(4,5,7,.88); direction: ltr; unicode-bidi: isolate; }
   .fitile-lightbox.is-open { display: flex; }
-  .fitile-lightbox-figure { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: min(86vw, 900px); min-height: 180px; max-height: 92vh; margin: 0; }
-  .fitile-lightbox-image { display: block; width: auto; height: auto; max-width: 100%; max-height: 82vh; object-fit: contain; border-radius: 12px; box-shadow: 0 18px 55px rgba(0,0,0,.5); }
+  .fitile-lightbox-figure { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: min(86vw, 900px); min-height: 180px; max-height: 92vh; margin: 0; overflow: hidden; }
+  .fitile-lightbox-image { display: block; width: auto; height: auto; max-width: 100%; max-height: 82vh; object-fit: contain; border-radius: 12px; box-shadow: 0 18px 55px rgba(0,0,0,.5); cursor: zoom-in; transform: scale(1); transform-origin: center center; transition: transform .2s ease, transform-origin .08s linear; user-select: none; -webkit-user-drag: none; }
+  .fitile-lightbox.is-zoomed .fitile-lightbox-image { cursor: zoom-out; transform: scale(2.35); transition: transform .18s ease; }
+  .fitile-lightbox.is-zoomed .fitile-lightbox-caption { opacity: .55; }
   .fitile-lightbox.is-loading .fitile-lightbox-image { visibility: hidden; }
   .fitile-lightbox-spinner { display: none; position: absolute; top: 50%; left: 50%; width: 42px; height: 42px; margin: -21px 0 0 -21px; border: 4px solid rgba(255,255,255,.25); border-top-color: var(--gold-soft); border-radius: 50%; animation: fitile-lightbox-spin .8s linear infinite; }
   .fitile-lightbox.is-loading .fitile-lightbox-spinner { display: block; }
@@ -2431,6 +2433,33 @@
     '</div>';
   }
 
+  function setupDecorativeLightboxZoom(lightbox) {
+    if (!lightbox || lightbox.dataset.zoomReady === "true") return;
+    var image = lightbox.querySelector(".fitile-lightbox-image");
+    if (!image) return;
+    lightbox.dataset.zoomReady = "true";
+    image.setAttribute("title", "Click to zoom; move the mouse to explore");
+    image.addEventListener("click", function (event) {
+      event.stopPropagation();
+      lightbox.classList.toggle("is-zoomed");
+      if (!lightbox.classList.contains("is-zoomed")) image.style.transformOrigin = "center center";
+    });
+    image.addEventListener("mousemove", function (event) {
+      if (!lightbox.classList.contains("is-zoomed")) return;
+      var width = image.offsetWidth || 1;
+      var height = image.offsetHeight || 1;
+      var x = Math.max(0, Math.min(100, (event.offsetX / width) * 100));
+      var y = Math.max(0, Math.min(100, (event.offsetY / height) * 100));
+      image.style.transformOrigin = x + "% " + y + "%";
+    });
+  }
+  function resetDecorativeLightboxZoom(lightbox) {
+    if (!lightbox) return;
+    lightbox.classList.remove("is-zoomed");
+    var image = lightbox.querySelector(".fitile-lightbox-image");
+    if (image) image.style.transformOrigin = "center center";
+  }
+
   var fitile460LightboxIndex = 0;
   function getFitile460Lightbox() {
     var lightbox = document.getElementById("fitile-460-lightbox");
@@ -2442,6 +2471,7 @@
     lightbox.setAttribute("aria-modal", "true");
     lightbox.setAttribute("aria-label", "Product image viewer");
     lightbox.innerHTML = '<button class="fitile-lightbox-close" type="button" aria-label="Close">×</button><button class="fitile-lightbox-prev" type="button" aria-label="Previous image">‹</button><figure class="fitile-lightbox-figure"><span class="fitile-lightbox-spinner" aria-label="Loading" role="status"></span><img class="fitile-lightbox-image" alt=""><figcaption class="fitile-lightbox-caption"></figcaption></figure><button class="fitile-lightbox-next" type="button" aria-label="Next image">›</button>';
+    setupDecorativeLightboxZoom(lightbox);
     document.body.appendChild(lightbox);
     lightbox.addEventListener("click", function (event) { if (event.target === lightbox) closeFitile460Lightbox(); });
     lightbox.querySelector(".fitile-lightbox-close").addEventListener("click", closeFitile460Lightbox);
@@ -2453,6 +2483,7 @@
     var lightbox = getFitile460Lightbox();
     fitile460LightboxIndex = (index + FITILE_4_60_ITEMS.length) % FITILE_4_60_ITEMS.length;
     var item = FITILE_4_60_ITEMS[fitile460LightboxIndex];
+    resetDecorativeLightboxZoom(lightbox);
     var image = lightbox.querySelector(".fitile-lightbox-image");
     var requestId = (lightbox._fitileLoadId || 0) + 1;
     lightbox._fitileLoadId = requestId;
@@ -2485,6 +2516,7 @@
     var lightbox = document.getElementById("takgol-3060-lightbox"); if (lightbox) return lightbox;
     lightbox = document.createElement("div"); lightbox.id = "takgol-3060-lightbox"; lightbox.className = "fitile-lightbox"; lightbox.setAttribute("role", "dialog"); lightbox.setAttribute("aria-modal", "true");
     lightbox.innerHTML = '<button class="fitile-lightbox-close" type="button" aria-label="Close">×</button><button class="fitile-lightbox-prev" type="button" aria-label="Previous image">‹</button><figure class="fitile-lightbox-figure"><span class="fitile-lightbox-spinner" aria-label="Loading" role="status"></span><img class="fitile-lightbox-image" alt=""><figcaption class="fitile-lightbox-caption"></figcaption></figure><button class="fitile-lightbox-next" type="button" aria-label="Next image">›</button>';
+    setupDecorativeLightboxZoom(lightbox);
     document.body.appendChild(lightbox);
     lightbox.addEventListener("click", function(e){ if(e.target===lightbox) closeTakgol3060Lightbox(); });
     lightbox.querySelector(".fitile-lightbox-close").addEventListener("click", closeTakgol3060Lightbox);
@@ -2493,7 +2525,8 @@
     return lightbox;
   }
   function showTakgol3060Lightbox(index) {
-    var lightbox=getTakgol3060Lightbox(); takgol3060LightboxIndex=(index+TAKGOL_30_60_ITEMS.length)%TAKGOL_30_60_ITEMS.length; var item=TAKGOL_30_60_ITEMS[takgol3060LightboxIndex]; var image=lightbox.querySelector(".fitile-lightbox-image"); var requestId=(lightbox._loadId||0)+1; lightbox._loadId=requestId;
+    var lightbox=getTakgol3060Lightbox();
+    resetDecorativeLightboxZoom(lightbox); takgol3060LightboxIndex=(index+TAKGOL_30_60_ITEMS.length)%TAKGOL_30_60_ITEMS.length; var item=TAKGOL_30_60_ITEMS[takgol3060LightboxIndex]; var image=lightbox.querySelector(".fitile-lightbox-image"); var requestId=(lightbox._loadId||0)+1; lightbox._loadId=requestId;
     lightbox.classList.add("is-loading","is-open"); image.onload=function(){if(lightbox._loadId===requestId)lightbox.classList.remove("is-loading");}; image.onerror=function(){if(lightbox._loadId===requestId)lightbox.classList.remove("is-loading");}; image.removeAttribute("src"); image.alt=item.name+" 30×60"; lightbox.querySelector(".fitile-lightbox-caption").textContent=item.name; document.body.classList.add("fitile-lightbox-open"); image.src=item.src; lightbox.querySelector(".fitile-lightbox-close").focus();
   }
   function closeTakgol3060Lightbox(){var lightbox=document.getElementById("takgol-3060-lightbox");if(lightbox)lightbox.classList.remove("is-open","is-loading");document.body.classList.remove("fitile-lightbox-open");}
@@ -2513,6 +2546,7 @@
       '<button class="fitile-lightbox-prev" type="button" aria-label="Previous image">‹</button>' +
       '<figure class="fitile-lightbox-figure"><span class="fitile-lightbox-spinner" aria-label="Loading" role="status"></span><img class="fitile-lightbox-image" alt=""><figcaption class="fitile-lightbox-caption"></figcaption></figure>' +
       '<button class="fitile-lightbox-next" type="button" aria-label="Next image">›</button>';
+    setupDecorativeLightboxZoom(lightbox);
     document.body.appendChild(lightbox);
     lightbox.addEventListener("click", function (event) {
       if (event.target === lightbox) closeFitile260Lightbox();
@@ -2526,6 +2560,7 @@
     var lightbox = getFitile260Lightbox();
     fitile260LightboxIndex = (index + FITILE_2_60_ITEMS.length) % FITILE_2_60_ITEMS.length;
     var item = FITILE_2_60_ITEMS[fitile260LightboxIndex];
+    resetDecorativeLightboxZoom(lightbox);
     var image = lightbox.querySelector(".fitile-lightbox-image");
     var requestId = (lightbox._fitileLoadId || 0) + 1;
     lightbox._fitileLoadId = requestId;
