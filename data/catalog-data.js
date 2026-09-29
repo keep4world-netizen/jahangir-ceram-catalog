@@ -489,6 +489,11 @@ window.CATALOG_DATA = {
      "name": "Tino",
      "gold": "Tino.webp",
      "silver": "Tino Silver.webp"
+    },
+    {
+     "name": "test panel admin",
+     "gold": "test-panel-admin-30x60.webp",
+     "silver": "test-panel-admin-30x60-silver.webp"
     }
    ]
   },
@@ -948,6 +953,10 @@ window.CATALOG_DATA = {
   "Una": {
    "fa": "یونا",
    "ar": "أونا"
+  },
+  "test panel admin": {
+   "fa": "تست پنل ادمین",
+   "ar": "ادمین بنل"
   }
  }
 };
