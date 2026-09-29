@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>پنل مدیریت کاتالوگ جهانگیر سرام</title>
+<link rel="icon" href="/assets/images/jahangir-ceram-logo.webp" type="image/webp">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap');
+  :root { --bg:#f3f3f1; --card:#fff; --ink:#26241f; --muted:#77736a; --line:#dcdad3; --gold:#b9821c; --gold-d:#8f6212; --danger:#b3261e; --ok:#1f7a3d; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Vazirmatn',Tahoma,sans-serif; background:var(--bg); color:var(--ink); font-size:15px; }
+  button, input, select { font:inherit; }
+  button { cursor:pointer; }
+  .btn { border:1px solid var(--line); background:var(--card); color:var(--ink); padding:8px 14px; border-radius:8px; }
+  .btn:hover { border-color:var(--gold); color:var(--gold-d); }
+  .btn.primary { background:var(--gold); border-color:var(--gold); color:#fff; font-weight:600; }
+  .btn.primary:hover { background:var(--gold-d); color:#fff; }
+  .btn.danger { color:var(--danger); }
+  .btn.danger:hover { border-color:var(--danger); color:var(--danger); }
+  .btn:disabled { opacity:.45; cursor:not-allowed; }
+  .btn.sm { padding:4px 9px; font-size:13px; }
+  header { position:sticky; top:0; z-index:10; display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:10px 16px; background:#2f2d29; color:#fff; }
+  header h1 { font-size:16px; margin:0; margin-inline-end:auto; }
+  header .btn { background:#3d3a35; border-color:#57534b; color:#fff; }
+  header .btn.primary { background:var(--gold); border-color:var(--gold); }
+  #status { font-size:13px; color:#d7d3c8; }
+  .layout { display:grid; grid-template-columns:270px 1fr; gap:16px; padding:16px; max-width:1300px; margin:0 auto; }
+  nav { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px; align-self:start; position:sticky; top:64px; max-height:calc(100vh - 80px); overflow:auto; }
+  nav h3 { margin:10px 8px 6px; font-size:13px; color:var(--gold-d); }
+  nav h3:first-child { margin-top:2px; }
+  .nav-item { display:flex; justify-content:space-between; gap:8px; width:100%; text-align:start; border:0; background:none; padding:8px; border-radius:8px; }
+  .nav-item:hover { background:#f4efe3; }
+  .nav-item.active { background:#f1e6cc; font-weight:600; }
+  .nav-item small { display:block; color:var(--muted); direction:ltr; text-align:right; font-weight:400; }
+  .count { background:#ece8dc; border-radius:99px; padding:0 8px; height:22px; line-height:22px; font-size:12px; align-self:center; }
+  .view-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+  .view-head h2 { margin:0; font-size:18px; margin-inline-end:auto; }
+  .view-head small { color:var(--muted); direction:ltr; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; }
+  .card.is-new { border-color:var(--ok); }
+  .thumb { aspect-ratio:1/1; background:#e9e7e0 center/cover no-repeat; position:relative; }
+  .thumb .tag { position:absolute; top:6px; inset-inline-start:6px; background:var(--ok); color:#fff; font-size:11px; padding:1px 7px; border-radius:99px; }
+  .card .name { padding:8px 10px 2px; font-weight:600; direction:ltr; text-align:left; word-break:break-word; }
+  .card .sub { padding:0 10px 6px; color:var(--muted); font-size:12px; min-height:18px; }
+  .card .acts { display:flex; gap:5px; padding:8px 10px 10px; margin-top:auto; flex-wrap:wrap; }
+  .empty { padding:40px; text-align:center; color:var(--muted); background:var(--card); border:1px dashed var(--line); border-radius:12px; }
+  .changes { background:#fff8e6; border:1px solid #ecd9a6; border-radius:10px; padding:8px 12px; margin-bottom:12px; font-size:13px; }
+  .changes ul { margin:4px 0 0; padding-inline-start:18px; }
+  /* login */
+  #login { max-width:520px; margin:8vh auto; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:24px; }
+  #login h2 { margin-top:0; }
+  #login input { width:100%; direction:ltr; padding:10px; border:1px solid var(--line); border-radius:8px; margin:8px 0 12px; }
+  #login ol { padding-inline-start:20px; color:var(--muted); font-size:13.5px; line-height:1.9; }
+  #login code { background:#f1efe8; padding:1px 5px; border-radius:4px; direction:ltr; unicode-bidi:embed; }
+  .err { color:var(--danger); font-size:14px; margin:8px 0 0; white-space:pre-wrap; }
+  /* modal */
+  dialog { border:0; border-radius:14px; padding:0; width:min(560px,94vw); box-shadow:0 20px 60px rgba(0,0,0,.35); }
+  dialog::backdrop { background:rgba(0,0,0,.45); }
+  .modal-in { padding:18px 20px 16px; }
+  .modal-in h3 { margin:0 0 12px; }
+  .field { margin-bottom:12px; }
+  .field label { display:block; font-size:13px; margin-bottom:4px; color:var(--muted); }
+  .field input[type=text] { width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; }
+  .field input.ltr { direction:ltr; text-align:left; }
+  .field .cur { display:flex; align-items:center; gap:10px; margin-top:6px; font-size:12px; color:var(--muted); }
+  .field .cur img { width:56px; height:56px; object-fit:cover; border-radius:6px; border:1px solid var(--line); }
+  .modal-foot { display:flex; gap:8px; justify-content:flex-start; margin-top:6px; }
+  #toast { position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:#2f2d29; color:#fff; padding:10px 16px; border-radius:10px; z-index:50; max-width:90vw; display:none; white-space:pre-wrap; }
+  #toast.err { background:var(--danger); }
+  @media (max-width: 800px) { .layout { grid-template-columns:1fr; } nav { position:static; max-height:none; } }
+</style>
+</head>
+<body>
+
+<div id="login" hidden>
+  <h2>ورود به پنل مدیریت</h2>
+  <p>برای ذخیره‌ی تغییرات روی GitHub به یک توکن نیاز است. توکن فقط در همین مرورگر ذخیره می‌شود.</p>
+  <ol>
+    <li>در GitHub به <code>Settings → Developer settings → Personal access tokens → Fine-grained tokens</code> برو و Generate new token بزن.</li>
+    <li>در Repository access فقط ریپوی <code>jahangir-ceram-catalog</code> را انتخاب کن.</li>
+    <li>در Permissions ← Repository permissions مقدار <code>Contents</code> را روی <code>Read and write</code> بگذار.</li>
+    <li>توکن ساخته‌شده را اینجا بچسبان.</li>
+  </ol>
+  <input id="tokenInput" type="password" placeholder="github_pat_..." autocomplete="off">
+  <button class="btn primary" id="loginBtn">ورود</button>
+  <p class="err" id="loginErr"></p>
+</div>
+
+<div id="app" hidden>
+  <header>
+    <h1>پنل مدیریت کاتالوگ جهانگیر سرام</h1>
+    <span id="status"></span>
+    <button class="btn primary" id="publishBtn" disabled>انتشار تغییرات</button>
+    <button class="btn" id="discardBtn" disabled>لغو تغییرات</button>
+    <a class="btn" href="/" target="_blank" rel="noopener" style="text-decoration:none">مشاهده سایت</a>
+    <button class="btn" id="logoutBtn">خروج</button>
+  </header>
+  <div class="layout">
+    <nav id="nav"></nav>
+    <section id="view"></section>
+  </div>
+</div>
+
+<dialog id="dlg"><div class="modal-in" id="dlgBody"></div></dialog>
+<div id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+  var OWNER = 'keep4world-netizen', REPO = 'jahangir-ceram-catalog';
+  var API = 'https://api.github.com';
+  var DATA_PATH = 'data/catalog-data.js';
+  var IMG = 'assets/images/';
+  var FA = { 'Jahangir Ceram':'جهانگیر سرام', 'Sialk Ceram':'سیلک سرام', 'Porcelain Ceramic':'سرامیک پرسلان', 'Matte':'مات',
+    'Nano Polish':'نانو پولیش', 'Crystal Polish':'کریستال پولیش', 'Washbasin':'روشویی', 'Puzzle':'پازل',
+    'Decorative':'دکوراتیو', 'Fitileh':'فیتیله', 'Takgol':'تک گل' };
+
+  var token = '', branch = 'main', headSha = '';
+  var treeSet = new Set(), data = null, loadedText = '';
+  var newFiles = new Map();   // path -> { blob, url }
+  var delFiles = new Set();   // existing repo paths to delete
+  var log = [];               // human readable change list
+  var curId = null;
+  var busy = false;
+
+  function $(id) { return document.getElementById(id); }
+  function el(html) { var t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]; }); }
+  function fa(s) { return String(s).split(' / ').map(function (p) { return FA[p] || p; }).join(' / '); }
+  function toast(msg, isErr) {
+    var t = $('toast'); t.textContent = msg; t.className = isErr ? 'err' : ''; t.style.display = 'block';
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.style.display = 'none'; }, isErr ? 7000 : 3500);
+  }
+  function setStatus(s) { $('status').textContent = s || ''; }
+
+  /* ---------- GitHub API ---------- */
+  function gh(path, opts) {
+    opts = opts || {};
+    var headers = Object.assign({ Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }, opts.headers || {});
+    return fetch(API + path, Object.assign({}, opts, { headers: headers })).then(function (r) {
+      if (r.ok) return r;
+      return r.text().then(function (t) {
+        var m = ''; try { m = JSON.parse(t).message; } catch (e) { m = t; }
+        var hint = r.status === 401 ? ' (توکن نامعتبر یا منقضی است)' : r.status === 403 || r.status === 404 ? ' (دسترسی توکن به ریپو یا مجوز Contents را بررسی کن)' : '';
+        throw new Error('GitHub ' + r.status + ': ' + m + hint);
+      });
+    });
+  }
+  function repo(p) { return '/repos/' + OWNER + '/' + REPO + p; }
+  function parseData(text) {
+    var i = text.indexOf('{'), j = text.lastIndexOf('}');
+    if (i < 0 || j < 0) throw new Error('قالب فایل data/catalog-data.js نامعتبر است');
+    return JSON.parse(text.slice(i, j + 1));
+  }
+  function serialize() { return 'window.CATALOG_DATA = ' + JSON.stringify(data, null, 1) + ';\n'; }
+  function fetchRemote() {
+    return gh(repo('/git/ref/heads/' + branch)).then(function (r) { return r.json(); }).then(function (ref) {
+      var sha = ref.object.sha;
+      return gh(repo('/git/commits/' + sha)).then(function (r) { return r.json(); }).then(function (c) {
+        return gh(repo('/contents/' + DATA_PATH + '?ref=' + sha), { headers: { Accept: 'application/vnd.github.raw+json' } })
+          .then(function (r) { return r.text(); }).then(function (text) { return { sha: sha, tree: c.tree.sha, text: text }; });
+      });
+    });
+  }
+
+  function load() {
+    setStatus('در حال بارگذاری از GitHub…');
+    return gh(repo('')).then(function (r) { return r.json(); }).then(function (info) {
+      branch = info.default_branch;
+      return fetchRemote();
+    }).then(function (rem) {
+      headSha = rem.sha; loadedText = rem.text; data = parseData(rem.text);
+      return gh(repo('/git/trees/' + rem.tree + '?recursive=1')).then(function (r) { return r.json(); });
+    }).then(function (t) {
+      treeSet = new Set(t.tree.filter(function (x) { return x.type === 'blob'; }).map(function (x) { return x.path; }));
+      newFiles.forEach(function (v) { URL.revokeObjectURL(v.url); });
+      newFiles = new Map(); delFiles = new Set(); log = [];
+      if (!data.names) data.names = {};
+      if (!curId || !findGallery(curId)) curId = data.galleries[0].id;
+      setStatus(''); render();
+    });
+  }
+
+  /* ---------- helpers ---------- */
+  function findGallery(id) { return data.galleries.filter(function (g) { return g.id === id; })[0]; }
+  function gLabel(g) { return fa(g.path) + (g.size ? ' · ' + g.size : ''); }
+  function slug(s) { return String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'product'; }
+  function sizeSlug(s) { return String(s).replace(/×/g, 'x').toLowerCase(); }
+  function isGS(g) { return g.kind === 'gold-silver'; }
+  function refs(g, p) {
+    if (isGS(g)) { var out = [IMG + p.gold, g.thumbs + p.gold]; if (p.silver) out.push(IMG + p.silver, g.thumbs + p.silver); return out; }
+    return [p.gallery, p.detail].filter(Boolean);
+  }
+  function refCount() {
+    var m = {}; data.galleries.forEach(function (g) { g.products.forEach(function (p) { refs(g, p).forEach(function (r) { m[r] = (m[r] || 0) + 1; }); }); }); return m;
+  }
+  function releaseUnreferenced(paths) {
+    var m = refCount();
+    paths.forEach(function (p) {
+      if (m[p]) return;
+      if (newFiles.has(p)) { URL.revokeObjectURL(newFiles.get(p).url); newFiles.delete(p); }
+      else if (treeSet.has(p)) delFiles.add(p);
+    });
+  }
+  function uniquePath(base, ext) {
+    var p = base + ext, n = 2;
+    while (treeSet.has(p) || newFiles.has(p) || delFiles.has(p)) { p = base + '-' + n + ext; n++; }
+    return p;
+  }
+  function imgUrl(path) {
+    if (newFiles.has(path)) return newFiles.get(path).url;
+    return '/' + encodeURI(path);
+  }
+  function cardImg(g, p) { return isGS(g) ? imgUrl(g.thumbs + p.gold) : imgUrl(p.gallery); }
+  function dirty() { return log.length > 0; }
+
+  /* ---------- image processing ---------- */
+  function toWebp(file, maxSide, square) {
+    return createImageBitmap(file).then(function (bmp) {
+      var sx = 0, sy = 0, sw = bmp.width, sh = bmp.height, cw, ch;
+      if (square) { var s = Math.min(sw, sh); sx = (sw - s) / 2; sy = (sh - s) / 2; sw = sh = s; cw = ch = Math.min(maxSide, s); }
+      else { var k = Math.min(1, maxSide / Math.max(sw, sh)); cw = Math.round(sw * k); ch = Math.round(sh * k); }
+      var c = document.createElement('canvas'); c.width = cw; c.height = ch;
+      c.getContext('2d').drawImage(bmp, sx, sy, sw, sh, 0, 0, cw, ch);
+      return new Promise(function (res) { c.toBlob(res, 'image/webp', 0.86); });
+    }).then(function (blob) {
+      if (!blob || blob.type !== 'image/webp') throw new Error('این مرورگر تبدیل به WebP را پشتیبانی نمی‌کند (از Chrome یا Edge استفاده کن).');
+      return blob;
+    });
+  }
+  function addFile(path, blob) { newFiles.set(path, { blob: blob, url: URL.createObjectURL(blob) }); }
+  function blobToB64(blob) {
+    return blob.arrayBuffer().then(function (buf) {
+      var bytes = new Uint8Array(buf), s = '';
+      for (var i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      return btoa(s);
+    });
+  }
+  function textToB64(text) {
+    var bytes = new TextEncoder().encode(text), s = '';
+    for (var i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(s);
+  }
+
+  /* ---------- rendering ---------- */
+  function render() { renderNav(); renderView(); renderBar(); }
+  function renderBar() {
+    $('publishBtn').disabled = !dirty() || busy;
+    $('discardBtn').disabled = !dirty() || busy;
+    $('publishBtn').textContent = dirty() ? 'انتشار تغییرات (' + log.length + ')' : 'انتشار تغییرات';
+  }
+  function renderNav() {
+    var nav = $('nav'), html = '', brand = null;
+    data.galleries.forEach(function (g) {
+      if (g.brand !== brand) { brand = g.brand; html += '<h3>' + esc(fa(brand)) + '</h3>'; }
+      html += '<button class="nav-item' + (g.id === curId ? ' active' : '') + '" data-id="' + esc(g.id) + '"><span>' + esc(gLabel(g)) +
+        '<small>' + esc(g.path + (g.size ? ' ' + g.size : '')) + '</small></span><span class="count">' + g.products.length + '</span></button>';
+    });
+    nav.innerHTML = html;
+    nav.querySelectorAll('.nav-item').forEach(function (b) { b.onclick = function () { curId = b.dataset.id; render(); window.scrollTo(0, 0); }; });
+  }
+  function renderView() {
+    var g = findGallery(curId), v = $('view'), html = '';
+    html += '<div class="view-head"><h2>' + esc(fa(g.brand)) + ' ← ' + esc(gLabel(g)) + '</h2><small>' + esc(g.brand + ' / ' + g.path + (g.size ? ' / ' + g.size : '')) + '</small>' +
+      '<button class="btn primary" id="addBtn">+ افزودن محصول</button></div>';
+    if (log.length) html += '<div class="changes"><b>تغییرات منتشرنشده:</b><ul>' + log.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ul></div>';
+    if (!g.products.length) html += '<div class="empty">این گالری محصولی ندارد.</div>';
+    else {
+      html += '<div class="grid">';
+      g.products.forEach(function (p, i) {
+        var nm = data.names[p.name] || {}, isNew = refs(g, p).some(function (r) { return newFiles.has(r); });
+        html += '<div class="card' + (isNew ? ' is-new' : '') + '"><div class="thumb" style="background-image:url(\'' + cardImg(g, p).replace(/'/g, '%27') + '\')">' + (isNew ? '<span class="tag">جدید</span>' : '') + '</div>' +
+          '<div class="name">' + esc(p.name) + '</div><div class="sub">' + esc([nm.fa, isGS(g) && p.silver ? '(Gold + Silver)' : ''].filter(Boolean).join(' · ')) + '</div>' +
+          '<div class="acts"><button class="btn sm" data-a="edit" data-i="' + i + '">ویرایش</button>' +
+          '<button class="btn sm danger" data-a="del" data-i="' + i + '">حذف</button>' +
+          '<button class="btn sm" data-a="prev" data-i="' + i + '" title="انتقال به قبل"' + (i === 0 ? ' disabled' : '') + '>→</button>' +
+          '<button class="btn sm" data-a="next" data-i="' + i + '" title="انتقال به بعد"' + (i === g.products.length - 1 ? ' disabled' : '') + '>←</button></div></div>';
+      });
+      html += '</div>';
+    }
+    v.innerHTML = html;
+    $('addBtn').onclick = function () { openForm(g, -1); };
+    v.querySelectorAll('[data-a]').forEach(function (b) {
+      b.onclick = function () {
+        var i = +b.dataset.i, a = b.dataset.a;
+        if (a === 'edit') openForm(g, i);
+        else if (a === 'del') removeProduct(g, i);
+        else move(g, i, a === 'prev' ? -1 : 1);
+      };
+    });
+  }
+
+  /* ---------- actions ---------- */
+  function move(g, i, d) {
+    var j = i + d; if (j < 0 || j >= g.products.length) return;
+    var t = g.products[i]; g.products[i] = g.products[j]; g.products[j] = t;
+    log.push('جابه‌جایی «' + t.name + '» در ' + gLabel(g)); render();
+  }
+  function removeProduct(g, i) {
+    var p = g.products[i];
+    if (!confirm('محصول «' + p.name + '» از گالری «' + gLabel(g) + '» حذف شود؟\n(بعد از «انتشار تغییرات» از سایت حذف می‌شود؛ فایل‌های عکسِ بلااستفاده‌اش هم پاک می‌شوند.)')) return;
+    var files = refs(g, p);
+    g.products.splice(i, 1);
+    releaseUnreferenced(files);
+    log.push('حذف «' + p.name + '» از ' + gLabel(g)); render();
+  }
+
+  function openForm(g, idx) {
+    var editing = idx >= 0, p = editing ? g.products[idx] : null, nm = editing ? (data.names[p.name] || {}) : {};
+    var gs = isGS(g);
+    function fileField(id, label, cur, opt) {
+      return '<div class="field"><label>' + label + (opt ? ' (اختیاری)' : '') + '</label><input type="file" id="' + id + '" accept="image/*">' +
+        (cur ? '<div class="cur"><img src="' + esc(imgUrl(cur)) + '" alt=""><span>تصویر فعلی؛ برای جایگزینی فایل جدید انتخاب کن</span></div>' : '') + '</div>';
+    }
+    var html = '<h3>' + (editing ? 'ویرایش «' + esc(p.name) + '»' : 'افزودن محصول به ' + esc(gLabel(g))) + '</h3>' +
+      '<div class="field"><label>نام انگلیسی (همان نامی که در سایت نمایش داده می‌شود)</label><input type="text" id="fName" class="ltr" value="' + esc(editing ? p.name : '') + '"></div>' +
+      '<div class="field"><label>نام فارسی (اختیاری)</label><input type="text" id="fFa" value="' + esc(nm.fa || '') + '"></div>' +
+      '<div class="field"><label>نام عربی (اختیاری)</label><input type="text" id="fAr" value="' + esc(nm.ar || '') + '"></div>';
+    if (gs) {
+      html += fileField('fGold', 'عکس Gold' + (editing ? '' : ' (الزامی)'), editing ? IMG + p.gold : '', false) +
+        fileField('fSilver', 'عکس Silver', editing && p.silver ? IMG + p.silver : '', true) +
+        (editing && p.silver ? '<div class="field"><label><input type="checkbox" id="fNoSilver"> حذف تصویر Silver این محصول</label></div>' : '');
+    } else {
+      html += fileField('fGal', 'عکس کارت گالری' + (editing ? '' : ' (الزامی)'), editing ? p.gallery : '', false) +
+        fileField('fDet', 'عکس صفحه محصول' + (editing ? '' : ' (الزامی)'), editing ? p.detail : '', false);
+    }
+    html += '<div class="modal-foot"><button class="btn primary" id="fOk">' + (editing ? 'ثبت ویرایش' : 'افزودن') + '</button><button class="btn" id="fCancel">انصراف</button></div><p class="err" id="fErr"></p>';
+    $('dlgBody').innerHTML = html;
+    var dlg = $('dlg'); dlg.showModal();
+    $('fCancel').onclick = function () { dlg.close(); };
+    $('fOk').onclick = function () {
+      $('fOk').disabled = true; $('fErr').textContent = '';
+      submitForm(g, idx).then(function () { dlg.close(); }).catch(function (e) { $('fErr').textContent = e.message || String(e); $('fOk').disabled = false; });
+    };
+  }
+
+  function submitForm(g, idx) {
+    var editing = idx >= 0, old = editing ? g.products[idx] : null, gs = isGS(g);
+    var name = $('fName').value.trim().replace(/\s+/g, ' '), faN = $('fFa').value.trim(), arN = $('fAr').value.trim();
+    if (!name) return Promise.reject(new Error('نام انگلیسی را وارد کن.'));
+    if (/[<>"'\\]/.test(name)) return Promise.reject(new Error('نام نباید شامل < > " \' \\ باشد.'));
+    if (/ (Gold|Silver)$/i.test(name)) return Promise.reject(new Error('انتهای نام نباید «Gold» یا «Silver» باشد؛ سایت خودش آن را اضافه می‌کند.'));
+    if (g.products.some(function (q, i) { return i !== idx && q.name.toLowerCase() === name.toLowerCase(); }))
+      return Promise.reject(new Error('محصولی با این نام در همین گالری وجود دارد.'));
+    var F = function (id) { var e = $(id); return e && e.files && e.files[0] ? e.files[0] : null; };
+    var base = slug(name), ss = g.size ? '-' + sizeSlug(g.size) : '';
+    var jobs = [], product;
+    if (gs) {
+      var gold = F('fGold'), silver = F('fSilver'), noSilver = $('fNoSilver') && $('fNoSilver').checked;
+      if (!editing && !gold) return Promise.reject(new Error('عکس Gold الزامی است.'));
+      product = editing ? { name: name, gold: old.gold, silver: noSilver ? '' : old.silver } : { name: name, gold: '', silver: '' };
+      var released = [];
+      if (gold) {
+        var gp = uniquePath(IMG + base + '-' + sizeSlug(g.size), '.webp'), gfile = gp.slice(IMG.length);
+        released = released.concat(editing ? refs(g, old).filter(function (r) { return r === IMG + old.gold || r === g.thumbs + old.gold; }) : []);
+        jobs.push(toWebp(gold, 1600, false).then(function (b) { addFile(gp, b); }));
+        jobs.push(toWebp(gold, 400, true).then(function (b) { addFile(g.thumbs + gfile, b); }));
+        product.gold = gfile;
+      }
+      if (silver) {
+        var sp = uniquePath(IMG + base + '-' + sizeSlug(g.size) + '-silver', '.webp'), sfile = sp.slice(IMG.length);
+        if (editing && old.silver) released.push(IMG + old.silver, g.thumbs + old.silver);
+        jobs.push(toWebp(silver, 1600, false).then(function (b) { addFile(sp, b); }));
+        jobs.push(toWebp(silver, 400, true).then(function (b) { addFile(g.thumbs + sfile, b); }));
+        product.silver = sfile;
+      } else if (editing && noSilver && old.silver) released.push(IMG + old.silver, g.thumbs + old.silver);
+    } else {
+      var gal = F('fGal'), det = F('fDet');
+      if (!editing && (!gal || !det)) return Promise.reject(new Error('هر دو عکس (کارت گالری و صفحه محصول) الزامی‌اند.'));
+      product = editing ? { name: name, gallery: old.gallery, detail: old.detail } : { name: name, gallery: '', detail: '' };
+      var released = [];
+      if (gal) { var pg = uniquePath(IMG + base + '-gallery' + ss, '.webp'); if (editing) released.push(old.gallery); jobs.push(toWebp(gal, 1000, false).then(function (b) { addFile(pg, b); })); product.gallery = pg; }
+      if (det) { var pd = uniquePath(IMG + base + ss, '.webp'); if (editing) released.push(old.detail); jobs.push(toWebp(det, 1600, false).then(function (b) { addFile(pd, b); })); product.detail = pd; }
+    }
+    return Promise.all(jobs).then(function () {
+      if (editing) {
+        g.products[idx] = product;
+        if (old.name !== name) delete_name_if_unused(old.name);
+        releaseUnreferenced(released);
+        log.push('ویرایش «' + old.name + '»' + (old.name !== name ? ' ← «' + name + '»' : '') + ' در ' + gLabel(g));
+      } else {
+        g.products.push(product);
+        log.push('افزودن «' + name + '» به ' + gLabel(g));
+      }
+      if (faN || arN) data.names[name] = { fa: faN, ar: arN }; else if (data.names[name]) delete data.names[name];
+      render();
+    });
+  }
+  function delete_name_if_unused(n) {
+    var used = data.galleries.some(function (g) { return g.products.some(function (p) { return p.name === n; }); });
+    if (!used) delete data.names[n];
+  }
+
+  /* ---------- publish ---------- */
+  function publish() {
+    if (!dirty() || busy) return;
+    if (!confirm('تغییرات روی GitHub ثبت و سایت به‌روز شود؟')) return;
+    busy = true; renderBar();
+    var paths = Array.from(newFiles.keys()), tree = [], step = 0, total = paths.length + 4;
+    function prog(t) { step++; setStatus(t + ' (' + step + '/' + total + ')'); }
+    prog('بررسی آخرین نسخه');
+    fetchRemote().then(function (rem) {
+      if (rem.text !== loadedText) throw new Error('فایل داده روی GitHub بعد از باز کردن پنل تغییر کرده است. صفحه را رفرش کن (تغییرات منتشرنشده از بین می‌روند) و دوباره انجام بده.');
+      var chain = Promise.resolve();
+      paths.forEach(function (p) {
+        chain = chain.then(function () { prog('آپلود ' + p.split('/').pop()); return blobToB64(newFiles.get(p).blob); })
+          .then(function (b64) { return gh(repo('/git/blobs'), { method: 'POST', body: JSON.stringify({ content: b64, encoding: 'base64' }) }); })
+          .then(function (r) { return r.json(); })
+          .then(function (j) { tree.push({ path: p, mode: '100644', type: 'blob', sha: j.sha }); });
+      });
+      return chain.then(function () {
+        prog('ثبت فایل داده');
+        return gh(repo('/git/blobs'), { method: 'POST', body: JSON.stringify({ content: textToB64(serialize()), encoding: 'base64' }) });
+      }).then(function (r) { return r.json(); }).then(function (j) {
+        tree.push({ path: DATA_PATH, mode: '100644', type: 'blob', sha: j.sha });
+        delFiles.forEach(function (p) { tree.push({ path: p, mode: '100644', type: 'blob', sha: null }); });
+        prog('ساخت commit');
+        return gh(repo('/git/trees'), { method: 'POST', body: JSON.stringify({ base_tree: rem.tree, tree: tree }) });
+      }).then(function (r) { return r.json(); }).then(function (t) {
+        return gh(repo('/git/commits'), { method: 'POST', body: JSON.stringify({ message: 'Admin: ' + log.length + ' catalog change(s)\n\n' + log.join('\n'), tree: t.sha, parents: [rem.sha] }) });
+      }).then(function (r) { return r.json(); }).then(function (c) {
+        prog('به‌روزرسانی branch');
+        return gh(repo('/git/refs/heads/' + branch), { method: 'PATCH', body: JSON.stringify({ sha: c.sha }) });
+      });
+    }).then(function () {
+      busy = false; toast('منتشر شد ✓ تا حدود یک دقیقه دیگر روی سایت دیده می‌شود.');
+      return load();
+    }).catch(function (e) {
+      busy = false; setStatus(''); renderBar(); toast('خطا: ' + (e.message || e), true);
+    });
+  }
+
+  /* ---------- boot ---------- */
+  function showLogin(msg) { $('app').hidden = true; $('login').hidden = false; $('loginErr').textContent = msg || ''; }
+  function start() {
+    $('login').hidden = true; $('app').hidden = false;
+    load().catch(function (e) {
+      setStatus('');
+      if (/401|توکن/.test(e.message)) { localStorage.removeItem('jc_token'); showLogin(e.message); }
+      else toast(e.message || String(e), true);
+    });
+  }
+  $('loginBtn').onclick = function () {
+    var v = $('tokenInput').value.trim(); if (!v) return;
+    token = v; localStorage.setItem('jc_token', v); start();
+  };
+  $('tokenInput').onkeydown = function (e) { if (e.key === 'Enter') $('loginBtn').click(); };
+  $('logoutBtn').onclick = function () {
+    if (dirty() && !confirm('تغییرات منتشرنشده از بین می‌رود. خارج می‌شوی؟')) return;
+    localStorage.removeItem('jc_token'); token = ''; showLogin('');
+  };
+  $('publishBtn').onclick = publish;
+  $('discardBtn').onclick = function () { if (confirm('همه‌ی تغییرات منتشرنشده لغو شود؟')) load().catch(function (e) { toast(e.message, true); }); };
+  window.addEventListener('beforeunload', function (e) { if (dirty()) { e.preventDefault(); e.returnValue = ''; } });
+
+  try { token = localStorage.getItem('jc_token') || ''; } catch (e) { token = ''; }
+  if (token) start(); else showLogin('');
+})();
+</script>
+</body>
+</html>

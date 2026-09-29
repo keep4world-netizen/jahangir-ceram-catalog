@@ -2146,6 +2146,7 @@
 <div class="page-number">Page 1</div>
 </div>
 <div id="catalog-pages"></div>
+<script src="/data/catalog-data.js"></script>
 <script>
 
   /* Two main categories — the Sialk Ceram logo has not been uploaded yet and will be added when available */
@@ -2408,6 +2409,52 @@
 
   // Matic Light had a NO IMAGE AVAILABLE placeholder; use a valid light product photo fallback.
   MATTE_IMAGES[3] = MATTE_IMAGES[1];
+
+  /* ---- Catalog data layer: product lists are loaded from /data/catalog-data.js (edited by /admin/).
+     If that file is missing or invalid, the built-in lists above stay in effect. ---- */
+  (function applyCatalogData() {
+    var D = window.CATALOG_DATA;
+    if (!D || !Array.isArray(D.galleries)) return;
+    function gal(id) { return D.galleries.filter(function (g) { return g.id === id; })[0]; }
+    function fill(arr, values) { arr.length = 0; values.forEach(function (v) { arr.push(v); }); }
+    function simple(id, names, gallery, detail) {
+      var g = gal(id); if (!g) return;
+      fill(names, g.products.map(function (p) { return p.name; }));
+      if (gallery) fill(gallery, g.products.map(function (p) { return p.gallery; }));
+      if (detail) fill(detail, g.products.map(function (p) { return p.detail; }));
+    }
+    function goldSilver(id, items) {
+      var g = gal(id); if (!g) return;
+      var out = [];
+      g.products.forEach(function (p) {
+        out.push({ name: p.name, type: "product", src: "assets/images/" + p.gold, thumb: g.thumbs + p.gold });
+        if (p.silver) out.push({ name: p.name + " Silver", type: "silver", src: "assets/images/" + p.silver, thumb: g.thumbs + p.silver });
+      });
+      fill(items, out);
+    }
+    simple("matte60120", MATTE_60120_PRODUCTS, MATTE_60120_GALLERY_IMAGES, MATTE_60120_DETAIL_IMAGES);
+    simple("jnano80", JAHANGIR_NANO_80_PRODUCTS, JAHANGIR_NANO_80_GALLERY_IMAGES, JAHANGIR_NANO_80_DETAIL_IMAGES);
+    simple("washbasin", WASHBASIN_PRODUCTS, WASHBASIN_GALLERY_IMAGES, WASHBASIN_DETAIL_IMAGES);
+    simple("puzzle", PUZZLE_PRODUCTS, PUZZLE_GALLERY_IMAGES, PUZZLE_DETAIL_IMAGES);
+    simple("sialk19", SIALK_PAGE19_PRODUCTS, SIALK_PAGE19_IMAGES, SIALK_PAGE19_DETAIL_IMAGES);
+    simple("sialk25", SIALK_PAGE25_PRODUCTS, SIALK_PAGE25_IMAGES, SIALK_PAGE25_DETAIL_IMAGES);
+    simple("sialk30", SIALK_PAGE30_PRODUCTS, SIALK_PAGE30_IMAGES, SIALK_PAGE30_DETAIL_IMAGES);
+    simple("sialk34", SIALK_PAGE34_PRODUCTS, SIALK_PAGE34_IMAGES, SIALK_PAGE34_DETAIL_IMAGES);
+    goldSilver("fitile260", FITILE_2_60_ITEMS);
+    goldSilver("fitile460", FITILE_4_60_ITEMS);
+    goldSilver("takgol3060", TAKGOL_30_60_ITEMS);
+    var m = gal("matte80");
+    if (m) {
+      fill(MATTE_PRODUCTS, m.products.map(function (p) { return p.name; }));
+      fill(MATTE_IMAGES, m.products.map(function (p) { return p.gallery; }));
+      Object.keys(PRODUCT_IMAGES).forEach(function (k) { delete PRODUCT_IMAGES[k]; });
+      m.products.forEach(function (p) {
+        if (p.detail) PRODUCT_IMAGES[p.name] = p.detail;
+        if (p.name === "Matic Light") MATIC_LIGHT_GALLERY_IMAGE = p.gallery;
+      });
+    }
+  })();
+
 
   function renderFitile260Gallery() {
     return '<div class="product-grid fitile-260-grid" aria-label="Fitile 2-60 Products">' +
@@ -2981,6 +3028,18 @@
     "Teylor": { fa: "تیلور", ar: "تايلور" },
     "Tino": { fa: "تینو", ar: "تينو" }
   };
+
+  /* Extra/edited product names (fa/ar) from /data/catalog-data.js */
+  (function applyCatalogNames() {
+    var D = window.CATALOG_DATA;
+    if (!D || !D.names) return;
+    Object.keys(D.names).forEach(function (n) {
+      var t = D.names[n]; if (!t) return;
+      var cur = NAME_TRANSLATIONS[n] || {};
+      NAME_TRANSLATIONS[n] = { fa: t.fa || cur.fa, ar: t.ar || cur.ar };
+    });
+  })();
+
   function readStoredLanguage() {
     try { return window.localStorage.getItem("jc-language") || "en"; } catch (error) { return "en"; }
   }
