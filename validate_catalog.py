@@ -49,7 +49,7 @@ assert '<div class="cover-controls">' in html
 assert 'Coming Soon<small>به‌زودی</small>' not in html
 assert 'data-placeholder="coming-soon">Coming Soon' in html
 
-script_tag = soup.find('script')
+script_tag = soup.find('script', src=False)
 assert script_tag is not None
 script = script_tag.string or script_tag.get_text()
 assert 'document.body.classList.remove("language-gate-active")' in script
