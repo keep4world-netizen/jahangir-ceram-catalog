@@ -121,6 +121,11 @@
   nav summary small { display:block; margin-inline-start:18px; color:var(--muted); font-weight:400; direction:ltr; text-align:right; }
   nav > details > summary { color:var(--gold-d); font-size:15px; }
   nav .sub { margin-inline-start:9px; padding-inline-start:8px; border-inline-start:1px solid var(--line); }
+
+  .tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; } .tab.on { border-color:var(--gold); color:var(--gold-d); background:#2b2517; }
+  textarea { width:100%; padding:7px 9px; background:#111214; color:var(--ink); border:1px solid var(--line); border-radius:8px; font:inherit; line-height:1.7; resize:vertical; }
+  .tr-row { align-items:start; } .tr-row small { display:block; margin-top:3px; color:var(--muted); direction:ltr; text-align:left; font-size:11px; }
+  .tr-head { background:#131417; color:var(--gold-d); font-size:13px; font-weight:600; align-items:center; }
 </style>
 </head>
 <body>
@@ -176,6 +181,7 @@
   var log = [];               // human readable change list
   var curId = null;
   var busy = false;
+  var defs = { ui: {}, names: {}, contact: {} };   // the site's built-in words, read from the live index.html
 
   function $(id) { return document.getElementById(id); }
   function el(html) { var t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; }
@@ -235,7 +241,7 @@
       newFiles = new Map(); delFiles = new Set(); log = [];
       if (!data.names) data.names = {};
       if (curId !== '__tr' && (!curId || !findGallery(curId))) curId = data.galleries[0].id;
-      setStatus(''); render();
+      return loadDefaults().then(function () { setStatus(''); render(); });
     });
   }
 
@@ -527,35 +533,92 @@
     });
   }
 
-  /* ---------- translation audit ---------- */
-  function trNames() { var seen = {}, out = []; data.galleries.forEach(function (g) { g.products.forEach(function (p) { if (!seen[p.name]) { seen[p.name] = 1; out.push(p.name); } }); }); return out; }
-  function trIssues(nm) {
+  /* ---------- translation audit (every word of the catalog) ---------- */
+  var SEC = { ui: 'متن‌های سایت', names: 'نام‌ها و دسته‌ها', contact: 'اطلاعات تماس' };
+  function grab(html, name) {
+    var i = html.indexOf('var ' + name + ' ='); if (i < 0) return null;
+    var st = html.indexOf('{', i), d = 0, q = '', j, c;
+    for (j = st; j < html.length; j++) {
+      c = html[j];
+      if (q) { if (c === '\\') j++; else if (c === q) q = ''; continue; }
+      if (c === '"' || c === "'" || c === '`') q = c;
+      else if (c === '/' && html[j + 1] === '/') { j = html.indexOf('\n', j); if (j < 0) break; }
+      else if (c === '{') d++;
+      else if (c === '}' && --d === 0) break;
+    }
+    return new Function('return (' + html.slice(st, j + 1) + ')')();
+  }
+  function loadDefaults() {
+    return fetch('/', { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (html) {
+      var L = grab(html, 'LANGUAGES'), N = grab(html, 'NAME_TRANSLATIONS'), C = grab(html, 'CONTACT_DETAILS');
+      defs = { ui: {}, names: N || {}, contact: {} };
+      if (L) Object.keys(L.en.ui).forEach(function (k) { defs.ui[k] = { en: L.en.ui[k], fa: (L.fa.ui || {})[k] || '', ar: (L.ar.ui || {})[k] || '' }; });
+      if (C) Object.keys(C).forEach(function (k) { if (!C[k].value) defs.contact[k] = { en: C[k].en || '', fa: C[k].fa || '', ar: C[k].ar || '' }; });
+    }).catch(function () { toast('کلمات پیش‌فرض سایت خوانده نشد؛ فقط نام محصولات بررسی می‌شود.', true); });
+  }
+  function eff(sec, k, l) {
+    var o = data[sec] && data[sec][k]; if (o && o[l]) return o[l];
+    var d = defs[sec] && defs[sec][k]; return (d && d[l]) || '';
+  }
+  function trNames() {
+    var seen = {}, out = [];
+    function add(n) { n = String(n || '').trim(); if (n && !seen[n]) { seen[n] = 1; out.push(n); } }
+    data.galleries.forEach(function (g) { add(g.brand); String(g.path).split(' / ').forEach(add); g.products.forEach(function (p) { add(p.name); }); });
+    Object.keys(defs.names).forEach(add); Object.keys(data.names || {}).forEach(add);
+    return out;
+  }
+  function trIssues(nm, en, needEn) {
     var i = [], f = (nm.fa || '').trim(), a = (nm.ar || '').trim(), any = /[\u0600-\u06FF]/;
+    if (needEn && !String(en || '').trim()) i.push('انگلیسی خالی');
     if (!f) i.push('فارسی خالی'); else { if (!any.test(f)) i.push('فارسی: حروف فارسی ندارد'); if (/[كي]/.test(f)) i.push('فارسی: حرف عربی (ك/ي)'); }
     if (!a) i.push('عربی خالی'); else { if (!any.test(a)) i.push('عربی: حروف عربی ندارد'); else if (/[پچژگ]/.test(a)) i.push('عربی: حرف فارسی (پ چ ژ گ)'); }
     if (f && a && f === a) i.push('فارسی و عربی یکسان');
+    (String(en || '').match(/\{\w+\}/g) || []).forEach(function (ph) {
+      if (f && f.indexOf(ph) < 0) i.push('فارسی: ' + ph + ' جا افتاده'); if (a && a.indexOf(ph) < 0) i.push('عربی: ' + ph + ' جا افتاده');
+    });
     return i;
   }
-  function trCount() { return trNames().filter(function (n) { return trIssues(data.names[n] || {}).length; }).length; }
+  function trEntries() {
+    var out = [];
+    Object.keys(defs.ui).forEach(function (k) { out.push({ sec: 'ui', k: k }); });
+    Object.keys(defs.contact).forEach(function (k) { out.push({ sec: 'contact', k: k }); });
+    trNames().forEach(function (n) { out.push({ sec: 'names', k: n }); });
+    out.forEach(function (e) { e.en = e.sec === 'names' ? e.k : eff(e.sec, e.k, 'en'); e.is = trIssues({ fa: eff(e.sec, e.k, 'fa'), ar: eff(e.sec, e.k, 'ar') }, e.en, e.sec !== 'names'); });
+    return out;
+  }
+  function trCount() { return trEntries().filter(function (e) { return e.is.length; }).length; }
   function issHtml(is) { return is.length ? is.map(function (t) { return '<span class="bad">' + esc(t) + '</span>'; }).join('') : '<span class="good">✓ سالم</span>'; }
+  function fld(e, l) {
+    var val = eff(e.sec, e.k, l), big = val.length > 70 || val.indexOf('\n') >= 0, dir = l === 'en' ? 'ltr' : 'rtl', ph = l === 'fa' ? 'فارسی' : l === 'ar' ? 'العربية' : 'English';
+    return big ? '<textarea rows="5" data-l="' + l + '" dir="' + dir + '" placeholder="' + ph + '">' + esc(val) + '</textarea>'
+      : '<input type="text" data-l="' + l + '" dir="' + dir + '" placeholder="' + ph + '" value="' + esc(val) + '">';
+  }
   function renderTr(v) {
-    var only = !!renderTr.only, names = trNames(), n0 = trCount();
-    var html = '<div class="view-head"><h2>بررسی ترجمه‌ها (فارسی / عربی)</h2><label class="ck"><input type="checkbox" id="trOnly"' + (only ? ' checked' : '') + '> فقط موارد مشکل‌دار (' + n0 + ')</label></div>' +
-      '<p class="hint">نام هر محصول یک‌بار آمده و در همه‌ی گالری‌ها اعمال می‌شود. بعد از ویرایش «انتشار تغییرات» را بزن.</p><div class="tr">';
-    names.forEach(function (n) {
-      var nm = data.names[n] || {}, is = trIssues(nm); if (only && !is.length) return;
-      html += '<div class="tr-row" data-n="' + esc(n) + '"><div class="en">' + esc(n) + '</div><input type="text" data-l="fa" dir="rtl" placeholder="فارسی" value="' + esc(nm.fa || '') + '">' +
-        '<input type="text" data-l="ar" dir="rtl" placeholder="العربية" value="' + esc(nm.ar || '') + '"><div class="iss">' + issHtml(is) + '</div></div>';
+    var tab = renderTr.tab || 'ui', only = !!renderTr.only, all = trEntries(), cnt = { ui: 0, names: 0, contact: 0 }, total = 0;
+    all.forEach(function (e) { if (e.is.length) { cnt[e.sec]++; total++; } });
+    var html = '<div class="view-head"><h2>بررسی ترجمه‌ها (همه‌ی کلمات کاتالوگ)</h2><label class="ck"><input type="checkbox" id="trOnly"' + (only ? ' checked' : '') + '> فقط موارد مشکل‌دار (' + total + ')</label></div><div class="tabs">';
+    Object.keys(SEC).forEach(function (s) { html += '<button class="btn sm tab' + (s === tab ? ' on' : '') + '" data-tab="' + s + '">' + SEC[s] + ' <span class="count ' + (cnt[s] ? 'warn' : 'okc') + '">' + (cnt[s] || '✓') + '</span></button>'; });
+    html += '</div><p class="hint">مقدار خالی یعنی همان متن پیش‌فرض سایت. بعد از ویرایش «انتشار تغییرات» را بزن.</p><div class="tr"><div class="tr-row tr-head"><div>English</div><div>فارسی</div><div>العربية</div><div>وضعیت</div></div>';
+    var rows = 0;
+    all.forEach(function (e) {
+      if (e.sec !== tab || (only && !e.is.length)) return; rows++;
+      html += '<div class="tr-row" data-sec="' + e.sec + '" data-k="' + esc(e.k) + '"><div>' + (e.sec === 'names' ? '<div class="en">' + esc(e.k) + '</div>' : fld(e, 'en') + '<small>' + esc(e.k) + '</small>') +
+        '</div><div>' + fld(e, 'fa') + '</div><div>' + fld(e, 'ar') + '</div><div class="iss">' + issHtml(e.is) + '</div></div>';
     });
-    v.innerHTML = html + (only && !n0 ? '<div class="empty">همه‌ی ترجمه‌ها سالم به نظر می‌رسند ✓</div>' : '') + '</div>';
+    v.innerHTML = html + '</div>' + (rows ? '' : '<div class="empty">' + (only ? 'در این بخش مشکلی پیدا نشد ✓' : 'موردی در این بخش نیست.') + '</div>');
     $('trOnly').onchange = function () { renderTr.only = this.checked; renderTr(v); };
-    v.querySelectorAll('.tr-row input').forEach(function (inp) {
+    v.querySelectorAll('[data-tab]').forEach(function (b) { b.onclick = function () { renderTr.tab = b.dataset.tab; renderTr(v); }; });
+    v.querySelectorAll('.tr-row [data-l]').forEach(function (inp) {
       inp.onchange = function () {
-        var row = inp.closest('.tr-row'), n = row.dataset.n, nm = Object.assign({ fa: '', ar: '' }, data.names[n]), tag = 'ترجمه «' + n + '»';
-        nm[inp.dataset.l] = inp.value.trim();
-        if (nm.fa || nm.ar) data.names[n] = nm; else delete data.names[n];
-        log = log.filter(function (l) { return l.indexOf(tag) !== 0; }); log.push(tag + ' ویرایش شد');
-        row.querySelector('.iss').innerHTML = issHtml(trIssues(nm)); renderBar(); renderNav();
+        var row = inp.closest('.tr-row'), sec = row.dataset.sec, k = row.dataset.k, l = inp.dataset.l, val = inp.value.trim();
+        var def = ((defs[sec] || {})[k] || {})[l] || '', store = data[sec] || (data[sec] = {}), o = Object.assign({}, store[k]), tag = 'ترجمه «' + k + '»';
+        if (!val || val === def) delete o[l]; else o[l] = val;
+        if (Object.keys(o).length) store[k] = o; else delete store[k];
+        if (sec !== 'names' && !Object.keys(store).length) delete data[sec];
+        log = log.filter(function (x) { return x.indexOf(tag) !== 0; }); log.push(tag + ' ویرایش شد');
+        inp.value = eff(sec, k, l);
+        var en = sec === 'names' ? k : eff(sec, k, 'en');
+        row.querySelector('.iss').innerHTML = issHtml(trIssues({ fa: eff(sec, k, 'fa'), ar: eff(sec, k, 'ar') }, en, sec !== 'names')); renderBar(); renderNav();
       };
     });
   }
