@@ -71,6 +71,41 @@
   #toast { position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:#2f2d29; color:#fff; padding:10px 16px; border-radius:10px; z-index:50; max-width:90vw; display:none; white-space:pre-wrap; }
   #toast.err { background:var(--danger); }
   @media (max-width: 800px) { .layout { grid-template-columns:1fr; } nav { position:static; max-height:none; } }
+
+  /* ---- dark / gold theme (matches the catalog) ---- */
+  :root { --bg:#0e0f11; --card:#181a1d; --ink:#ece7dc; --muted:#9b9486; --line:#34322c; --gold:#d4a84b; --gold-d:#f2d48b; --danger:#ff8178; --ok:#5acb8a; }
+  body { background:radial-gradient(1200px 500px at 50% -120px, #2a2416 0%, transparent 70%), var(--bg); }
+  header { background:#131417; border-bottom:1px solid rgba(242,212,139,.35); }
+  header h1 { color:var(--gold-d); }
+  .btn { background:#1f2124; }
+  .btn.primary, .btn.primary:hover { color:#1a1408; }
+  .btn.primary { background:linear-gradient(135deg,#f2d48b,#d4a84b); }
+  .btn.primary:hover { filter:brightness(1.08); }
+  nav .nav-item { color:var(--ink); } nav .nav-item:hover { background:#22242a; }
+  nav .nav-item.active { background:#2b2517; box-shadow:inset 0 0 0 1px rgba(242,212,139,.45); }
+  nav h3 { color:var(--gold-d); }
+  .count { background:#2a2c31; color:var(--ink); } .count.warn { background:#5a2b27; color:#ffd2ce; } .count.okc { background:#1f3a2b; color:#b8f0d1; }
+  .card { background:var(--card); } .card.is-new { box-shadow:0 0 0 1px var(--gold); }
+  .thumb { background-color:#111214; }
+  .changes { background:#2a2417; border-color:#5b4a22; color:var(--ink); }
+  #login code { background:#26282c; }
+  input[type=text], input[type=password], input[type=file] { background:#111214; color:var(--ink); border:1px solid var(--line); border-radius:8px; }
+  dialog { background:var(--card); color:var(--ink); } dialog::backdrop { background:rgba(0,0,0,.7); }
+  #toast { border:1px solid var(--line); }
+  /* translation audit */
+  .hint { color:var(--muted); font-size:13px; margin:0 0 10px; } .ck { font-size:13px; color:var(--muted); }
+  .tr { background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .tr-row { display:grid; grid-template-columns:1fr 1.3fr 1.3fr 1.2fr; gap:8px; align-items:center; padding:8px 10px; border-bottom:1px solid var(--line); }
+  .tr-row:last-child { border-bottom:0; } .tr-row input { width:100%; padding:7px 9px; }
+  .tr-row .en { direction:ltr; text-align:left; font-weight:600; } .tr-row .iss { font-size:12px; display:flex; flex-wrap:wrap; gap:4px; }
+  .bad { background:#4a2724; color:#ffc9c4; border-radius:99px; padding:1px 8px; } .good { color:var(--ok); }
+  /* history + preview */
+  .hist { max-height:60vh; overflow:auto; } .hrow { display:flex; gap:10px; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--line); }
+  .hmsg { font-size:12px; color:var(--muted); margin-top:2px; } .curv { background:var(--gold); color:#1a1408; border-radius:99px; padding:0 8px; font-size:11px; }
+  #pv { width:min(1240px,98vw); height:94vh; padding:0; border:1px solid rgba(242,212,139,.4); border-radius:14px; overflow:hidden; }
+  #pv[open] { display:flex; flex-direction:column; } #pv .bar { display:flex; gap:8px; align-items:center; padding:8px 12px; background:#131417; } #pv .bar b { margin-inline-end:auto; color:var(--gold-d); }
+  #pv .wrap { flex:1; background:#050506; overflow:auto; } #pv iframe { display:block; border:0; width:100%; height:100%; background:#fff; } #pv.m iframe { width:400px; margin:0 auto; }
+  @media (max-width: 800px) { .tr-row { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -90,6 +125,8 @@
     <span id="status"></span>
     <button class="btn primary" id="publishBtn" disabled>انتشار تغییرات</button>
     <button class="btn" id="discardBtn" disabled>لغو تغییرات</button>
+    <button class="btn" id="previewBtn">پیش‌نمایش سایت</button>
+    <button class="btn" id="histBtn">تاریخچه</button>
     <a class="btn" href="/" target="_blank" rel="noopener" style="text-decoration:none">مشاهده سایت</a>
     <button class="btn" id="logoutBtn">خروج</button>
   </header>
@@ -100,6 +137,7 @@
 </div>
 
 <dialog id="dlg"><div class="modal-in" id="dlgBody"></div></dialog>
+<dialog id="pv"><div class="bar"><b>پیش‌نمایش (منتشر نشده)</b><button class="btn sm" id="pvM">موبایل / دسکتاپ</button><button class="btn sm" id="pvClose">بستن</button></div><div class="wrap"><iframe id="pvFrame" title="preview"></iframe></div></dialog>
 <div id="toast"></div>
 
 <script>
@@ -176,7 +214,7 @@
       newFiles.forEach(function (v) { URL.revokeObjectURL(v.url); });
       newFiles = new Map(); delFiles = new Set(); log = [];
       if (!data.names) data.names = {};
-      if (!curId || !findGallery(curId)) curId = data.galleries[0].id;
+      if (curId !== '__tr' && (!curId || !findGallery(curId))) curId = data.galleries[0].id;
       setStatus(''); render();
     });
   }
@@ -266,7 +304,8 @@
     $('publishBtn').textContent = dirty() ? 'انتشار تغییرات (' + log.length + ')' : 'انتشار تغییرات';
   }
   function renderNav() {
-    var nav = $('nav'), html = '', brand = null;
+    var nav = $('nav'), html = '', brand = null, tc = trCount();
+    html += '<button class="nav-item' + (curId === '__tr' ? ' active' : '') + '" data-id="__tr"><span>بررسی ترجمه‌ها<small>Persian / Arabic names</small></span><span class="count ' + (tc ? 'warn' : 'okc') + '">' + (tc || '✓') + '</span></button>';
     data.galleries.forEach(function (g) {
       if (g.brand !== brand) { brand = g.brand; html += '<h3>' + esc(fa(brand)) + '</h3>'; }
       html += '<button class="nav-item' + (g.id === curId ? ' active' : '') + '" data-id="' + esc(g.id) + '"><span>' + esc(gLabel(g)) +
@@ -276,6 +315,7 @@
     nav.querySelectorAll('.nav-item').forEach(function (b) { b.onclick = function () { curId = b.dataset.id; render(); window.scrollTo(0, 0); }; });
   }
   function renderView() {
+    if (curId === '__tr') return renderTr($('view'));
     var g = findGallery(curId), v = $('view'), html = '';
     html += '<div class="view-head"><h2>' + esc(fa(g.brand)) + ' ← ' + esc(gLabel(g)) + '</h2><small>' + esc(g.brand + ' / ' + g.path + (g.size ? ' / ' + g.size : '')) + '</small>' +
       '<button class="btn primary" id="addBtn">+ افزودن محصول</button></div>';
@@ -445,6 +485,102 @@
       busy = false; setStatus(''); renderBar(); toast('خطا: ' + (e.message || e), true);
     });
   }
+
+  /* ---------- translation audit ---------- */
+  function trNames() { var seen = {}, out = []; data.galleries.forEach(function (g) { g.products.forEach(function (p) { if (!seen[p.name]) { seen[p.name] = 1; out.push(p.name); } }); }); return out; }
+  function trIssues(nm) {
+    var i = [], f = (nm.fa || '').trim(), a = (nm.ar || '').trim(), any = /[\u0600-\u06FF]/;
+    if (!f) i.push('فارسی خالی'); else { if (!any.test(f)) i.push('فارسی: حروف فارسی ندارد'); if (/[كي]/.test(f)) i.push('فارسی: حرف عربی (ك/ي)'); }
+    if (!a) i.push('عربی خالی'); else { if (!any.test(a)) i.push('عربی: حروف عربی ندارد'); else if (/[پچژگکی]/.test(a)) i.push('عربی: حرف فارسی (پ چ ژ گ ک ی)'); }
+    if (f && a && f === a) i.push('فارسی و عربی یکسان');
+    return i;
+  }
+  function trCount() { return trNames().filter(function (n) { return trIssues(data.names[n] || {}).length; }).length; }
+  function issHtml(is) { return is.length ? is.map(function (t) { return '<span class="bad">' + esc(t) + '</span>'; }).join('') : '<span class="good">✓ سالم</span>'; }
+  function renderTr(v) {
+    var only = !!renderTr.only, names = trNames(), n0 = trCount();
+    var html = '<div class="view-head"><h2>بررسی ترجمه‌ها (فارسی / عربی)</h2><label class="ck"><input type="checkbox" id="trOnly"' + (only ? ' checked' : '') + '> فقط موارد مشکل‌دار (' + n0 + ')</label></div>' +
+      '<p class="hint">نام هر محصول یک‌بار آمده و در همه‌ی گالری‌ها اعمال می‌شود. بعد از ویرایش «انتشار تغییرات» را بزن.</p><div class="tr">';
+    names.forEach(function (n) {
+      var nm = data.names[n] || {}, is = trIssues(nm); if (only && !is.length) return;
+      html += '<div class="tr-row" data-n="' + esc(n) + '"><div class="en">' + esc(n) + '</div><input type="text" data-l="fa" dir="rtl" placeholder="فارسی" value="' + esc(nm.fa || '') + '">' +
+        '<input type="text" data-l="ar" dir="rtl" placeholder="العربية" value="' + esc(nm.ar || '') + '"><div class="iss">' + issHtml(is) + '</div></div>';
+    });
+    v.innerHTML = html + (only && !n0 ? '<div class="empty">همه‌ی ترجمه‌ها سالم به نظر می‌رسند ✓</div>' : '') + '</div>';
+    $('trOnly').onchange = function () { renderTr.only = this.checked; renderTr(v); };
+    v.querySelectorAll('.tr-row input').forEach(function (inp) {
+      inp.onchange = function () {
+        var row = inp.closest('.tr-row'), n = row.dataset.n, nm = Object.assign({ fa: '', ar: '' }, data.names[n]), tag = 'ترجمه «' + n + '»';
+        nm[inp.dataset.l] = inp.value.trim();
+        if (nm.fa || nm.ar) data.names[n] = nm; else delete data.names[n];
+        log = log.filter(function (l) { return l.indexOf(tag) !== 0; }); log.push(tag + ' ویرایش شد');
+        row.querySelector('.iss').innerHTML = issHtml(trIssues(nm)); renderBar(); renderNav();
+      };
+    });
+  }
+
+  /* ---------- history + revert ---------- */
+  function openHistory() {
+    if (dirty()) return toast('اول تغییرات را منتشر یا لغو کن، بعد به نسخه قبل برگرد.', true);
+    var dlg = $('dlg'); $('dlgBody').innerHTML = '<h3>تاریخچه انتشارها</h3><p class="hint">در حال بارگذاری…</p>'; dlg.showModal();
+    gh('/commits?path=' + DATA_PATH + '&per_page=30').then(function (r) { return r.json(); }).then(function (list) {
+      var h = '<h3>تاریخچه انتشارها</h3><div class="hist">';
+      list.forEach(function (c, i) {
+        var lines = c.commit.message.split('\n').filter(Boolean), d = new Date(c.commit.author.date);
+        h += '<div class="hrow"><div><b>' + esc(d.toLocaleString('fa-IR')) + '</b> ' + (i === 0 ? '<span class="curv">نسخه فعلی</span>' : '') +
+          '<div class="hmsg">' + esc(lines.slice(1).join(' • ') || lines[0] || '') + '</div></div>' +
+          (i === 0 ? '' : '<button class="btn sm" data-sha="' + esc(c.sha) + '">برگشت به این نسخه</button>') + '</div>';
+      });
+      $('dlgBody').innerHTML = h + '</div><div class="modal-foot"><button class="btn" id="hClose">بستن</button></div>';
+      $('hClose').onclick = function () { dlg.close(); };
+      $('dlgBody').querySelectorAll('[data-sha]').forEach(function (b) { b.onclick = function () { revertTo(b.dataset.sha); }; });
+    }).catch(function (e) { dlg.close(); toast(e.message || String(e), true); });
+  }
+  function revertTo(sha) {
+    if (!confirm('کاتالوگ به این نسخه برگردد؟\n(یک انتشار جدید ثبت می‌شود و نسخه فعلی هم در تاریخچه می‌ماند.)')) return;
+    $('dlg').close(); busy = true; renderBar(); setStatus('در حال برگرداندن…');
+    var rem;
+    fetchRemote().then(function (r) { rem = r; return gh('/contents/' + DATA_PATH + '?ref=' + sha); })
+      .then(function (r) { return r.text(); }).then(function (old) {
+        parseData(old);
+        return gh('/git/blobs', { method: 'POST', body: JSON.stringify({ content: textToB64(old), encoding: 'base64' }) });
+      }).then(function (r) { return r.json(); }).then(function (b) {
+        return gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: rem.tree, tree: [{ path: DATA_PATH, mode: '100644', type: 'blob', sha: b.sha }] }) });
+      }).then(function (r) { return r.json(); }).then(function (t) {
+        return gh('/git/commits', { method: 'POST', body: JSON.stringify({ message: 'Admin: revert catalog data to ' + sha.slice(0, 7), tree: t.sha, parents: [rem.sha] }) });
+      }).then(function (r) { return r.json(); }).then(function (c) {
+        return gh('/git/refs/heads/' + branch, { method: 'PATCH', body: JSON.stringify({ sha: c.sha }) });
+      }).then(function () { busy = false; toast('برگشت انجام شد ✓ تا حدود یک دقیقه دیگر روی سایت دیده می‌شود.'); return load(); })
+      .catch(function (e) { busy = false; setStatus(''); renderBar(); toast('خطا: ' + (e.message || e), true); });
+  }
+
+  /* ---------- live preview (unpublished data + new images) ---------- */
+  function previewShim(M) {   // runs INSIDE the preview iframe, before the site's own scripts
+    function fix(v) { if (typeof v !== 'string') return v; var k = v.split('?')[0].replace(/^\//, ''); try { k = decodeURI(k); } catch (e) {} return M[k] || v; }
+    var d = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src'), sa = Element.prototype.setAttribute;
+    Object.defineProperty(HTMLImageElement.prototype, 'src', { get: d.get, set: function (v) { d.set.call(this, fix(v)); } });
+    Element.prototype.setAttribute = function (n, v) { if (n === 'src' && this.tagName === 'IMG') v = fix(v); return sa.call(this, n, v); };
+    ['pushState', 'replaceState'].forEach(function (k) { var o = history[k]; history[k] = function () { try { return o.apply(history, arguments); } catch (e) {} }; });
+    new MutationObserver(function (ms) { ms.forEach(function (m) { m.addedNodes.forEach(function (n) {
+      if (n.nodeType !== 1) return;
+      (n.tagName === 'IMG' ? [n] : [].slice.call(n.querySelectorAll('img'))).forEach(function (i) { var s = i.getAttribute('src'), f = fix(s); if (f !== s) i.setAttribute('src', f); });
+    }); }); }).observe(document, { childList: true, subtree: true });
+  }
+  function openPreview() {
+    var map = {}; newFiles.forEach(function (v, p) { map[p] = v.url; }); toast('در حال ساخت پیش‌نمایش…');
+    fetch('/', { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (html) {
+      var tag = '<script>' + serialize().replace(/</g, '\\u003c') + '<\/script>';
+      var re = /<script[^>]*src=["']\/data\/catalog-data\.js["'][^>]*><\/script>/i;
+      if (!re.test(html)) throw new Error('در صفحه‌ی اصلی سایت، فراخوانی data/catalog-data.js پیدا نشد.');
+      html = html.replace(re, function () { return tag; })
+        .replace(/<head[^>]*>/i, function (m) { return m + '<base href="/"><script>(' + previewShim.toString() + ')(' + JSON.stringify(map) + ')<\/script>'; });
+      $('pvFrame').srcdoc = html; $('pv').classList.remove('m'); $('pv').showModal();
+    }).catch(function (e) { toast(e.message || String(e), true); });
+  }
+  $('previewBtn').onclick = openPreview; $('histBtn').onclick = openHistory;
+  $('pvM').onclick = function () { $('pv').classList.toggle('m'); };
+  $('pvClose').onclick = function () { $('pv').close(); $('pvFrame').srcdoc = ''; };
+  $('pv').addEventListener('cancel', function () { $('pvFrame').srcdoc = ''; });
 
   /* ---------- boot ---------- */
   function showLogin(msg) { $('app').hidden = true; $('login').hidden = false; $('loginErr').textContent = msg || ''; }
