@@ -47,7 +47,7 @@ window.CATALOG_DATA = {
     {
      "name": "test",
      "gallery": "assets/images/test-gallery-80x80.webp",
-     "detail": "assets/images/test-80x80.webp"
+     "detail": "assets/images/test-80x80-2.webp"
     }
    ]
   },
@@ -489,11 +489,6 @@ window.CATALOG_DATA = {
      "name": "Tino",
      "gold": "Tino.webp",
      "silver": "Tino Silver.webp"
-    },
-    {
-     "name": "test2",
-     "gold": "test2-30x60.webp",
-     "silver": "test2-30x60-silver.webp"
     }
    ]
   },
