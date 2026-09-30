@@ -441,11 +441,6 @@ window.CATALOG_DATA = {
      "silver": "Linda Silver.webp"
     },
     {
-     "name": "Maria",
-     "gold": "Maria.webp",
-     "silver": "Maria Silver.webp"
-    },
-    {
      "name": "Milo",
      "gold": "Milo.webp",
      "silver": "Milo Silver.webp"
