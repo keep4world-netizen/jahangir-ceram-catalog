@@ -77,14 +77,9 @@
 
 <div id="login" hidden>
   <h2>ورود به پنل مدیریت</h2>
-  <p>برای ذخیره‌ی تغییرات روی GitHub به یک توکن نیاز است. توکن فقط در همین مرورگر ذخیره می‌شود.</p>
-  <ol>
-    <li>در GitHub به <code>Settings → Developer settings → Personal access tokens → Fine-grained tokens</code> برو و Generate new token بزن.</li>
-    <li>در Repository access فقط ریپوی <code>jahangir-ceram-catalog</code> را انتخاب کن.</li>
-    <li>در Permissions ← Repository permissions مقدار <code>Contents</code> را روی <code>Read and write</code> بگذار.</li>
-    <li>توکن ساخته‌شده را اینجا بچسبان.</li>
-  </ol>
-  <input id="tokenInput" type="password" placeholder="github_pat_..." autocomplete="off">
+  <p>نام کاربری و رمز عبور را وارد کنید.</p>
+  <input id="userInput" type="text" placeholder="نام کاربری" autocomplete="username" autocapitalize="off">
+  <input id="passInput" type="password" placeholder="رمز عبور" autocomplete="current-password">
   <button class="btn primary" id="loginBtn">ورود</button>
   <p class="err" id="loginErr"></p>
 </div>
@@ -110,15 +105,13 @@
 <script>
 (function () {
   'use strict';
-  var OWNER = 'keep4world-netizen', REPO = 'jahangir-ceram-catalog';
-  var API = 'https://api.github.com';
   var DATA_PATH = 'data/catalog-data.js';
   var IMG = 'assets/images/';
   var FA = { 'Jahangir Ceram':'جهانگیر سرام', 'Sialk Ceram':'سیلک سرام', 'Porcelain Ceramic':'سرامیک پرسلان', 'Matte':'مات',
     'Nano Polish':'نانو پولیش', 'Crystal Polish':'کریستال پولیش', 'Washbasin':'روشویی', 'Puzzle':'پازل',
     'Decorative':'دکوراتیو', 'Fitileh':'فیتیله', 'Takgol':'تک گل' };
 
-  var token = '', branch = 'main', headSha = '';
+  var auth = '', branch = 'main', headSha = '';
   var treeSet = new Set(), data = null, loadedText = '';
   var newFiles = new Map();   // path -> { blob, url }
   var delFiles = new Set();   // existing repo paths to delete
@@ -139,17 +132,21 @@
   /* ---------- GitHub API ---------- */
   function gh(path, opts) {
     opts = opts || {};
-    var headers = Object.assign({ Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }, opts.headers || {});
-    return fetch(API + path, Object.assign({}, opts, { headers: headers })).then(function (r) {
+    var init = { method: opts.method || 'GET', headers: { Authorization: 'Basic ' + auth, 'Content-Type': 'application/json' } };
+    if (opts.body) init.body = opts.body;
+    return fetch('/api/gh?p=' + encodeURIComponent(path), init).then(function (r) {
       if (r.ok) return r;
       return r.text().then(function (t) {
-        var m = ''; try { m = JSON.parse(t).message; } catch (e) { m = t; }
-        var hint = r.status === 401 ? ' (توکن نامعتبر یا منقضی است)' : r.status === 403 || r.status === 404 ? ' (دسترسی توکن به ریپو یا مجوز Contents را بررسی کن)' : '';
-        throw new Error('GitHub ' + r.status + ': ' + m + hint);
+        var m = ''; try { m = JSON.parse(t).message || ''; } catch (e) { m = ''; }
+        if (r.status === 401) throw new Error('نام کاربری یا رمز عبور اشتباه است.');
+        if (r.status === 404 && !m) throw new Error('سرویس /api/gh روی سایت پیدا نشد. مطمئن شو فایل api/gh.js در ریپو هست و دیپلوی Vercel تمام شده.');
+        if (r.status === 500 && /not configured/.test(m)) throw new Error('متغیرهای محیطی در Vercel تنظیم نشده‌اند (GITHUB_TOKEN، ADMIN_USER، ADMIN_PASS). بعد از تنظیم باید Redeploy کنی.');
+        if (r.status === 502 && /token/.test(m)) throw new Error('توکن GitHub که در Vercel گذاشته‌ای نامعتبر یا منقضی است.');
+        throw new Error('خطا ' + r.status + ': ' + (m || t.slice(0, 200)));
       });
     });
   }
-  function repo(p) { return '/repos/' + OWNER + '/' + REPO + p; }
+  function repo(p) { return p; }
   function parseData(text) {
     var i = text.indexOf('{'), j = text.lastIndexOf('}');
     if (i < 0 || j < 0) throw new Error('قالب فایل data/catalog-data.js نامعتبر است');
@@ -202,7 +199,6 @@
     paths.forEach(function (p) {
       if (m[p]) return;
       if (newFiles.has(p)) { URL.revokeObjectURL(newFiles.get(p).url); newFiles.delete(p); }
-      else if (treeSet.has(p)) delFiles.add(p);
     });
   }
   function uniquePath(base, ext) {
@@ -301,7 +297,7 @@
   }
   function removeProduct(g, i) {
     var p = g.products[i];
-    if (!confirm('محصول «' + p.name + '» از گالری «' + gLabel(g) + '» حذف شود؟\n(بعد از «انتشار تغییرات» از سایت حذف می‌شود؛ فایل‌های عکسِ بلااستفاده‌اش هم پاک می‌شوند.)')) return;
+    if (!confirm('محصول «' + p.name + '» از گالری «' + gLabel(g) + '» حذف شود؟\n(بعد از «انتشار تغییرات» از کاتالوگ سایت حذف می‌شود. فایل عکس‌هایش در ریپو می‌ماند.)')) return;
     var files = refs(g, p);
     g.products.splice(i, 1);
     releaseUnreferenced(files);
@@ -439,25 +435,28 @@
     $('login').hidden = true; $('app').hidden = false;
     load().catch(function (e) {
       setStatus('');
-      if (/401|توکن/.test(e.message)) { localStorage.removeItem('jc_token'); showLogin(e.message); }
+      if (/نام کاربری/.test(e.message)) { localStorage.removeItem('jc_auth'); showLogin(e.message); }
       else toast(e.message || String(e), true);
     });
   }
   $('loginBtn').onclick = function () {
-    var v = $('tokenInput').value.trim(); if (!v) return;
-    token = v; localStorage.setItem('jc_token', v); start();
+    var u = $('userInput').value.trim(), pw = $('passInput').value; if (!u || !pw) return;
+    var bytes = new TextEncoder().encode(u + ':' + pw), bin = '';
+    for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    auth = btoa(bin); try { localStorage.setItem('jc_auth', auth); } catch (e) {}
+    $('passInput').value = ''; start();
   };
-  $('tokenInput').onkeydown = function (e) { if (e.key === 'Enter') $('loginBtn').click(); };
+  $('passInput').onkeydown = function (e) { if (e.key === 'Enter') $('loginBtn').click(); };
   $('logoutBtn').onclick = function () {
     if (dirty() && !confirm('تغییرات منتشرنشده از بین می‌رود. خارج می‌شوی؟')) return;
-    localStorage.removeItem('jc_token'); token = ''; showLogin('');
+    localStorage.removeItem('jc_auth'); auth = ''; showLogin('');
   };
   $('publishBtn').onclick = publish;
   $('discardBtn').onclick = function () { if (confirm('همه‌ی تغییرات منتشرنشده لغو شود؟')) load().catch(function (e) { toast(e.message, true); }); };
   window.addEventListener('beforeunload', function (e) { if (dirty()) { e.preventDefault(); e.returnValue = ''; } });
 
-  try { token = localStorage.getItem('jc_token') || ''; } catch (e) { token = ''; }
-  if (token) start(); else showLogin('');
+  try { localStorage.removeItem('jc_token'); auth = localStorage.getItem('jc_auth') || ''; } catch (e) { auth = ''; }
+  if (auth) start(); else showLogin('');
 })();
 </script>
 </body>
