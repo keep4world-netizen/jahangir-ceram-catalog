@@ -37,7 +37,16 @@ python3 validate_catalog.py path/to/catalog.html
 
 ## Editing the catalog
 
-The production `index.html` in this package is the complete catalog, including its newer catalog sections. Edit that file directly when changing catalog data or image paths, and place WebP image assets in `assets/images/`. The `catalog-source.html` file is a legacy reference only and is not deployed; do not edit it for production changes. The old generator script is intentionally not included because it could overwrite newer production sections.
+Products in the galleries are managed from the admin panel at `/admin/`
+(log in with the admin username and password). Each publish commits changes to
+`data/catalog-data.js` and `assets/images/`, and Vercel redeploys automatically.
+
+The panel talks to GitHub through the serverless function `api/gh.js`, which needs
+these environment variables in Vercel: `GITHUB_TOKEN` (fine-grained, this repo only,
+Contents: Read and write), `ADMIN_USER` and `ADMIN_PASS`. Never commit them to the repo.
+
+Page structure, texts and layout are still edited directly in `index.html`.
+Removing a product in the panel does not delete its image files from the repo.
 
 ## Compatibility
 
