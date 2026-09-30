@@ -532,7 +532,7 @@
   function trIssues(nm) {
     var i = [], f = (nm.fa || '').trim(), a = (nm.ar || '').trim(), any = /[\u0600-\u06FF]/;
     if (!f) i.push('فارسی خالی'); else { if (!any.test(f)) i.push('فارسی: حروف فارسی ندارد'); if (/[كي]/.test(f)) i.push('فارسی: حرف عربی (ك/ي)'); }
-    if (!a) i.push('عربی خالی'); else { if (!any.test(a)) i.push('عربی: حروف عربی ندارد'); else if (/[پچژگکی]/.test(a)) i.push('عربی: حرف فارسی (پ چ ژ گ ک ی)'); }
+    if (!a) i.push('عربی خالی'); else { if (!any.test(a)) i.push('عربی: حروف عربی ندارد'); else if (/[پچژگ]/.test(a)) i.push('عربی: حرف فارسی (پ چ ژ گ)'); }
     if (f && a && f === a) i.push('فارسی و عربی یکسان');
     return i;
   }
