@@ -2727,7 +2727,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page product-detail-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + name + ' · Puzzle</h2>' +
       '<p class="catalog-breadcrumb">Jahangir Ceram / Puzzle</p>' +
       '<img class="cloudy-product-image puzzle-product-image" data-src="' + PUZZLE_DETAIL_IMAGES[index] + '" alt="' + name + ' product presentation" loading="lazy" decoding="async">' +
@@ -2741,6 +2741,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     observeDeferredProductImages(sheet);
     return sheet;
   }
@@ -2771,7 +2772,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page product-detail-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + name + ' · Washbasin</h2>' +
       '<p class="catalog-breadcrumb">Jahangir Ceram / Washbasin</p>' +
       '<img class="cloudy-product-image washbasin-product-image" data-src="' + WASHBASIN_DETAIL_IMAGES[index] + '" alt="' + name + ' washbasin product presentation" loading="lazy" decoding="async">' +
@@ -2785,6 +2786,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     observeDeferredProductImages(sheet);
     return sheet;
   }
@@ -3236,7 +3238,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page product-detail-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + name + ' · 60×120</h2>' +
       '<p class="catalog-breadcrumb">Jahangir Ceram / Porcelain Ceramic / Matte</p>' +
       '<img class="cloudy-product-image" data-src="' + productImage + '" alt="' + name + ' 60×120 product presentation" loading="lazy" decoding="async">' +
@@ -3250,6 +3252,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     observeDeferredProductImages(sheet);
     return sheet;
   }
@@ -3285,7 +3288,7 @@
       ? '<img class="cloudy-product-image" data-src="' + PRODUCT_IMAGES[name] + '" alt="' + tr("productImageAlt").replace("{name}", name).replace("80×80", "\u200e80×80\u200e") + '" loading="lazy" decoding="async">'
       : '';
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + localizeName(name) + ' · ' + localizeName('80×80') + '</h2>' +
       '<p class="catalog-breadcrumb">' + localizePath("Jahangir Ceram / Porcelain Ceramic") + '</p>' +
       productImageMarkup +
@@ -3304,6 +3307,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     observeDeferredProductImages(sheet);
     return sheet;
   }
@@ -3334,7 +3338,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page product-detail-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + name + ' · 80×80</h2>' +
       '<p class="catalog-breadcrumb">Jahangir Ceram / Porcelain Ceramic / Nano Polish</p>' +
       '<img class="cloudy-product-image jahagir-nano-product-image" data-src="' + JAHANGIR_NANO_80_DETAIL_IMAGES[index] + '" alt="' + name + ' 80×80 product presentation" loading="lazy" decoding="async">' +
@@ -3348,6 +3352,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     observeDeferredProductImages(sheet);
     return sheet;
   }
@@ -3382,7 +3387,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page product-detail-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + SIALK_PAGE19_PRODUCTS[index] + ' · 60×120</h2>' +
       '<p class="catalog-breadcrumb">Sialk Ceram / Porcelain Ceramic / Nano Polish</p>' +
       '<img class="cloudy-product-image sialk-product-image" data-src="' + SIALK_PAGE19_DETAIL_IMAGES[index] + '" alt="' + name + ' 60×120" loading="lazy" decoding="async">' +
@@ -3396,6 +3401,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     observeDeferredProductImages(sheet);
     return sheet;
   }
@@ -3429,7 +3435,7 @@
       ? '<img class="cloudy-product-image sialk-8080-product-image" data-src="' + SIALK_PAGE25_DETAIL_IMAGES[index] + '" alt="' + name + ' 80×80" loading="lazy" decoding="async">'
       : '<div class="product-detail-description" data-placeholder="product-image">Product image will be added later.</div>';
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + name + ' · 80×80</h2>' +
       '<p class="catalog-breadcrumb">Sialk Ceram / Porcelain Ceramic / Nano Polish</p>' +
       productImageMarkup +
@@ -3443,6 +3449,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     observeDeferredProductImages(sheet);
     return sheet;
   }
@@ -3470,7 +3477,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page product-detail-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + name + ' · 100×100</h2>' +
       '<p class="catalog-breadcrumb">Sialk Ceram / Porcelain Ceramic / Nano Polish</p>' +
       '<img class="cloudy-product-image sialk-100100-product-image" data-src="' + SIALK_PAGE30_DETAIL_IMAGES[index] + '" alt="' + name + ' 100×100" loading="lazy" decoding="async">' +
@@ -3484,6 +3491,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     observeDeferredProductImages(sheet);
     return sheet;
   }
@@ -3511,7 +3519,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page product-detail-page cloudy-product-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + name + ' · 100×100</h2>' +
       '<p class="catalog-breadcrumb">Sialk Ceram / Porcelain Ceramic / Crystal Polish</p>' +
       '<img class="cloudy-product-image" data-src="' + SIALK_PAGE34_DETAIL_IMAGES[index] + '" alt="' + name + ' 100×100" loading="lazy" decoding="async">' +
@@ -3525,6 +3533,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     observeDeferredProductImages(sheet);
     return sheet;
   }
@@ -3605,7 +3614,7 @@
     page.className = "catalog-page";
     if (options.productGallery) page.classList.add("has-product-grid");
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + catalogHeadingLabel(size, options.path || "") + '</h2>' +
       '<p class="catalog-breadcrumb">' + catalogBreadcrumbLabel(options.path || "") + '</p>' +
       (options.productGallery ? renderCatalogGallery(pageKey)
@@ -3658,6 +3667,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     initializeProductGalleryPages(options);
     if (!options.initial) {
       history.pushState({ catalogSize: size }, "", "#catalog-" + encodeURIComponent(size));
@@ -3749,7 +3759,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
       '<h2 class="catalog-heading">' + localizeName(category.name) + '</h2>' +
       '<p class="catalog-breadcrumb">' + tr("selectSubcategory") + '</p>' +
       '<div class="category-subitems"></div>' +
@@ -3761,6 +3771,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     if (!options.initial) {
       history.pushState({ pageKey: pageKey }, "", "#category-" + category.id);
       sheet.scrollIntoView({ behavior: "auto", block: "start" });
@@ -3828,7 +3839,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page about-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
         '<svg class="about-panel-icon" viewBox="0 0 24 24" aria-hidden="true">' +
           '<circle cx="12" cy="7.5" r="3"></circle>' +
           '<path d="M5.5 20c.5-3.6 2.8-5.6 6.5-5.6s6 2 6.5 5.6"></path>' +
@@ -3844,6 +3855,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     return sheet;
   }
   function createContactPage() {
@@ -3861,7 +3873,7 @@
     var page = document.createElement("section");
     page.className = "catalog-page contact-page";
     page.innerHTML =
-      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>Back</button>' +
+      '<button class="catalog-back" type="button"><span class="back-icon" aria-hidden="true">↩</span>' + tr("back") + '</button>' +
         '<svg class="contact-panel-icon" viewBox="0 0 24 24" aria-hidden="true">' +
           '<path d="M4 13v-1a8 8 0 0 1 16 0v1"></path>' +
           '<path d="M4 13H2.8v4.2A1.8 1.8 0 0 0 4.6 19H6v-6z"></path>' +
@@ -3918,6 +3930,7 @@
     };
     sheet.appendChild(page);
     pages.appendChild(sheet);
+    refreshSheetLanguage(sheet);
     return sheet;
   }
   function goToStaticPage(pageKey) {
