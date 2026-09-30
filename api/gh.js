@@ -28,6 +28,7 @@ const RULES = [
   { m: 'GET', re: /^$/ },
   { m: 'GET', re: new RegExp('^/git/ref/heads/' + BRANCH + '$') },
   { m: 'GET', re: new RegExp('^/git/commits/' + SHA + '$') },
+  { m: 'GET', re: /^\/commits\?path=data\/catalog-data\.js&per_page=\d{1,2}$/ },
   { m: 'GET', re: new RegExp('^/git/trees/' + SHA + '\\?recursive=1$') },
   { m: 'GET', re: new RegExp('^/contents/data/catalog-data\\.js\\?ref=' + SHA + '$') },
   { m: 'POST', re: /^\/git\/blobs$/, check: function (b) {
