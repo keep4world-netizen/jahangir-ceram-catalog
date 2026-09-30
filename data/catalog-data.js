@@ -43,6 +43,11 @@ window.CATALOG_DATA = {
      "name": "Matsu Cream",
      "gallery": "assets/images/matsu-cream-gallery-80x80.webp",
      "detail": "assets/images/matsu-cream-80x80.webp"
+    },
+    {
+     "name": "tst",
+     "gallery": "assets/images/tst-gallery-80x80.webp",
+     "detail": "assets/images/tst-80x80.webp"
     }
    ]
   },
@@ -955,6 +960,10 @@ window.CATALOG_DATA = {
   "test2": {
    "fa": "تست 2",
    "ar": "تس 2"
+  },
+  "tst": {
+   "fa": "تست",
+   "ar": "js"
   }
  }
 };
