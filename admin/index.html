@@ -214,17 +214,34 @@
   function dirty() { return log.length > 0; }
 
   /* ---------- image processing ---------- */
+  /* Full-quality image handling.
+   * - A WebP that is not a square thumbnail is uploaded byte-for-byte (no re-encoding, no resizing).
+   * - Anything else (JPG/PNG/...) is converted at full resolution with near-lossless quality.
+   * - Square thumbnails are a center crop only (same look as the other catalog cards).
+   * The only limit is file size: /api/gh accepts blobs up to ~3 MB, so if a file is bigger the quality
+   * (and only then the size) is reduced just enough to fit. maxSide = 0 means "never downscale". */
+  var MAX_BYTES = 2900000;
+  function encodeWebp(canvas, q) { return new Promise(function (res) { canvas.toBlob(res, 'image/webp', q); }); }
   function toWebp(file, maxSide, square) {
+    if (!square && file.type === 'image/webp' && file.size <= MAX_BYTES) return Promise.resolve(file);
     return createImageBitmap(file).then(function (bmp) {
       var sx = 0, sy = 0, sw = bmp.width, sh = bmp.height, cw, ch;
-      if (square) { var s = Math.min(sw, sh); sx = (sw - s) / 2; sy = (sh - s) / 2; sw = sh = s; cw = ch = Math.min(maxSide, s); }
-      else { var k = Math.min(1, maxSide / Math.max(sw, sh)); cw = Math.round(sw * k); ch = Math.round(sh * k); }
-      var c = document.createElement('canvas'); c.width = cw; c.height = ch;
-      c.getContext('2d').drawImage(bmp, sx, sy, sw, sh, 0, 0, cw, ch);
-      return new Promise(function (res) { c.toBlob(res, 'image/webp', 0.86); });
-    }).then(function (blob) {
-      if (!blob || blob.type !== 'image/webp') throw new Error('این مرورگر تبدیل به WebP را پشتیبانی نمی‌کند (از Chrome یا Edge استفاده کن).');
-      return blob;
+      if (square) { var s = Math.min(sw, sh); sx = (sw - s) / 2; sy = (sh - s) / 2; sw = sh = s; cw = ch = maxSide ? Math.min(maxSide, s) : s; }
+      else { var k = maxSide ? Math.min(1, maxSide / Math.max(sw, sh)) : 1; cw = Math.round(sw * k); ch = Math.round(sh * k); }
+      var qualities = [0.97, 0.94, 0.91, 0.88, 0.85];
+      function attempt(w, h, qi) {
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        var ctx = c.getContext('2d'); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(bmp, sx, sy, sw, sh, 0, 0, w, h);
+        return encodeWebp(c, qualities[qi]).then(function (blob) {
+          if (!blob || blob.type !== 'image/webp') throw new Error('این مرورگر تبدیل به WebP را پشتیبانی نمی‌کند (از Chrome یا Edge استفاده کن).');
+          if (blob.size <= MAX_BYTES) return blob;
+          if (qi + 1 < qualities.length) return attempt(w, h, qi + 1);
+          if (w < 600) return blob;
+          return attempt(Math.round(w * 0.85), Math.round(h * 0.85), 0);
+        });
+      }
+      return attempt(cw, ch, 0);
     });
   }
   function addFile(path, blob) { newFiles.set(path, { blob: blob, url: URL.createObjectURL(blob) }); }
@@ -352,15 +369,15 @@
       if (gold) {
         var gp = uniquePath(IMG + base + '-' + sizeSlug(g.size), '.webp'), gfile = gp.slice(IMG.length);
         released = released.concat(editing ? refs(g, old).filter(function (r) { return r === IMG + old.gold || r === g.thumbs + old.gold; }) : []);
-        jobs.push(toWebp(gold, 1600, false).then(function (b) { addFile(gp, b); }));
-        jobs.push(toWebp(gold, 400, true).then(function (b) { addFile(g.thumbs + gfile, b); }));
+        jobs.push(toWebp(gold, 0, false).then(function (b) { addFile(gp, b); }));
+        jobs.push(toWebp(gold, 800, true).then(function (b) { addFile(g.thumbs + gfile, b); }));
         product.gold = gfile;
       }
       if (silver) {
         var sp = uniquePath(IMG + base + '-' + sizeSlug(g.size) + '-silver', '.webp'), sfile = sp.slice(IMG.length);
         if (editing && old.silver) released.push(IMG + old.silver, g.thumbs + old.silver);
-        jobs.push(toWebp(silver, 1600, false).then(function (b) { addFile(sp, b); }));
-        jobs.push(toWebp(silver, 400, true).then(function (b) { addFile(g.thumbs + sfile, b); }));
+        jobs.push(toWebp(silver, 0, false).then(function (b) { addFile(sp, b); }));
+        jobs.push(toWebp(silver, 800, true).then(function (b) { addFile(g.thumbs + sfile, b); }));
         product.silver = sfile;
       } else if (editing && noSilver && old.silver) released.push(IMG + old.silver, g.thumbs + old.silver);
     } else {
@@ -368,8 +385,8 @@
       if (!editing && (!gal || !det)) return Promise.reject(new Error('هر دو عکس (کارت گالری و صفحه محصول) الزامی‌اند.'));
       product = editing ? { name: name, gallery: old.gallery, detail: old.detail } : { name: name, gallery: '', detail: '' };
       var released = [];
-      if (gal) { var pg = uniquePath(IMG + base + '-gallery' + ss, '.webp'); if (editing) released.push(old.gallery); jobs.push(toWebp(gal, 1000, false).then(function (b) { addFile(pg, b); })); product.gallery = pg; }
-      if (det) { var pd = uniquePath(IMG + base + ss, '.webp'); if (editing) released.push(old.detail); jobs.push(toWebp(det, 1600, false).then(function (b) { addFile(pd, b); })); product.detail = pd; }
+      if (gal) { var pg = uniquePath(IMG + base + '-gallery' + ss, '.webp'); if (editing) released.push(old.gallery); jobs.push(toWebp(gal, 0, false).then(function (b) { addFile(pg, b); })); product.gallery = pg; }
+      if (det) { var pd = uniquePath(IMG + base + ss, '.webp'); if (editing) released.push(old.detail); jobs.push(toWebp(det, 0, false).then(function (b) { addFile(pd, b); })); product.detail = pd; }
     }
     return Promise.all(jobs).then(function () {
       if (editing) {
