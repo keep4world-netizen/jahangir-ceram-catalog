@@ -43,11 +43,6 @@ window.CATALOG_DATA = {
      "name": "Matsu Cream",
      "gallery": "assets/images/matsu-cream-gallery-80x80.webp",
      "detail": "assets/images/matsu-cream-80x80.webp"
-    },
-    {
-     "name": "test",
-     "gallery": "assets/images/test-gallery-80x80.webp",
-     "detail": "assets/images/test-80x80-2.webp"
     }
    ]
   },
