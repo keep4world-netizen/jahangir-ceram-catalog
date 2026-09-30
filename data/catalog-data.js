@@ -43,6 +43,11 @@ window.CATALOG_DATA = {
      "name": "Matsu Cream",
      "gallery": "assets/images/matsu-cream-gallery-80x80.webp",
      "detail": "assets/images/matsu-cream-80x80.webp"
+    },
+    {
+     "name": "test",
+     "gallery": "assets/images/test-gallery-80x80.webp",
+     "detail": "assets/images/test-80x80.webp"
     }
    ]
   },
@@ -484,6 +489,11 @@ window.CATALOG_DATA = {
      "name": "Tino",
      "gold": "Tino.webp",
      "silver": "Tino Silver.webp"
+    },
+    {
+     "name": "test2",
+     "gold": "test2-30x60.webp",
+     "silver": "test2-30x60-silver.webp"
     }
    ]
   },
@@ -947,6 +957,14 @@ window.CATALOG_DATA = {
   "test panel admin": {
    "fa": "تست پنل ادمین",
    "ar": "ادمین بنل"
+  },
+  "test": {
+   "fa": "تست",
+   "ar": "تس"
+  },
+  "test2": {
+   "fa": "تست 2",
+   "ar": "تس 2"
   }
  }
 };
