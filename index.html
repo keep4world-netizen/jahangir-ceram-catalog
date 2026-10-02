@@ -15,6 +15,8 @@
 <meta content="summary_large_image" name="twitter:card"/>
 <link rel="canonical" href="https://jahangir-ceram-catalog.vercel.app/"/>
 <link rel="icon" type="image/webp" href="/assets/images/jahangir-ceram-logo.webp"/>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
 <title>Jahangir Ceram Catalogs</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap');
@@ -4299,6 +4301,9 @@
 
   render();
   applyLanguage();
+</script>
+<script>
+if ('serviceWorker' in navigator) { window.addEventListener('load', function () { try { navigator.serviceWorker.register('/sw.js'); } catch (e) {} }); }
 </script>
 </body>
 </html>
